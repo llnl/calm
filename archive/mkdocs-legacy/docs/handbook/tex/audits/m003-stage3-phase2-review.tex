@@ -1,0 +1,40 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 3 --- Implementation Review (Phase 2)}
+
+\subsection{Reviewed Transformation}
+
+Enumeration of all admissible surface terminations.
+
+\subsection{Mathematical Input}
+
+Classification result indicating that multiple admissible terminations
+exist together with the primitive surface.
+
+\subsection{Mathematical Output}
+
+A finite Termination Set containing all admissible, physically distinct
+surface terminations.
+
+\subsection{Algorithmic Role}
+
+Generate every admissible termination while preserving provenance and
+crystallographic identity. No slab construction occurs during this
+phase.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Scientific transformation.
+\item No gauge operation.
+\item No representation projection.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Are all admissible terminations enumerated?
+\item Are duplicate terminations excluded only through documented
+equivalence relations?
+\item Is finiteness guaranteed by the implementation?
+\end{enumerate}

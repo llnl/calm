@@ -1,0 +1,169 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc" viewBox="0 0 1440 780" data-calm-figure-version="2">
+<title id="title">Three interfacial energy reference processes</title>
+<desc id="desc">A central coherent interface is connected to three distinct reference states: coherently strained bulks, cleaved unrelaxed surfaces, and independently relaxed fixed-cell surfaces. Each path answers a different scientific question and uses area and interface multiplicity normalization.</desc>
+<style>
+  .canvas { fill: #fcfdff; }
+  .panel { fill: #f5f7fb; stroke: #cbd3e1; stroke-width: 1.6; }
+  .panel-white { fill: #ffffff; stroke: #cbd3e1; stroke-width: 1.6; }
+  .panel-a { fill: #e0f2f0; stroke: #007c78; stroke-width: 2; }
+  .panel-b { fill: #e8eefb; stroke: #3563c4; stroke-width: 2; }
+  .panel-violet { fill: #efeafb; stroke: #6c4ccf; stroke-width: 2; }
+  .panel-amber { fill: #faead8; stroke: #c97619; stroke-width: 2; }
+  .panel-red { fill: #f8e6e4; stroke: #b34e45; stroke-width: 2; }
+  .ink { stroke: #172033; stroke-width: 2.2; fill: none; }
+  .line { stroke: #536078; stroke-width: 1.8; fill: none; }
+  .line-heavy { stroke: #172033; stroke-width: 3; fill: none; }
+  .line-a { stroke: #007c78; stroke-width: 3; fill: none; }
+  .line-b { stroke: #3563c4; stroke-width: 3; fill: none; }
+  .line-violet { stroke: #6c4ccf; stroke-width: 3; fill: none; }
+  .line-amber { stroke: #c97619; stroke-width: 3; fill: none; }
+  .line-red { stroke: #b34e45; stroke-width: 3; fill: none; }
+  .line-muted { stroke: #aab4c4; stroke-width: 1.3; fill: none; }
+  .dash { stroke-dasharray: 9 7; }
+  .dot { stroke-dasharray: 3 6; }
+  .grid { stroke: #dce2ec; stroke-width: 1; }
+  .grid-strong { stroke: #bdc7d7; stroke-width: 1.4; }
+  .atom-a { fill: #ffffff; stroke: #007c78; stroke-width: 2.2; }
+  .atom-b { fill: #ffffff; stroke: #3563c4; stroke-width: 2.2; }
+  .atom-neutral { fill: #ffffff; stroke: #637087; stroke-width: 1.8; }
+  .point-front { fill: #ffffff; stroke: #007c78; stroke-width: 3; }
+  .point-dominated { fill: #ffffff; stroke: #b34e45; stroke-width: 3; }
+  .point-selected { fill: #6c4ccf; stroke: #ffffff; stroke-width: 2; }
+  .fill-a { fill: #62b9b4; fill-opacity: 0.34; stroke: #007c78; stroke-width: 2.4; }
+  .fill-b { fill: #7f9ddd; fill-opacity: 0.28; stroke: #3563c4; stroke-width: 2.4; }
+  .fill-violet { fill: #9e86df; fill-opacity: 0.25; stroke: #6c4ccf; stroke-width: 2.4; }
+  .fill-amber { fill: #e5a153; fill-opacity: 0.28; stroke: #c97619; stroke-width: 2.4; }
+  .fill-red { fill: #d88881; fill-opacity: 0.22; stroke: #b34e45; stroke-width: 2.4; }
+  .surface-plane { fill: #e5a153; fill-opacity: 0.34; stroke: #c97619; stroke-width: 2.2; }
+  .vacuum { fill: url(#vacuum-hatch); stroke: #aab4c4; stroke-width: 1.4; }
+  .badge { fill: #ffffff; stroke: #bdc7d7; stroke-width: 1.4; }
+  .title { font: 700 28px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #172033; letter-spacing: -0.25px; }
+  .panel-title { font: 700 19px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #172033; }
+  .label { font: 650 16px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #172033; }
+  .body { font: 15.5px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #38445a; }
+  .small { font: 13.5px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #5c677b; }
+  .tiny { font: 12px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #68748a; }
+  .math { font: italic 17px Cambria, Georgia, 'Times New Roman', serif; fill: #172033; }
+  .math-small { font: italic 14px Cambria, Georgia, 'Times New Roman', serif; fill: #38445a; }
+  .step { font: 700 14px Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; fill: #ffffff; }
+  .white { fill: #ffffff; }
+  .a-text { fill: #006e6a; }
+  .b-text { fill: #2d55aa; }
+  .violet-text { fill: #5f40b8; }
+  .amber-text { fill: #a95d10; }
+  .red-text { fill: #963d36; }
+</style>
+<defs>
+
+  <marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#172033"/></marker>
+  <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#536078"/></marker>
+  <marker id="arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#007c78"/></marker>
+  <marker id="arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#3563c4"/></marker>
+  <marker id="arrow-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#6c4ccf"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#c97619"/></marker>
+  <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#b34e45"/></marker>
+  <pattern id="vacuum-hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#f8fafc"/><line x1="0" y1="0" x2="0" y2="12" stroke="#dce2ec" stroke-width="3"/></pattern>
+  <pattern id="dominated-hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" fill="#f8e6e4" fill-opacity="0.55"/><line x1="0" y1="0" x2="0" y2="10" stroke="#d88881" stroke-width="2"/></pattern>
+
+
+</defs>
+<rect class="canvas" width="1440" height="780" rx="24"/>
+<text x="56" y="52" class="title">Interfacial quantities differ because their reference processes differ</text>
+<rect x="485" y="92" width="470" height="190" rx="16" class="panel-violet" />
+<text x="720" y="128" class="panel-title violet-text" text-anchor="middle">coherent interface state</text>
+<text x="720" y="154" class="small" text-anchor="middle">E_int · common in-plane cell · n_int interfaces</text>
+<circle cx="565" cy="188" r="7" class="atom-a" />
+<circle cx="603" cy="188" r="7" class="atom-a" />
+<circle cx="641" cy="188" r="7" class="atom-a" />
+<circle cx="679" cy="188" r="7" class="atom-a" />
+<circle cx="717" cy="188" r="7" class="atom-a" />
+<circle cx="755" cy="188" r="7" class="atom-a" />
+<circle cx="793" cy="188" r="7" class="atom-a" />
+<circle cx="831" cy="188" r="7" class="atom-a" />
+<circle cx="869" cy="188" r="7" class="atom-a" />
+<circle cx="565" cy="214" r="7" class="atom-a" />
+<circle cx="603" cy="214" r="7" class="atom-a" />
+<circle cx="641" cy="214" r="7" class="atom-a" />
+<circle cx="679" cy="214" r="7" class="atom-a" />
+<circle cx="717" cy="214" r="7" class="atom-a" />
+<circle cx="755" cy="214" r="7" class="atom-a" />
+<circle cx="793" cy="214" r="7" class="atom-a" />
+<circle cx="831" cy="214" r="7" class="atom-a" />
+<circle cx="869" cy="214" r="7" class="atom-a" />
+<line x1="545" y1="228" x2="895" y2="228" class="line-violet"/>
+<circle cx="565" cy="244" r="7" class="atom-b" />
+<circle cx="603" cy="244" r="7" class="atom-b" />
+<circle cx="641" cy="244" r="7" class="atom-b" />
+<circle cx="679" cy="244" r="7" class="atom-b" />
+<circle cx="717" cy="244" r="7" class="atom-b" />
+<circle cx="755" cy="244" r="7" class="atom-b" />
+<circle cx="793" cy="244" r="7" class="atom-b" />
+<circle cx="831" cy="244" r="7" class="atom-b" />
+<circle cx="869" cy="244" r="7" class="atom-b" />
+<circle cx="565" cy="270" r="7" class="atom-b" />
+<circle cx="603" cy="270" r="7" class="atom-b" />
+<circle cx="641" cy="270" r="7" class="atom-b" />
+<circle cx="679" cy="270" r="7" class="atom-b" />
+<circle cx="717" cy="270" r="7" class="atom-b" />
+<circle cx="755" cy="270" r="7" class="atom-b" />
+<circle cx="793" cy="270" r="7" class="atom-b" />
+<circle cx="831" cy="270" r="7" class="atom-b" />
+<circle cx="869" cy="270" r="7" class="atom-b" />
+<text x="530" y="209" class="label a-text" text-anchor="end">A</text>
+<text x="530" y="263" class="label b-text" text-anchor="end">B</text>
+<path d="M 720 282 C 720 330, 245 330, 245 386" class="line-a" marker-end="url(#arrow-a)"/>
+<path d="M 720 282 C 720 330, 720 330, 720 386" class="line-amber" marker-end="url(#arrow-amber)"/>
+<path d="M 720 282 C 720 330, 1195 330, 1195 386" class="line-b" marker-end="url(#arrow-b)"/>
+<rect x="44" y="390" width="400" height="300" rx="16" class="panel-a" />
+<text x="244" y="430" class="panel-title a-text" text-anchor="middle">strained-bulk references</text>
+<text x="244" y="458" class="label" text-anchor="middle">interface excess energy</text>
+<rect x="89" y="492" width="130" height="82" rx="8" class="panel-white" />
+<rect x="269" y="492" width="130" height="82" rx="8" class="panel-white" />
+<circle cx="112" cy="520" r="6" class="atom-a" />
+<circle cx="292" cy="548" r="6" class="atom-b" />
+<circle cx="140" cy="520" r="6" class="atom-a" />
+<circle cx="320" cy="548" r="6" class="atom-b" />
+<circle cx="168" cy="520" r="6" class="atom-a" />
+<circle cx="348" cy="548" r="6" class="atom-b" />
+<circle cx="196" cy="520" r="6" class="atom-a" />
+<circle cx="376" cy="548" r="6" class="atom-b" />
+<text x="154" y="598" class="small" text-anchor="middle">compatible strained A</text>
+<text x="334" y="598" class="small" text-anchor="middle">compatible strained B</text>
+<text x="244" y="635" class="math-small" text-anchor="middle">E_int − m_A μ_A − m_B μ_B</text>
+<text x="244" y="663" class="label" text-anchor="middle">divide by A × n_int</text>
+<rect x="495" y="390" width="400" height="300" rx="16" class="panel-amber" />
+<text x="695" y="430" class="panel-title amber-text" text-anchor="middle">cleaved unrelaxed surfaces</text>
+<text x="695" y="458" class="label" text-anchor="middle">work of separation</text>
+<line x1="550" y1="520" x2="670" y2="520" class="line-a"/>
+<line x1="720" y1="548" x2="840" y2="548" class="line-b"/>
+<circle cx="567" cy="505" r="6" class="atom-a" />
+<circle cx="737" cy="563" r="6" class="atom-b" />
+<circle cx="595" cy="505" r="6" class="atom-a" />
+<circle cx="765" cy="563" r="6" class="atom-b" />
+<circle cx="623" cy="505" r="6" class="atom-a" />
+<circle cx="793" cy="563" r="6" class="atom-b" />
+<circle cx="651" cy="505" r="6" class="atom-a" />
+<circle cx="821" cy="563" r="6" class="atom-b" />
+<text x="695" y="598" class="small" text-anchor="middle">same coordinates immediately after cleavage</text>
+<text x="695" y="635" class="math-small" text-anchor="middle">E_A^unrel + E_B^unrel − E_int</text>
+<text x="695" y="663" class="label" text-anchor="middle">divide by A × n_int</text>
+<rect x="946" y="390" width="400" height="300" rx="16" class="panel-b" />
+<text x="1146" y="430" class="panel-title b-text" text-anchor="middle">independently relaxed surfaces</text>
+<text x="1146" y="458" class="label" text-anchor="middle">work of adhesion</text>
+<line x1="1001" y1="520" x2="1121" y2="520" class="line-a"/>
+<line x1="1171" y1="548" x2="1291" y2="548" class="line-b"/>
+<circle cx="1018" cy="505" r="6" class="atom-a" />
+<circle cx="1188" cy="563" r="6" class="atom-b" />
+<circle cx="1046" cy="505" r="6" class="atom-a" />
+<circle cx="1216" cy="563" r="6" class="atom-b" />
+<circle cx="1074" cy="505" r="6" class="atom-a" />
+<circle cx="1244" cy="563" r="6" class="atom-b" />
+<circle cx="1102" cy="505" r="6" class="atom-a" />
+<circle cx="1272" cy="563" r="6" class="atom-b" />
+<path d="M 1001 520 Q 1061 506 1121 520" class="line-a" />
+<path d="M 1171 548 Q 1231 562 1291 548" class="line-b" />
+<text x="1146" y="598" class="small" text-anchor="middle">two converged fixed-cell relaxations</text>
+<text x="1146" y="635" class="math-small" text-anchor="middle">E_A^rel + E_B^rel − E_int</text>
+<text x="1146" y="663" class="label" text-anchor="middle">divide by A × n_int</text>
+<text x="720" y="742" class="body" text-anchor="middle">Raw total energies are saved separately; the convention determines the derived thermodynamic quantity.</text>
+</svg>

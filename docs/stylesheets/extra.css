@@ -1,0 +1,298 @@
+/*
+ * CALM documentation typography and page components.
+ *
+ * The theme owns navigation, search, and controls. These rules tune only the
+ * article surface and reusable documentation components.
+ */
+
+:root {
+  --calm-article-font-size: 15px;
+  --calm-article-line-height: 1.65;
+  --calm-panel-radius: 0.65rem;
+  --calm-panel-border: var(--md-default-fg-color--lightest);
+  --calm-panel-shadow: 0 0.25rem 0.9rem rgb(23 32 51 / 8%);
+}
+
+.md-content .md-typeset {
+  font-size: var(--calm-article-font-size);
+  line-height: var(--calm-article-line-height);
+}
+
+.md-content .md-typeset > h1 {
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.md-content .md-typeset > h2 {
+  margin-top: 2.2em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-content .md-typeset > h3 {
+  margin-top: 1.7em;
+}
+
+.md-content .md-typeset .calm-lede {
+  max-width: 58rem;
+  margin-top: 0;
+  margin-bottom: 1.35rem;
+  color: var(--md-default-fg-color--light);
+  font-size: 1.08em;
+  line-height: 1.6;
+}
+
+/* Landing-page and section-index cards. */
+.md-content .md-typeset .calm-card-grid > ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin: 1.2rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.md-content .md-typeset .calm-card-grid > ul > li {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem 1.05rem;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--calm-panel-border);
+  border-radius: var(--calm-panel-radius);
+  box-shadow: var(--calm-panel-shadow);
+}
+
+.md-content .md-typeset .calm-card-grid > ul > li > :first-child {
+  margin-top: 0;
+}
+
+.md-content .md-typeset .calm-card-grid > ul > li > :last-child {
+  margin-bottom: 0;
+}
+
+.md-content .md-typeset .calm-card-grid > ul > li > strong:first-child {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--md-default-fg-color);
+  font-size: 1.02em;
+}
+
+.md-content .md-typeset .calm-card-grid--compact > ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Compact facts at the start of tutorials and executable guides. */
+.md-content .md-typeset .calm-page-facts > ul,
+.md-content .md-typeset .calm-api-meta > ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.25rem 1.25rem;
+  margin: 1rem 0 1.45rem;
+  padding: 0.8rem 1rem;
+  list-style: none;
+  background: var(--md-code-bg-color);
+  border-left: 0.2rem solid var(--md-primary-fg-color);
+  border-radius: 0 var(--calm-panel-radius) var(--calm-panel-radius) 0;
+}
+
+.md-content .md-typeset .calm-page-facts > ul > li,
+.md-content .md-typeset .calm-api-meta > ul > li {
+  margin: 0.15rem 0;
+}
+
+.md-content .md-typeset .calm-api-meta > ul {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+}
+
+.md-content .md-typeset .calm-link-grid > ul {
+  columns: 2 20rem;
+  column-gap: 2rem;
+  margin-top: 0.7rem;
+}
+
+.md-content .md-typeset .calm-link-grid > ul > li {
+  break-inside: avoid;
+  margin-bottom: 0.45rem;
+}
+
+/* Keep supporting technical material compact but readable relative to prose. */
+.md-content .md-typeset table:not([class]),
+.md-content .md-typeset .admonition,
+.md-content .md-typeset details {
+  font-size: 0.875em;
+}
+
+/* Wide tables remain usable without widening the article or viewport. */
+.md-content .md-typeset .md-typeset__table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.md-content .md-typeset table:not([class]) th {
+  white-space: nowrap;
+}
+
+.md-content .md-typeset table:not([class]) td,
+.md-content .md-typeset table:not([class]) th {
+  vertical-align: top;
+}
+
+/* Inline identifiers may wrap; source code and terminal blocks should not. */
+.md-content .md-typeset :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
+.md-content .md-typeset pre > code {
+  overflow-wrap: normal;
+}
+
+/* Long equations should scroll rather than force the article wider. */
+.md-content .md-typeset div.arithmatex {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.1rem;
+}
+
+/* Scientific figures use one responsive treatment across long-form pages. */
+.md-content .md-typeset .calm-figure {
+  margin: 1.6rem auto 1.9rem;
+  max-width: 100%;
+}
+
+.md-content .md-typeset .calm-figure__scroll-hint {
+  display: none;
+}
+
+.md-content .md-typeset .calm-figure > p {
+  margin: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  background: #fcfdff;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.65rem;
+  box-shadow: 0 0.25rem 0.9rem rgb(23 32 51 / 8%);
+  scrollbar-gutter: stable;
+}
+
+.md-content .md-typeset .calm-figure a {
+  display: block;
+  line-height: 0;
+}
+
+.md-content .md-typeset .calm-figure a:focus-visible {
+  outline: 3px solid var(--md-accent-fg-color);
+  outline-offset: 3px;
+}
+
+.md-content .md-typeset .calm-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0.65rem;
+}
+
+.md-content .md-typeset .calm-figure figcaption {
+  max-width: 64rem;
+  margin: 0.7rem 0.25rem 0;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.9em;
+  font-style: normal;
+  line-height: 1.55;
+  text-align: left;
+}
+
+@media screen and (max-width: 59.984375em) {
+  .md-content .md-typeset .calm-card-grid > ul,
+  .md-content .md-typeset .calm-card-grid--compact > ul,
+  .md-content .md-typeset .calm-api-meta > ul {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Preserve a comfortable touch-reading size on narrow screens. */
+@media screen and (max-width: 44.984375em) {
+  :root {
+    --calm-article-font-size: 16px;
+    --calm-article-line-height: 1.6;
+  }
+
+  .md-content .md-typeset > h2 {
+    margin-top: 1.9em;
+  }
+
+  .md-content .md-typeset .calm-card-grid > ul,
+  .md-content .md-typeset .calm-card-grid--compact > ul,
+  .md-content .md-typeset .calm-page-facts > ul,
+  .md-content .md-typeset .calm-api-meta > ul {
+    grid-template-columns: 1fr;
+  }
+
+  .md-content .md-typeset .calm-card-grid > ul > li {
+    padding: 0.9rem;
+  }
+
+  .md-content .md-typeset .calm-figure {
+    margin-block: 1.15rem 1.5rem;
+  }
+
+  .md-content .md-typeset .calm-figure--wide .calm-figure__scroll-hint {
+    display: block;
+    margin: 0 0 0.35rem;
+    color: var(--md-default-fg-color--light);
+    font-size: 0.8em;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .md-content .md-typeset .calm-figure--wide img {
+    min-width: 46rem;
+  }
+
+  .md-content .md-typeset .calm-figure figcaption {
+    margin-inline: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-content .md-typeset * {
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .md-content .md-typeset {
+    font-size: 10pt;
+    line-height: 1.45;
+  }
+
+  .md-content .md-typeset .calm-card-grid > ul,
+  .md-content .md-typeset .calm-card-grid--compact > ul,
+  .md-content .md-typeset .calm-page-facts > ul,
+  .md-content .md-typeset .calm-api-meta > ul {
+    display: block;
+  }
+
+  .md-content .md-typeset .calm-card-grid > ul > li {
+    margin-bottom: 0.6rem;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .md-content .md-typeset .calm-figure > p {
+    overflow: visible;
+    box-shadow: none;
+  }
+
+  .md-content .md-typeset .calm-figure img {
+    min-width: 0;
+  }
+}

@@ -1,0 +1,49 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 4 --- Comparison (Phase 4)}
+
+\subsection{Mathematical Proposition}
+
+Stable identifiers and provenance augment a Termination Set without
+changing the represented scientific objects.
+
+\subsection{Implementation}
+
+The implementation assigns labels and provenance only after the
+Termination Set has been canonicalized.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.30\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Termination identity preserved & Implemented\\
+Stable labeling added & Implemented\\
+Provenance retained & Implemented\\
+Scientific object unchanged & Consistent with specification\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Evidence includes:
+
+\begin{itemize}
+\item Stage 2 mathematical specification.
+\item Stage 3 implementation review.
+\item Documented implementation workflow.
+\end{itemize}
+
+\subsection{Audit Result}
+
+No discrepancy identified. The implementation treats labeling and
+provenance as representation augmentation rather than scientific
+transformation.
+
+\subsection{Stage 4 Status}
+
+All implementation phases have now been compared against the
+mathematical specification. Stage 4 is complete.

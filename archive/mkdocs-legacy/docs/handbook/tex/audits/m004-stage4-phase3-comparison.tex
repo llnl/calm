@@ -1,0 +1,44 @@
+\chapter{M004 --- Surface Termination Selection}
+
+\section{Stage 4 --- Comparison (Phase 3)}
+
+\subsection{Mathematical Proposition}
+
+Recording provenance augments a selected Surface Termination with
+reproducibility metadata without modifying the scientific object.
+
+\subsection{Implementation}
+
+The implementation records labels, identifiers, and provenance only
+after a termination has been selected.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.30\linewidth}|}
+\hline
+Requirement & Status\\
+\hline
+Termination identity preserved & Implemented\\
+Selection provenance recorded & Implemented\\
+Scientific object unchanged & Consistent\\
+Representation augmented & Yes\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Stage 2 specification, Stage 3 implementation review, documented
+implementation workflow.
+
+\subsection{Audit Result}
+
+No discrepancy identified. Provenance recording is correctly interpreted
+as a representation transformation preserving the selected scientific
+object.
+
+\subsection{Stage 4 Status}
+
+All implementation phases have now been compared against the
+mathematical specification. Stage 4 is complete.

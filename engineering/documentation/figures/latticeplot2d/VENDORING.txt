@@ -1,0 +1,19 @@
+# Vendored latticeplot2d documentation tool
+
+This directory contains the source of `latticeplot2d` 0.4.0, integrated into
+CALM as repository-owned documentation tooling.
+
+- **Role:** generate two-dimensional crystallographic figures for the MkDocs
+  site.
+- **Distribution boundary:** this directory is not part of the installable
+  `calm` Python package and does not add a CALM runtime dependency.
+- **Dependencies:** NumPy and Matplotlib. Matplotlib is already available
+  through CALM's existing `plot` optional environment.
+- **License:** MIT; see `latticeplot2d-MIT.txt` in this directory.
+- **Import boundary:** figure recipes must import this vendored copy through
+  `engineering/documentation/figures`, not an externally installed
+  `latticeplot2d` distribution.
+
+When updating the vendored source, preserve the license, run the lattice-tool
+regression tests, regenerate the owned SVG assets, and inspect the rendered
+MkDocs pages.

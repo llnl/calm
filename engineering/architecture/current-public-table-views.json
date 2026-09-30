@@ -1,0 +1,559 @@
+{
+  "authorities": {
+    "canonical_projection_root": "calm/public/projections",
+    "collection_base": "calm/public/collections/base.py:_BaseCollection",
+    "collection_projection": "calm/public/collections/views.py",
+    "database_schema": "calm/project/infrastructure/db/tables.py",
+    "renderer": "calm/project/presentation/notebook.py:display_table",
+    "sql_view_objects": false
+  },
+  "current_export_behavior": {
+    "collection_dataframe_columns": "resolved_named_view_schema",
+    "collection_display_columns": "resolved_named_view_schema",
+    "collection_empty_csv": "resolved_named_view_header",
+    "collection_include_exclude": "validated_after_named_view_resolution",
+    "collection_rows": "homogeneous_ordered_schema",
+    "collection_unknown_view": "raises_with_supported_views",
+    "collection_write_table_columns": "resolved_named_view_schema",
+    "direct_renderer_columns": "explicit_include_or_sorted_union",
+    "dynamic_empty_collection_csv": "declared_base_header_plus_domain_columns",
+    "public_schema_selector": "named_view_only",
+    "result_dataframe_columns": "resolved_named_view_schema",
+    "result_display_columns": "resolved_named_view_schema",
+    "result_empty_csv": "resolved_named_view_header",
+    "result_include_exclude": "validated_after_named_view_resolution",
+    "result_rows": "homogeneous_ordered_schema",
+    "result_unknown_view": "raises_with_supported_views",
+    "result_write_table_columns": "resolved_named_view_schema",
+    "retired_table_selector": "rejected_by_signature"
+  },
+  "current_view_owners": {
+    "ArtifactCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.ArtifactCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.persistence_views.ARTIFACT_VIEW_SPECS over normalize_artifact_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "CampaignCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.campaigns.CampaignCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.campaign_views.CAMPAIGN_VIEW_SPECS over normalize_campaign_row",
+      "source": "calm/public/collections/campaigns.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "CampaignRunCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.CampaignRunCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.campaign_views.CAMPAIGN_RUN_VIEW_SPECS over normalize_campaign_run_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "CampaignWorkflowResult": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.inputs.campaigns.CampaignWorkflowResult",
+      "recognized_views": [
+        "all",
+        "comparison",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.campaign_views.CAMPAIGN_RESULT_VIEW_SPECS over CampaignCaseResult rows",
+      "source": "calm/public/inputs/campaigns.py",
+      "target_views": [
+        "all",
+        "comparison",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "CandidateCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.candidates.CandidateCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.candidate_views.CANDIDATE_VIEW_SPECS over normalize_candidate_row",
+      "source": "calm/public/collections/candidates.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "DatasetCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.datasets.DatasetCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.dataset_views.DATASET_VIEW_SPECS over normalize_dataset_row",
+      "source": "calm/public/collections/datasets.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "DatasetItemCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.DatasetItemCollection",
+      "recognized_views": [
+        "all",
+        "features",
+        "full",
+        "learning",
+        "ml",
+        "model",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.dataset_views.DATASET_ITEM_VIEW_SPECS over normalize_dataset_item_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "learning",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "EdgeCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.EdgeCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.persistence_views.EDGE_VIEW_SPECS over normalize_edge_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "EnergyResultCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.EnergyResultCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.RAW_ENERGY_RESULT_VIEW_SPECS over ProjectEnergyResult.to_dict",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "EnergyWorkflowResult": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.followups.EnergyWorkflowResult",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "kind-specific result view registries over delegated raw and thermodynamic rows",
+      "source": "calm/public/records/followups.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "FollowupCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.FollowupCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.persistence_views.FOLLOWUP_VIEW_SPECS over normalize_followup_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "InterfaceCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.interfaces.InterfaceCollection",
+      "recognized_views": [
+        "all",
+        "construction",
+        "full",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.interface_views.INTERFACE_VIEW_SPECS over normalize_interface_public_row and validated atomistic deformation diagnostics",
+      "source": "calm/public/collections/interfaces.py",
+      "target_views": [
+        "all",
+        "construction",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "InterfaceSearchResult": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.interfaces.InterfaceSearchResult",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.candidate_views.CANDIDATE_VIEW_SPECS over normalize_candidate_row",
+      "source": "calm/public/records/interfaces.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "strain",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "MaterialCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.structures.MaterialCollection",
+      "recognized_views": [
+        "all",
+        "characterization",
+        "characterization_all",
+        "characterizations",
+        "summary"
+      ],
+      "row_schema_owner": "MaterialCollection ViewSpec registry over canonical and typed characterization rows",
+      "source": "calm/public/collections/structures.py",
+      "target_views": [
+        "all",
+        "characterization",
+        "characterization_all",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "ProjectDataset": {
+      "default_view": "learning",
+      "qualified_name": "calm.public.records.persistence.ProjectDataset",
+      "recognized_views": [
+        "all",
+        "features",
+        "full",
+        "learning",
+        "ml",
+        "model",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "delegated calm.public.records.dataset_views.DATASET_ITEM_VIEW_SPECS",
+      "source": "calm/public/records/persistence.py",
+      "target_views": [
+        "all",
+        "learning",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "delegated"
+    },
+    "ReferenceEnergyResultCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.ReferenceEnergyResultCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.REFERENCE_ENERGY_RESULT_VIEW_SPECS over ProjectReferenceEnergyResult.to_dict",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "ReferenceEnergyWorkflowResult": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.followups.ReferenceEnergyWorkflowResult",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.REFERENCE_ENERGY_RESULT_VIEW_SPECS over delegated reference-energy rows",
+      "source": "calm/public/records/followups.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "RegistrySearchRun": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.followups.RegistrySearchRun",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.REGISTRY_SEARCH_VIEW_SPECS over exact-current registry result rows",
+      "source": "calm/public/records/followups.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "RelaxationResultCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.RelaxationResultCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.RELAXATION_RESULT_VIEW_SPECS over ProjectRelaxationResult.to_dict",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "RelaxationWorkflowResult": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.followups.RelaxationWorkflowResult",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.RELAXATION_RESULT_VIEW_SPECS over delegated relaxation rows",
+      "source": "calm/public/records/followups.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "RunCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.RunCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.persistence_views.RUN_VIEW_SPECS over normalize_run_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "SearchCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.SearchCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.persistence_views.SEARCH_VIEW_SPECS over normalize_search_row",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "StrainPartitionScan": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.records.followups.StrainPartitionScan",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.STRAIN_PARTITION_VIEW_SPECS over exact-current scan points",
+      "source": "calm/public/records/followups.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "SurfaceCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.structures.SurfaceCollection",
+      "recognized_views": [
+        "all",
+        "characterization",
+        "characterization_all",
+        "characterizations",
+        "summary"
+      ],
+      "row_schema_owner": "SurfaceCollection ViewSpec registry over canonical and typed characterization rows",
+      "source": "calm/public/collections/structures.py",
+      "target_views": [
+        "all",
+        "characterization",
+        "characterization_all",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    },
+    "ThermodynamicResultCollection": {
+      "default_view": "summary",
+      "qualified_name": "calm.public.collections.persistence.ThermodynamicResultCollection",
+      "recognized_views": [
+        "all",
+        "full",
+        "provenance",
+        "summary"
+      ],
+      "row_schema_owner": "calm.public.records.result_views.THERMODYNAMIC_RESULT_VIEW_SPECS over ProjectThermodynamicResult.to_dict",
+      "source": "calm/public/collections/persistence.py",
+      "target_views": [
+        "all",
+        "provenance",
+        "summary"
+      ],
+      "unknown_view_behavior": "raises"
+    }
+  },
+  "known_defects": [],
+  "projection_foundation": {
+    "dynamic_schema_policy": "declared_base_plus_domain_extra_columns",
+    "projection_type": "calm.public.collections.views.ResolvedTableProjection",
+    "public_schema_selector": "named_view_only",
+    "renderer_schema_policy": "format_only_with_explicit_include",
+    "result_projection_mixin": "calm.public.records.tabular.TabularResultMixin",
+    "shared_collection_methods": [
+      "to_dataframe",
+      "to_rows",
+      "to_table",
+      "write_table"
+    ],
+    "shared_result_methods": [
+      "to_dataframe",
+      "to_rows",
+      "to_table",
+      "write_table"
+    ],
+    "spec_type": "calm.public.collections.views.ViewSpec",
+    "unknown_collection_view": "raises_with_supported_views",
+    "unknown_result_view": "raises_with_supported_views"
+  },
+  "retired_table_presets": [
+    "artifacts",
+    "bulks",
+    "calculators",
+    "edges",
+    "followups",
+    "interfaces",
+    "prototypes",
+    "runs",
+    "slabs"
+  ],
+  "schema_version": "calm.public_table_views.v8",
+  "target_invariants": [
+    "canonical scientific values are not presentation formatted",
+    "direct renderer column selection is explicit generic formatting rather than domain schema inference",
+    "empty exports preserve the resolved view header",
+    "examples do not own domain table schemas",
+    "extensible views declare stable base headers and domain extra columns",
+    "in_memory and persisted records share domain view registries",
+    "include and exclude apply after named view resolution",
+    "internal provenance appears only in explicit provenance or all views",
+    "legacy table presets and persistence-named row-shape inference are retired",
+    "named views are the sole public domain schema selector",
+    "one named view has one ordered schema across rows tables dataframes and csv",
+    "public view names use scientific domain language rather than sql table names",
+    "renderers format values but do not select or derive scientific fields",
+    "summary is the ordinary reader-facing view and default where available",
+    "unknown columns and unknown views raise explicit errors"
+  ],
+  "temporary_example_schema_constants": {}
+}

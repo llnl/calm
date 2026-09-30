@@ -1,0 +1,61 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 3 --- Implementation Review (Phase 3)}
+
+\subsection{Reviewed Transformation}
+
+Construction of the exact primitive kernel/B\'ezout triplet
+$(u,v,w)$.
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Primitive Miller covector.
+\item Verified primitive reciprocal basis.
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A certified integer triplet $(u,v,w)$ where
+
+\[
+m\cdot u = 0,\qquad
+m\cdot v = 0,\qquad
+m\cdot w = 1,
+\]
+
+with $(u,v)$ spanning the primitive integer kernel.
+
+\subsection{Algorithmic Role}
+
+This phase constructs the exact integer objects required for all
+subsequent geometric operations. Unlike floating-point surface
+generation, all calculations remain in the integer lattice.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Scientific transformation.
+\item Exact integer-lattice construction.
+\item No representation change.
+\item No gauge operation.
+\end{itemize}
+
+\subsection{Relationship to M001}
+
+This phase reuses the mathematical ideas established in M001:
+
+\begin{itemize}
+\item Primitive kernel construction.
+\item Bézout witness construction.
+\item Exact unimodular reasoning.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Does the implementation construct a primitive kernel basis?
+\item Is the Bézout witness mathematically certified?
+\item Are all integer invariants preserved throughout the construction?
+\end{enumerate}

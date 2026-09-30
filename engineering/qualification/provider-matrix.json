@@ -1,0 +1,124 @@
+{
+  "schema_version": "calm.provider_qualification_matrix.v1",
+  "report_schema_version": "calm.provider_qualification_report.v1",
+  "provider_contract": {
+    "family": "ase",
+    "model": "EMT",
+    "device": "cpu",
+    "support_scope": "ASE EMT CPU baseline provider plumbing only",
+    "required_evidence": [
+      "construction",
+      "relaxation",
+      "energy",
+      "provenance"
+    ]
+  },
+  "profiles": {
+    "ase-emt-cpu-baseline": {
+      "description": "Construct ASE EMT, evaluate energy, relax a perturbed Al cell, and persist calculator provenance through the public project API.",
+      "checks": [
+        {
+          "id": "ase-emt-end-to-end-evidence",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_ase_emt_provider.py",
+            "--output",
+            "{report_dir}/ase-emt-evidence.json",
+            "--work-root",
+            "{report_dir}/ase-emt-work"
+          ],
+          "requires_modules": [
+            "ase",
+            "numpy",
+            "sqlalchemy"
+          ],
+          "timeout_seconds": 1200,
+          "evidence": [
+            "construction",
+            "relaxation",
+            "energy",
+            "provenance"
+          ]
+        }
+      ]
+    }
+  },
+  "cells": [
+    {
+      "id": "macos-arm64-py310-ase-emt",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.10",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "macos-arm64-py311-ase-emt",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.11",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "macos-arm64-py312-ase-emt",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.12",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "linux-x86_64-py310-ase-emt",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.10",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "secondary"
+    },
+    {
+      "id": "linux-x86_64-py311-ase-emt",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.11",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "secondary"
+    },
+    {
+      "id": "linux-x86_64-py312-ase-emt",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.12",
+      "profiles": [
+        "ase-emt-cpu-baseline"
+      ],
+      "required": true,
+      "tier": "secondary"
+    }
+  ],
+  "source_policy": {
+    "require_git_commit": true,
+    "require_clean_git": true
+  },
+  "evidence_distributions": [
+    "calm",
+    "numpy",
+    "sqlalchemy",
+    "ase"
+  ]
+}

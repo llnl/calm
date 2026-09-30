@@ -1,0 +1,47 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 4 --- Comparison (Phase 1)}
+
+\subsection{Mathematical Proposition}
+
+A valid conventional-to-primitive basis transformation produces a
+primitive lattice basis representing the same crystal lattice.
+
+\subsection{Implementation}
+
+The implementation first rationalizes and verifies the supplied
+conventional-to-primitive transformation before subsequent surface
+construction proceeds.
+
+\subsection{Comparison}
+
+\begin{tabular}{|p{0.38\linewidth}|p{0.42\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Equivalent lattice representation & Implemented\\
+Primitive basis required & Explicitly verified\\
+Transformation precedes later stages & Yes\\
+Scientific object changed & No; basis representation changes while crystal identity is preserved\\
+\hline
+\end{tabular}
+
+\subsection{Evidence}
+
+Evidence currently available:
+
+\begin{itemize}
+\item Module algorithm description.
+\item Explicit verification step documented by the implementation.
+\item Stage 3 implementation review.
+\end{itemize}
+
+\subsection{Audit Result}
+
+No discrepancy has been identified for Phase~1.
+
+The remaining question is whether the verification performed by the
+implementation is mathematically sufficient for all admissible primitive
+basis transformations. This will be revisited during Stage~5 if
+additional evidence is required.

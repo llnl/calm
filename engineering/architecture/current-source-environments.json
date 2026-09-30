@@ -1,0 +1,132 @@
+{
+  "dependency_profiles": {
+    "base": {
+      "imports": {
+        "numpy": "numpy",
+        "sqlalchemy": "sqlalchemy"
+      },
+      "source": "project.dependencies"
+    },
+    "science": {
+      "imports": {
+        "ase": "ase",
+        "scipy": "scipy",
+        "spglib": "spglib"
+      },
+      "source": "project.optional-dependencies.science"
+    }
+  },
+  "owned_files": [
+    "README.md",
+    "calm-chgnet.yml",
+    "calm-grace.yml",
+    "calm-mace.yml",
+    "calm-science.yml",
+    "validate_environment.py"
+  ],
+  "provider_profiles": {
+    "ase": {
+      "distribution_imports": {},
+      "environment_name": "calm-science",
+      "external_runtime_required": false,
+      "extra": null,
+      "import_any": [],
+      "recipe": "calm-science.yml",
+      "required_imports": [
+        "ase"
+      ],
+      "runtime_scope": "ase_builtin_calculators"
+    },
+    "chgnet": {
+      "distribution_imports": {
+        "chgnet": "chgnet"
+      },
+      "environment_name": "calm-chgnet",
+      "external_runtime_required": false,
+      "extra": "chgnet",
+      "import_any": [],
+      "recipe": "calm-chgnet.yml",
+      "required_imports": [],
+      "runtime_scope": "dependency_and_registry_availability"
+    },
+    "grace": {
+      "distribution_imports": {
+        "tensorpotential": "tensorpotential"
+      },
+      "environment_name": "calm-grace",
+      "external_runtime_required": false,
+      "extra": "grace",
+      "import_any": [],
+      "recipe": "calm-grace.yml",
+      "required_imports": [],
+      "runtime_scope": "dependency_and_registry_availability"
+    },
+    "lammps": {
+      "distribution_imports": {},
+      "environment_name": "calm-science",
+      "external_runtime_required": true,
+      "extra": null,
+      "import_any": [
+        "ase.calculators.lammpslib",
+        "ase.calculators.lammpsrun"
+      ],
+      "recipe": "calm-science.yml",
+      "required_imports": [],
+      "runtime_scope": "ase_adapter_only"
+    },
+    "mace": {
+      "distribution_imports": {
+        "mace-torch": "mace"
+      },
+      "environment_name": "calm-mace",
+      "external_runtime_required": false,
+      "extra": "mace",
+      "import_any": [],
+      "recipe": "calm-mace.yml",
+      "required_imports": [],
+      "runtime_scope": "dependency_and_registry_availability"
+    }
+  },
+  "recipe_policy": {
+    "channels": [
+      "conda-forge",
+      "nodefaults"
+    ],
+    "include_pip": true,
+    "provider_dependency_source": "project.optional-dependencies",
+    "shared_dependency_profiles": [
+      "base",
+      "science"
+    ]
+  },
+  "recipes": {
+    "calm-chgnet.yml": {
+      "environment_name": "calm-chgnet",
+      "provider_extra": "chgnet"
+    },
+    "calm-grace.yml": {
+      "environment_name": "calm-grace",
+      "provider_extra": "grace"
+    },
+    "calm-mace.yml": {
+      "environment_name": "calm-mace",
+      "provider_extra": "mace"
+    },
+    "calm-science.yml": {
+      "environment_name": "calm-science",
+      "provider_extra": null
+    }
+  },
+  "schema_version": "calm.source_environments.v1",
+  "validation": {
+    "default_profile": "base",
+    "project_smoke": true,
+    "python_maximum_exclusive": "3.13",
+    "python_minimum": "3.10",
+    "supported_profiles": [
+      "base",
+      "provider",
+      "science"
+    ]
+  }
+}

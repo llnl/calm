@@ -1,0 +1,57 @@
+{
+  "about": {
+    "description_lines": [
+      "CALM is a stable Python library for deterministic interface enumeration,",
+      "systematic prototype search, and follow-up analysis for crystalline",
+      "solid-solid interfaces. The conda package mirrors the import-light base",
+      "Python distribution; atomistic and crystallographic workflows require",
+      "the separately managed science dependencies."
+    ],
+    "dev_url": "https://czgitlab.llnl.gov/weitzner/calm",
+    "doc_url": "https://czgitlab.llnl.gov/weitzner/calm/-/tree/main/docs",
+    "home": "https://czgitlab.llnl.gov/weitzner/calm",
+    "summary": "Canonicalized Affine-invariant Lattice Matching for Interface Models"
+  },
+  "build": {
+    "authority": "meta_yaml_script",
+    "noarch": "python",
+    "number": 0,
+    "script": "{{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation",
+    "subdir": "noarch"
+  },
+  "dependency_policy": {
+    "host": "python + pip + pyproject.build-system.requires",
+    "run": "python + pyproject.project.dependencies",
+    "science": "not_bundled"
+  },
+  "license_policy_authority": "engineering/architecture/current-python-distribution.json#license_policy",
+  "maintainers": [
+    "sweitzner"
+  ],
+  "owned_files": [
+    "README.md",
+    "meta.yaml",
+    "run_test.py"
+  ],
+  "package_name": "calm",
+  "profile": "local_source_base_package",
+  "publication": {
+    "release_recipe_required": true,
+    "source_digest_required": true,
+    "status": "internal_qualification_only"
+  },
+  "recipe_path": "conda-recipe/meta.yaml",
+  "schema_version": "calm.conda_package.v1",
+  "source": {
+    "kind": "local_path",
+    "path": "..",
+    "working_tree_policy": "clean_commit_required_for_qualification"
+  },
+  "test": {
+    "imports": [
+      "calm"
+    ],
+    "run_test": "conda-recipe/run_test.py",
+    "test_requirements": []
+  }
+}

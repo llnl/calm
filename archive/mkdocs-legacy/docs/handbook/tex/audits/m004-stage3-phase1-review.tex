@@ -1,0 +1,45 @@
+\chapter{M004 --- Surface Termination Selection}
+
+\section{Stage 3 --- Implementation Review (Phase 1)}
+
+\subsection{Reviewed Transformation}
+
+Evaluation of the surface-termination selection criterion.
+
+\subsection{Purpose}
+
+Identify how the implementation evaluates the selection criterion before
+choosing a single termination from a Termination Set.
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Termination Set
+\item Selection criterion
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A ranked or filtered set of admissible candidates suitable for final
+selection.
+
+\subsection{Algorithmic Role}
+
+This phase evaluates admissibility and selection policy only. It does
+not construct new scientific objects.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Decision procedure
+\item Representation-neutral
+\item No gauge operation
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is the implemented selection criterion identical to the mathematical specification?
+\item Is the policy deterministic?
+\item Is the criterion configurable?
+\end{enumerate}

@@ -1,0 +1,54 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 3 --- Implementation Review (Phase 5)}
+
+\subsection{Reviewed Transformation}
+
+Stacking-vector shear minimization while preserving the primitive-surface
+construction constraints.
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Certified primitive in-plane basis.
+\item Certified Bézout witness.
+\item Stacking vector satisfying the surface-frame constraints.
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A shear-minimized stacking vector representing the same crystallographic
+surface and preserving the primitive construction certificate.
+
+\subsection{Algorithmic Role}
+
+This phase improves the numerical and geometric quality of the slab
+representation without changing the represented primitive surface. The
+implementation seeks a preferred representative within an equivalence
+class rather than constructing a new scientific object.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Gauge transformation.
+\item Canonical representative selection.
+\item Representation improvement.
+\end{itemize}
+
+\subsection{Preserved Invariants}
+
+\begin{itemize}
+\item Primitive kernel certificate.
+\item Bézout constraint.
+\item Surface orientation.
+\item Primitive surface lattice.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is the shear minimization mathematically equivalent to a gauge transformation?
+\item Does every update preserve the Bézout witness exactly?
+\item Is the selected representative optimal under the documented metric?
+\end{enumerate}

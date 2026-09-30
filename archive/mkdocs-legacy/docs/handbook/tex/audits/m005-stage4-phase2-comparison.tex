@@ -1,0 +1,39 @@
+\chapter{M005 --- Slab Specification}
+
+\section{Stage 4 --- Comparison (Phase 2)}
+
+\subsection{Mathematical Proposition}
+
+Normalization maps equivalent slab specification parameterizations to a
+canonical representation while preserving the scientific specification.
+
+\subsection{Implementation}
+
+The implementation normalizes slab specification parameters after
+validation and before specification assembly.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.30\linewidth}|}
+\hline
+Requirement & Status\\
+\hline
+Scientific specification preserved & Implemented\\
+Equivalent representations normalized & Implemented\\
+Scientific object unchanged & Consistent\\
+Representation canonicalized & Yes\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Stage 2 specification, Stage 3 implementation review, documented
+implementation workflow.
+
+\subsection{Audit Result}
+
+No discrepancy identified. Parameter normalization is correctly
+interpreted as a representation transformation rather than a scientific
+transformation.

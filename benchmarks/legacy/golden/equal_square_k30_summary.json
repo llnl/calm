@@ -1,0 +1,92 @@
+{
+  "case": "equal_square",
+  "class_count": 6,
+  "first_discovery_indices": [
+    1,
+    5,
+    13,
+    17,
+    25,
+    29
+  ],
+  "implementation": "primitive_coupled_pair_v2",
+  "k_max": 30,
+  "oracle_status": "pass",
+  "pair_identity_policy": {
+    "correspondence_orientation": "proper",
+    "key_version": 1,
+    "material_exchange_identified": false,
+    "pair_symmetry_policy": "full"
+  },
+  "pair_identity_sha256": "f1cad1c15fb271cceedc3962692ecd6d738596a949b450d0b73b1f93893eca67",
+  "pair_key_sha256": "93ca22a9afdc152851c4093d536b3f2deea862502262190b5be013b54332e448",
+  "primitive_pair_keys": [
+    [
+      -1,
+      0,
+      0,
+      -1,
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      -4,
+      -3,
+      -3,
+      -1,
+      5,
+      3,
+      0,
+      1
+    ],
+    [
+      -12,
+      -7,
+      -5,
+      -4,
+      13,
+      8,
+      0,
+      1
+    ],
+    [
+      -15,
+      -11,
+      -8,
+      -7,
+      17,
+      13,
+      0,
+      1
+    ],
+    [
+      -24,
+      -17,
+      -7,
+      -6,
+      25,
+      18,
+      0,
+      1
+    ],
+    [
+      -21,
+      -13,
+      -20,
+      -11,
+      29,
+      17,
+      0,
+      1
+    ]
+  ],
+  "schema": "calm.coupled_match_qualification/v2",
+  "surface_operation_counts": {
+    "A": 8,
+    "B": 8
+  },
+  "surface_symmetry_mode": "explicit_fixture",
+  "symmetry_source": "full_square_d4"
+}

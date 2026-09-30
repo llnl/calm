@@ -1,0 +1,46 @@
+
+% Extension to M001
+\section{Implementation Audit}
+
+\subsection{Implementation Decomposition}
+
+The implementation realizes the mathematical construction as the composition
+\[
+\Phi=\phi_{\mathrm{orient}}\circ
+\phi_{\mathrm{permute}}\circ
+\phi_{\mathrm{Bezout}}\circ
+\phi_{\mathrm{primitive}}.
+\]
+
+\subsection{Procedure Traceability}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Procedure & Mathematical role & Classification\\
+\hline
+\texttt{\_reduce\_hkl()} & Primitive normalization & Scientific\\
+\texttt{\_extended\_gcd()} & Bézout coefficients & Algorithmic\\
+\texttt{\_right\_reduce\_row\_to\_hnf()} & Unimodular reduction & Scientific\\
+\texttt{surface\_basis\_S\_from\_hkl()} & Orchestration & Composite\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Verification Obligations}
+
+The implementation should establish:
+
+\begin{enumerate}
+\item $\det(S)=1$.
+\item $\mathbf hS=(0,0,1)$.
+\item The first two columns span $\ker(\mathbf h)\cap\mathbb Z^3$.
+\item $S^{-1}\in SL(3,\mathbb Z)$.
+\end{enumerate}
+
+\subsection{Audit Findings}
+
+The implementation is more accurately described as a constructive
+unimodular reduction using successive Bézout eliminations than as a
+general Hermite Normal Form computation. This terminology should be
+used consistently throughout the handbook.

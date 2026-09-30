@@ -1,0 +1,15 @@
+{
+  "calculator_required": false,
+  "outcome": "one saved, constructed, and unrelaxed LiF/Li2O interface",
+  "required_artifacts": [
+    "interfaces.csv",
+    "run-summary.json"
+  ],
+  "required_interface_stage": "built",
+  "schema_version": "calm.tutorial_expectation.v1",
+  "structures": [
+    "lif",
+    "li2o"
+  ],
+  "tutorial": "first-interface"
+}

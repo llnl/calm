@@ -1,0 +1,36 @@
+\chapter{M004 --- Surface Termination Selection}
+
+\section{Stage 4 --- Comparison (Phase 1)}
+
+\subsection{Mathematical Proposition}
+
+Evaluation of a valid selection criterion produces an admissible decision
+space without modifying the underlying Termination Set.
+
+\subsection{Implementation}
+
+The implementation evaluates the configured selection policy before
+choosing a termination.
+
+\subsection{Comparison}
+
+\begin{tabular}{|p{0.42\linewidth}|p{0.34\linewidth}|}
+\hline
+Requirement & Status\\\hline
+Selection criterion evaluated & Implemented\\
+Termination set preserved & Consistent\\
+Scientific object unchanged & Yes\\
+Decision deferred until evaluation complete & Yes\\
+\hline
+\end{tabular}
+
+\subsection{Evidence}
+
+Stage 2 mathematical specification; Stage 3 implementation review;
+implementation documentation.
+
+\subsection{Audit Result}
+
+No discrepancy identified. The implementation is consistent with the
+mathematical interpretation of this phase as evaluation of a decision
+criterion rather than construction of a new scientific object.

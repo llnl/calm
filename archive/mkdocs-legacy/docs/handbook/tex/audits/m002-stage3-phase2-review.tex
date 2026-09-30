@@ -1,0 +1,51 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 3 --- Implementation Review (Phase 2)}
+
+\subsection{Reviewed Transformation}
+
+Transformation of the conventional Miller covector into its primitive
+representation.
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Conventional Miller covector.
+\item Verified conventional-to-primitive basis transformation.
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A primitive Miller covector expressed in the primitive reciprocal basis.
+
+\subsection{Algorithmic Role}
+
+This phase transfers the crystallographic orientation into the primitive
+reciprocal lattice. It provides the surface orientation used by all
+subsequent integer-lattice constructions.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Representation transformation between reciprocal coordinate systems.
+\item Preserves crystallographic orientation.
+\item Does not create a new scientific surface.
+\end{itemize}
+
+\subsection{Objects Preserved}
+
+\begin{itemize}
+\item Surface orientation.
+\item Miller plane.
+\item Crystallographic identity.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is the reciprocal-space transformation mathematically exact?
+\item Are orientation invariants preserved for all admissible basis
+transformations?
+\item Are normalization and sign conventions explicitly documented?
+\end{enumerate}

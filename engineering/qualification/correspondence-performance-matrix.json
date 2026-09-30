@@ -1,0 +1,94 @@
+{
+  "schema": "calm.correspondence_performance_matrix/v2",
+  "roadmap_series": "0337",
+  "update": "0337d",
+  "default_repeats": 5,
+  "default_memory_repeats": 1,
+  "default_warmup_runs": 1,
+  "correctness_fields": [
+    "implementation",
+    "transform_key_sha256",
+    "reference_record_sha256",
+    "correspondence_count",
+    "required_entry_bound",
+    "first_column_candidates",
+    "second_column_candidates",
+    "column_pairs_tested",
+    "unimodular_states_tested",
+    "strain_admissible_states"
+  ],
+  "workloads": [
+    {
+      "id": "correspondence_small_skew_all",
+      "family": "correspondence_small_sentinel",
+      "metric_a": [[2.0, 0.25], [0.25, 1.5]],
+      "metric_b": [[1.8, -0.1], [-0.1, 1.4]],
+      "eps_principal_max": 0.35,
+      "orientation": "all",
+      "metric_tolerance": 1e-12,
+      "entry_limit": null,
+      "strain_reference_atol": 1e-10,
+      "profile": false,
+      "purpose": "Short skew-metric sentinel guarding small-domain overhead.",
+      "expected": {
+        "transform_key_sha256": "8f81045c2af08a6de4013a79e5dd5dc67b3790bf4e779e302268a95712cc1786",
+        "reference_record_sha256": "d9af5432e8d0285e7ae5cb5ea393f9a142b5014cd646bcb33c5bb71abd3f0f8b",
+        "correspondence_count": 8,
+        "required_entry_bound": 1,
+        "first_column_candidates": 8,
+        "second_column_candidates": 6,
+        "column_pairs_tested": 48,
+        "unimodular_states_tested": 32,
+        "strain_admissible_states": 8
+      }
+    },
+    {
+      "id": "correspondence_isotropic_annulus_proper",
+      "family": "correspondence_isotropic_annulus",
+      "metric_a": [[1.0, 0.0], [0.0, 1.0]],
+      "metric_b": [[1.0, 0.0], [0.0, 1.0]],
+      "eps_principal_max": 3.0,
+      "orientation": "proper",
+      "metric_tolerance": 1e-12,
+      "entry_limit": null,
+      "strain_reference_atol": 1e-10,
+      "profile": true,
+      "purpose": "Large isotropic annulus with 1,597,696 determinant states.",
+      "expected": {
+        "transform_key_sha256": "a8552ee6b92dbe8dbb30a3c89e6b3ad26d7845b44b70bd1379692101898950c6",
+        "reference_record_sha256": "31b56d1997ea8d89b04423a101d56d85407f3590fdda5254a6c5f5a9a0cea8f3",
+        "correspondence_count": 2484,
+        "required_entry_bound": 20,
+        "first_column_candidates": 1264,
+        "second_column_candidates": 1264,
+        "column_pairs_tested": 1597696,
+        "unimodular_states_tested": 3092,
+        "strain_admissible_states": 2484
+      }
+    },
+    {
+      "id": "correspondence_anisotropic_skew_all",
+      "family": "correspondence_anisotropic_skew",
+      "metric_a": [[4.0, 1.2], [1.2, 1.5]],
+      "metric_b": [[1.5, 0.4], [0.4, 3.0]],
+      "eps_principal_max": 2.7,
+      "orientation": "all",
+      "metric_tolerance": 1e-12,
+      "entry_limit": null,
+      "strain_reference_atol": 1e-10,
+      "profile": true,
+      "purpose": "Large anisotropic skew domain with 667,000 determinant states.",
+      "expected": {
+        "transform_key_sha256": "1fa6bdd1c1b1d427250ef84e3c99db154f9cd5afc42c2fe18eada538340de17e",
+        "reference_record_sha256": "4691ed66f2eff4ac102ce0c7f9c7ecd1f3a2cfee24f60bdbf05d2907dd24003e",
+        "correspondence_count": 2598,
+        "required_entry_bound": 24,
+        "first_column_candidates": 1334,
+        "second_column_candidates": 500,
+        "column_pairs_tested": 667000,
+        "unimodular_states_tested": 3956,
+        "strain_admissible_states": 2598
+      }
+    }
+  ]
+}

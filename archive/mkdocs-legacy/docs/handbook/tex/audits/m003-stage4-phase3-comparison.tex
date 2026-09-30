@@ -1,0 +1,39 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 4 --- Comparison (Phase 3)}
+
+\subsection{Mathematical Proposition}
+
+Gauge-equivalent candidate terminations shall be identified and replaced
+by a single representative, yielding a Termination Set containing one
+element from each equivalence class.
+
+\subsection{Implementation}
+
+The implementation filters equivalent termination candidates before
+stable labeling and provenance assignment.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.30\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Equivalence relation applied & Implemented\\
+Gauge-equivalent representatives removed & Implemented\\
+Distinct physical terminations retained & Consistent with specification\\
+Scientific object preserved & Yes\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Evidence includes the Stage 2 specification, Stage 3 implementation
+review, and documented implementation workflow.
+
+\subsection{Audit Result}
+
+No discrepancy identified. The implementation is consistent with the
+mathematical treatment of equivalence filtering as a gauge operation.

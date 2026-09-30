@@ -1,0 +1,37 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 4 --- Comparison (Phase 1)}
+
+\subsection{Mathematical Proposition}
+
+Detection determines whether a primitive surface admits more than one
+physically distinct surface termination.
+
+\subsection{Implementation}
+
+The implementation performs a dedicated detection step before attempting
+termination enumeration.
+
+\subsection{Comparison}
+
+\begin{tabular}{|p{0.42\linewidth}|p{0.34\linewidth}|}
+\hline
+Requirement & Implementation\\
+\hline
+Identify multiplicity of terminations & Documented\\
+Preserve primitive surface & Yes\\
+No termination selected & Yes\\
+Scientific object unchanged & Yes\\
+\hline
+\end{tabular}
+
+\subsection{Evidence}
+
+Current evidence includes the documented implementation workflow and the
+Stage 3 implementation review.
+
+\subsection{Audit Result}
+
+No discrepancy identified. Detection is consistent with the mathematical
+role of classifying a primitive surface prior to termination
+enumeration.

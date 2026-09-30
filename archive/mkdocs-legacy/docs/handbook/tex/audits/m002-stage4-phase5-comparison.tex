@@ -1,0 +1,56 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 4 --- Comparison (Phase 5)}
+
+\subsection{Mathematical Proposition}
+
+Stacking-vector shear minimization selects a preferred representative
+within an equivalence class while preserving the primitive surface,
+primitive kernel certificate, and Bézout witness.
+
+\subsection{Implementation}
+
+The implementation performs shear minimization only after the certified
+primitive surface representation has been established and documents
+preservation of the construction constraints throughout this phase.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.32\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Primitive surface preserved & Documented\\
+Primitive-kernel certificate preserved & Documented\\
+Bézout witness preserved & Documented\\
+Representative improved & Implemented\\
+Scientific object unchanged & Consistent with specification\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Current evidence includes:
+
+\begin{itemize}
+\item Stage 2 mathematical specification.
+\item Stage 3 implementation review.
+\item Documented implementation algorithm.
+\end{itemize}
+
+\subsection{Audit Result}
+
+No discrepancy has been identified. This phase is consistent with a
+gauge transformation that improves the chosen representative while
+preserving the represented primitive surface.
+
+\subsection{Stage 4 Status}
+
+All five implementation phases have now been compared against the
+mathematical specification. Stage 4 is complete.
+
+Stage 5 will evaluate the verification evidence supporting each audited
+proposition.

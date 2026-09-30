@@ -1,0 +1,47 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 1 --- Revised Mathematical Specification}
+
+\subsection{Reason for Revision}
+
+Inspection of the implementation shows that the immediate scientific
+transformation is the enumeration of admissible surface terminations,
+not the selection of a particular termination.
+
+\subsection{Scientific Purpose}
+
+Construct the finite set of admissible surface terminations associated
+with a primitive surface.
+
+\subsection{Transformation}
+
+\[
+\Phi_{\mathrm{enumerate}}:
+\mathcal{S}_{\mathrm{primitive}}
+\rightarrow
+\mathcal{P}(\mathcal{T})
+\]
+
+where $\mathcal{P}(\mathcal{T})$ denotes the finite set of admissible
+surface terminations.
+
+\subsection{Input}
+
+Primitive Surface.
+
+\subsection{Output}
+
+Termination Set.
+
+\subsection{Invariants}
+
+\begin{itemize}
+\item In-plane lattice.
+\item Surface orientation.
+\item Bulk crystallographic identity.
+\end{itemize}
+
+\subsection{Notes}
+
+Selection of a particular termination is deferred to the next
+transformation (M004).

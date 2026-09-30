@@ -1,0 +1,52 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 4 --- Comparison (Phase 4)}
+
+\subsection{Mathematical Proposition}
+
+Certified Gauss reduction replaces an in-plane basis by a gauge-equivalent
+canonical representative while preserving the primitive surface lattice
+and its certification.
+
+\subsection{Implementation}
+
+The implementation performs Gauss reduction only after constructing the
+primitive kernel/B\'ezout certificate and documents preservation of that
+certificate as an explicit requirement.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.44\linewidth}|p{0.34\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Primitive lattice preserved & Documented\\
+Kernel certificate preserved & Documented\\
+Canonical representative selected & Implemented\\
+Scientific object unchanged & Consistent with specification\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Evidence reviewed:
+
+\begin{itemize}
+\item Stage 2 mathematical specification.
+\item Stage 3 implementation review.
+\item Implementation algorithm description.
+\end{itemize}
+
+\subsection{Audit Result}
+
+The implementation is consistent with the interpretation of Gauss
+reduction as a gauge transformation acting on representatives rather
+than on the underlying primitive surface.
+
+\subsection{Remaining Question}
+
+Stage 5 should verify that every elementary reduction step preserves the
+primitive-kernel certificate and associated lattice invariants.

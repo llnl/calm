@@ -1,0 +1,46 @@
+\chapter{M004 --- Surface Termination Selection}
+
+\section{Stage 3 --- Implementation Review (Phase 2)}
+
+\subsection{Reviewed Transformation}
+
+Selection of a single Surface Termination from the admissible candidate
+set.
+
+\subsection{Purpose}
+
+Document how the implementation performs the final selection once the
+selection criterion has been evaluated.
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Ranked or filtered Termination Set.
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A single Surface Termination together with sufficient provenance to
+reproduce the selection.
+
+\subsection{Algorithmic Role}
+
+This phase realizes the mathematical decision transformation defined in
+M004. No new termination is created; one existing member of the
+Termination Set is selected.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Decision transformation.
+\item Provenance-preserving.
+\item No gauge transformation.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is the selected termination uniquely determined by the criterion?
+\item Is provenance sufficient to reproduce the decision?
+\item Are ties handled deterministically?
+\end{enumerate}

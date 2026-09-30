@@ -1,0 +1,11 @@
+# Documentation dependencies.
+#
+# Install with:
+#   pip install -r docs/requirements.txt
+#
+# NOTE: mkdocs.yml uses the `material` theme and pymdownx markdown extensions.
+# Keep this file in sync with mkdocs.yml.
+mkdocs>=1.5
+mkdocs-material>=9.5
+mkdocs-gen-files>=0.5
+pymdown-extensions>=10.7

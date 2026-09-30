@@ -1,0 +1,66 @@
+\chapter{M005 --- Slab Construction}
+
+\section{Stage 1 --- Mathematical Specification}
+
+\subsection{Scientific Purpose}
+
+Construct a finite slab from a selected surface termination.
+
+\subsection{Transformation}
+
+\[
+\Phi_{\mathrm{slab}} :
+\mathcal{T}_{\mathrm{surface}}
+\rightarrow
+\mathcal{S}_{\mathrm{slab}}
+\]
+
+\subsection{Mathematical Inputs}
+
+\begin{itemize}
+\item Selected Surface Termination
+\item Slab thickness specification
+\item Boundary-condition specification
+\end{itemize}
+
+\subsection{Mathematical Outputs}
+
+\begin{itemize}
+\item Slab
+\end{itemize}
+
+\subsection{Domain}
+
+Surface-termination space.
+
+\subsection{Codomain}
+
+Slab space.
+
+\subsection{Preconditions}
+
+\begin{itemize}
+\item Valid Surface Termination.
+\item Positive slab thickness.
+\end{itemize}
+
+\subsection{Postconditions}
+
+A finite slab realizing the selected termination.
+
+\subsection{Invariants}
+
+\begin{itemize}
+\item Surface termination identity.
+\item In-plane lattice.
+\item Crystallographic orientation.
+\end{itemize}
+
+\subsection{Gauge Freedoms}
+
+Equivalent origin choices that preserve the same slab realization.
+
+\subsection{Notes}
+
+Thickness, stacking, and boundary-condition parameters are part of the
+mathematical definition of the slab, not merely implementation details.

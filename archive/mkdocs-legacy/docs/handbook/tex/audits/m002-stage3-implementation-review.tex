@@ -1,0 +1,45 @@
+
+\chapter{M002 --- Stage 3: Implementation Review}
+
+\section{Objective}
+
+Describe the implementation without evaluating correctness.
+
+\section{Implementation Inventory}
+
+The current implementation appears to involve:
+
+\begin{itemize}
+\item \texttt{calm/slab/surface\_primitive.py}
+\item \texttt{calm/slab/ops/primitive\_surface\_algorithm.py}
+\item \texttt{calm/slab/ops/validate\_surface\_basis.py}
+\end{itemize}
+
+\section{Review Plan}
+
+For each implementation routine determine:
+
+\begin{enumerate}
+\item Mathematical input object.
+\item Mathematical output object.
+\item Scientific transformation, representation transformation,
+or gauge operation.
+\item Algorithmic role.
+\end{enumerate}
+
+\section{Initial Mapping}
+
+\begin{center}
+\begin{tabular}{lll}
+Module & Expected role & Status\\
+\hline
+surface\_primitive.py & Public orchestration & Pending\\
+primitive\_surface\_algorithm.py & Core algorithm & Pending\\
+validate\_surface\_basis.py & Verification & Pending\\
+\end{tabular}
+\end{center}
+
+\section{Completion Criterion}
+
+Stage 3 is complete only after every routine has been mapped to its
+mathematical role without judging correctness.

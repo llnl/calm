@@ -1,0 +1,31 @@
+{
+  "schema_version": "calm.repository_root_ownership.v1",
+  "owned_files": {
+    ".gitignore": "Generated-artifact and local-worktree exclusion policy.",
+    ".gitlab-ci.yml": "GitLab CI entry point required at the repository root.",
+    "LICENSE": "Authoritative MIT license text distributed with source and package artifacts.",
+    "MANIFEST.in": "Setuptools manifest for the minimal installation-source sdist.",
+    "NOTICE": "Required U.S. Department of Energy and LLNL auspice and disclaimer notice.",
+    "README.md": "Repository and distribution landing page.",
+    "mkdocs.yml": "MkDocs site configuration.",
+    "public_api.md": "Reviewed human-readable public API inventory.",
+    "pyproject.toml": "Sole Python build, package-metadata, dependency, coverage, and primary Ruff authority.",
+    "pytest.ini": "Pytest discovery, import-path, warning, and marker policy."
+  },
+  "owned_directories": {
+    ".github": "GitHub-hosted documentation workflow for repository mirrors.",
+    "archive": "Deliberate historical evidence excluded from active package ownership.",
+    "benchmarks": "Repository-only benchmark and qualification workloads.",
+    "calm": "Installable Python package.",
+    "conda-recipe": "Local conda package recipe and package-build guidance.",
+    "docs": "Active user and scientific documentation source.",
+    "engineering": "Executable and machine-readable architecture, CI, documentation-build, and qualification infrastructure.",
+    "environments": "Source-checkout conda environments and environment validation tooling.",
+    "examples": "Executable public-workflow examples and bundled example inputs.",
+    "tests": "Architecture, repository, public, unit, and integration tests."
+  },
+  "forbidden_root_ignore_suffixes": [
+    ".md",
+    ".py"
+  ]
+}

@@ -1,0 +1,8 @@
+include LICENSE
+include NOTICE
+include README.md
+
+# The source distribution is a minimal installation source, not a repository
+# snapshot. Setuptools discovers test modules by default, so exclude that one
+# repository-only tree explicitly. Exact archive contents are checked after build.
+prune tests

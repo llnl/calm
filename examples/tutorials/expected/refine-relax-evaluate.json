@@ -1,0 +1,20 @@
+{
+  "calculator": "ase:EMT",
+  "calculator_required": true,
+  "interpretation_boundary": "EMT demonstrates CALM workflow mechanics and reference bookkeeping; it is not evidence of scientific suitability for another material system.",
+  "outcome": "one refined and relaxed Cu/Ni interface with work-of-adhesion results",
+  "reference_convention": "work_of_adhesion_relaxed_surfaces",
+  "required_artifacts": [
+    "raw-energies.csv",
+    "reference-energies.csv",
+    "relaxation-results.csv",
+    "run-summary.json",
+    "work-of-adhesion.csv"
+  ],
+  "schema_version": "calm.tutorial_expectation.v1",
+  "structures": [
+    "cu",
+    "ni"
+  ],
+  "tutorial": "refine-relax-evaluate"
+}

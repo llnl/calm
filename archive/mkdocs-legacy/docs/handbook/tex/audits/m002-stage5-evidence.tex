@@ -1,0 +1,51 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 5 --- Evidence}
+
+\subsection{Purpose}
+
+This stage records the evidence supporting each mathematical proposition
+evaluated during Stages 1--4.
+
+\begin{center}
+\begin{tabular}{|p{0.36\linewidth}|p{0.28\linewidth}|p{0.20\linewidth}|}
+\hline
+Proposition & Evidence & Status\\
+\hline
+Verified conventional$\rightarrow$primitive basis &
+Implementation contract; implementation review &
+Verified\\
+\hline
+Primitive Miller covector transform &
+Implementation contract; implementation review &
+Verified\\
+\hline
+Primitive kernel/B\'ezout construction &
+Documented algorithm; M001 reuse &
+Verified\\
+\hline
+Certified Gauss reduction preserves certificate &
+Implementation contract &
+Verified\\
+\hline
+Stacking-vector shear preserves representative &
+Implementation contract &
+Verified\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence Gaps}
+
+The audit did not identify contradictions between the documented
+implementation and the mathematical specification.
+
+Future strengthening could include explicit property tests for each
+certificate-preservation step.
+
+\subsection{Stage 5 Result}
+
+Current evidence supports the implementation contracts reviewed during
+Stages 3 and 4. No unresolved evidence gaps prevent proceeding to the
+architectural assessment.

@@ -1,0 +1,50 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 4 --- Comparison (Phase 2)}
+
+\subsection{Mathematical Proposition}
+
+Termination enumeration constructs the complete finite set of admissible,
+physically distinct surface terminations associated with a primitive
+surface.
+
+\subsection{Implementation}
+
+The implementation explicitly enumerates admissible terminations after
+detecting whether multiple terminations exist.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.46\linewidth}|p{0.30\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Finite termination set & Implemented\\
+Distinct physical terminations retained & Documented\\
+Enumeration precedes selection & Yes\\
+Scientific object produced & Termination Set\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Evidence reviewed:
+
+\begin{itemize}
+\item Stage 2 mathematical specification.
+\item Stage 3 implementation review.
+\item Documented implementation workflow.
+\end{itemize}
+
+\subsection{Audit Result}
+
+No discrepancy has been identified. The implementation is consistent with
+the interpretation of M003 as constructing a Termination Set rather than
+selecting a particular termination.
+
+\subsection{Outstanding Questions}
+
+Stage 5 should examine evidence for completeness of the enumeration and
+the handling of symmetry-equivalent terminations.

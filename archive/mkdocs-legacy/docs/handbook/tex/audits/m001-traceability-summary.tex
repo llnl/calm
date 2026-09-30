@@ -1,0 +1,40 @@
+
+\section{Traceability Summary}
+
+\begin{center}
+\begin{tabular}{|p{0.27\linewidth}|p{0.24\linewidth}|p{0.24\linewidth}|}
+\hline
+Mathematical proposition & Implementation evidence & Audit status\\
+\hline
+Primitive Miller reduction required &
+\texttt{\_reduce\_hkl()} invoked before reduction &
+Verified\\
+\hline
+Existence of Bézout witness &
+\texttt{\_right\_reduce\_row\_to\_hnf()} contract:
+$hV=(1,0,0)$ &
+Verified\\
+\hline
+Surface basis consists of primitive kernel basis and Bézout witness &
+Docstring of
+\texttt{surface\_basis\_S\_from\_hkl()} &
+Verified specification\\
+\hline
+Primitive kernel verification &
+\texttt{verify\_surface\_kernel\_is\_primitive()} &
+Verified criterion\\
+\hline
+Orientation repair &
+Performed after basis assembly &
+Verified\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Overall Conclusion}
+
+The mathematical specification developed during the audit is consistent
+with the documented contracts of the implementation. The remaining work
+for M001 is to strengthen evidence by tracing individual implementation
+statements and corresponding tests, rather than identifying new
+mathematical obligations.

@@ -1,0 +1,6 @@
+# Distribution build environment. Build-system requirements remain authoritative
+# in pyproject.toml; these bounds keep the CI front-end surface intentional.
+build>=1.2,<2
+twine>=5,<7
+setuptools>=77,<83
+wheel>=0.45,<1

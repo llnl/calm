@@ -1,0 +1,49 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 3 --- Implementation Review (Phase 4)}
+
+\subsection{Reviewed Transformation}
+
+Certified Gauss reduction of the in-plane basis.
+
+\subsection{Mathematical Input}
+
+A certified primitive kernel basis $(u,v)$ satisfying the primitive-kernel
+certificate established in the preceding phase.
+
+\subsection{Mathematical Output}
+
+A reduced in-plane basis representing the same primitive surface lattice.
+
+\subsection{Algorithmic Role}
+
+The implementation performs Gauss reduction only when the primitive-kernel
+certificate is preserved. Consequently the reduction changes only the
+chosen representative of the in-plane basis and not the represented
+surface lattice.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Gauge transformation.
+\item Canonical representative selection.
+\item No new scientific object is created.
+\end{itemize}
+
+\subsection{Preserved Invariants}
+
+\begin{itemize}
+\item Primitive-kernel certificate.
+\item Surface orientation.
+\item Primitive surface lattice.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is preservation of the primitive-kernel certificate sufficient to
+guarantee lattice equivalence?
+\item Does the implementation perform only unimodular in-plane updates?
+\item Is the reduced basis unique modulo the documented gauge freedom?
+\end{enumerate}

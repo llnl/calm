@@ -1,0 +1,158 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "calm"
+version = "1.0.0"
+description = "CALM (Canonicalized Affine-invariant Lattice Matching for Interface Models)"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+  { name = "Stephen Weitzner", email = "weitzner1@llnl.gov" },
+]
+
+# Dependencies required for the import-light Project and typed-input API.
+# Atomistic construction, symmetry, tables, plotting, and calculators remain
+# explicit extras so a base installation can open and inspect projects without
+# silently installing scientific or provider runtimes.
+dependencies = [
+    "numpy>=1.26,<3",
+    "sqlalchemy>=2.0,<3",
+]
+
+keywords = [
+  "interfaces",
+  "lattice-matching",
+  "crystallography",
+  "materials-science",
+  "solid-solid-interfaces",
+  "strain-partitioning",
+]
+
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Scientific/Engineering :: Chemistry",
+]
+
+[project.optional-dependencies]
+# Atomistic and crystallographic workflows.
+science = [
+  "scipy>=1.11.2,<2",
+  "ase>=3.25,<4",
+  "spglib>=2.6,<3",
+]
+
+# Optional tabular and visualization helpers.
+dataframe = ["pandas>=2.1,<3"]
+plot = ["matplotlib>=3.8,<4"]
+viz = [
+  "matplotlib>=3.8,<4",
+  "seaborn",
+  "plotly",
+]
+
+# Docs toolchain (optional): enables `mkdocs build`.
+docs = [
+  "mkdocs>=1.5",
+  "mkdocs-material>=9.5",
+  "mkdocs-gen-files>=0.5",
+  "pymdown-extensions>=10.7",
+]
+
+
+# Developer / test tooling.
+dev = [
+  "pytest>=7",
+  "pytest-timeout>=2.1",
+  "pytest-cov>=4.0",
+  "ruff==0.15.22",
+  "build>=1.2",
+  "twine>=5",
+  "tomli>=2; python_version < '3.11'",
+  "ipython>=8.0",
+  "jupyter",
+  "notebook",
+  "mkdocs>=1.5",
+  "mkdocs-material>=9.5",
+  "mkdocs-gen-files>=0.5",
+  "pymdown-extensions>=10.7",
+]
+
+# ML potential calculators. Provider environments are qualified separately;
+# broad cross-framework bundles are intentionally not published because the
+# TensorFlow and PyTorch stacks are not one supported runtime.
+grace = ["tensorpotential"]
+mace = ["mace-torch"]
+chgnet = ["chgnet"]
+
+[project.urls]
+Homepage = "https://czgitlab.llnl.gov/weitzner/calm"
+Repository = "https://czgitlab.llnl.gov/weitzner/calm"
+Issues = "https://czgitlab.llnl.gov/weitzner/calm/-/issues"
+Documentation = "https://czgitlab.llnl.gov/weitzner/calm/-/tree/main/docs"
+
+[tool.setuptools]
+include-package-data = false
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["calm", "calm.*"]
+
+[tool.setuptools.package-data]
+calm = ["data/tutorials/*.json"]
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["calm"]
+relative_files = true
+omit = [
+  "*/tests/*",
+  "*/test_*.py",
+  "*/__pycache__/*",
+  "*/site-packages/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "class .*\\bProtocol\\):",
+  "@(abc\\.)?abstractmethod",
+]
+precision = 2
+show_missing = true
+
+[tool.ruff]
+line-length = 88
+# Exclude test and benchmark trees from the production-source Ruff gate.
+extend-exclude = [
+  "tests/**",
+  "benchmarks/**",
+]
+
+# Per-file ignores for files that contain intentionally legacy/benchmark code
+[tool.ruff.lint]
+select = [
+  "E",
+  "F",
+  "W",
+  "C90",
+]
+# Existing production complexity and long-line debt remain outside the current
+# focused Ruff gate. Keep these explicit until a dedicated cleanup qualifies them.
+ignore = ["C901", "E501"]

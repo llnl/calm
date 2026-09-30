@@ -1,0 +1,93 @@
+# Python bytecode, caches, test output, and coverage
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.pyre/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.cache/
+.hypothesis/
+.ipynb_checkpoints/
+*.cover
+junit-*.xml
+
+# Python build and packaging artifacts
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Virtual environments
+.env/
+env/
+ENV/
+venv/
+.venv/
+
+# Editor and operating-system metadata
+.vscode/
+.idea/
+.DS_Store
+._*
+*~
+*.bak
+*.BAK
+*.swp
+*.swo
+
+# Generated documentation and GitLab Pages output
+/site/
+/public/
+
+# Local reports and scratch output
+ruff_*.json
+ruff_*.csv
+.tmp_test/
+out/
+tmpproj/
+
+# CALM workspaces, databases, and logs
+workspace/
+*.calm/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+**/logs/
+**/*.log
+
+# Generated example state and outputs
+examples/example_project.calm/
+examples/outputs/
+calm-first-interface/
+calm-compare-candidates/
+calm-refine-relax-evaluate/
+examples/workspace/
+examples/**/_work/
+examples.BAK/
+examples/*_interface.POSCAR
+examples/C*_interface.POSCAR
+examples/*.png
+examples/*.csv
+examples/*.cif
+
+# Generated benchmark outputs
+/results_calm.csv
+/results_pymatgen.csv
+/results_slabgen.csv
+/coupled-*.csv
+/bench_out/
+/diagnose_out/
+/figs/
+/benchmarks/results_*.csv
+/benchmarks/coupled-*.csv
+/benchmarks/bench_out/
+/benchmarks/diagnose_out/
+/benchmarks/figs/

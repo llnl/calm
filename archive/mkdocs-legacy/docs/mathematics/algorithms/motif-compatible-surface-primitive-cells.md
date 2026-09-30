@@ -1,0 +1,409 @@
+# Motif-compatible surface primitive unit-cell generation
+
+This page is the mathematical and algorithmic specification for CALM's motif-compatible surface primitive unit-cell generation. It describes the scientific problem independently of any single implementation detail, then maps the specification back to the current code paths.
+
+## Purpose
+
+Given a crystalline bulk structure and a surface orientation, CALM must construct an in-plane surface unit cell that is primitive for interface enumeration but still compatible with the decorated atomic motif. The cell must be small enough to avoid unnecessary supercell enumeration, yet large enough that periodic repetition reproduces the same surface motif, species labels, layer structure, and crystallographic translations.
+
+The output supports the ontology morphisms
+
+```text
+Crystal -> Surface -> Slab
+```
+
+and provides the in-plane lattice representation used later by interface matching, strain optimization, deduplication, and registry alignment.
+
+## Ontology mapping
+
+| Role | Object or representation |
+| --- | --- |
+| Input scientific object | `Crystal`, represented by a standardized bulk cell and atomic motif |
+| Input orientation | Miller index `(h,k,l)` in the conventional-cell reciprocal basis |
+| Intermediate object | `Surface`, represented by an oriented in-plane lattice and stacking direction |
+| Output scientific object | `Slab`, represented by an oriented ASE `Atoms` object and provenance transforms |
+| Scientific morphism | Construct Surface / Construct Slab |
+| Representation morphisms | Conventional-to-primitive basis conversion, Miller-index conversion, integer kernel construction, Cartesian rotation, in-plane basis reduction |
+
+The primitive surface-cell algorithm is not merely a display transformation. It changes the scientific representation of the surface/slab object by selecting a different periodic cell. However, several steps inside the algorithm are representation morphisms that preserve the same underlying surface lattice while changing basis or gauge.
+
+## Mathematical problem
+
+Let
+
+\[
+A_c = [a_c\ b_c\ c_c] \in \mathbb{R}^{3\times 3}
+\]
+
+be a conventional direct lattice basis, and let
+
+\[
+A_p = [a_p\ b_p\ c_p] \in \mathbb{R}^{3\times 3}
+\]
+
+be a primitive direct lattice basis expressed in the same Cartesian frame. CALM uses a column-vector convention: a Cartesian point is
+
+\[
+r = A f,
+\]
+
+where `f` is a fractional-coordinate column vector.
+
+A user-facing surface orientation is specified by a nonzero conventional Miller vector
+
+\[
+h_c = (h,k,l)^T \in \mathbb{Z}^3 \setminus \{0\}.
+\]
+
+The mathematical problem is to find integer primitive-basis vectors
+
+\[
+u,v,w \in \mathbb{Z}^3
+\]
+
+such that:
+
+1. `u` and `v` span a primitive rank-two lattice in the plane normal to the primitive Miller vector.
+2. `w` is a stacking vector whose projection advances by one interplanar period.
+3. The oriented cell
+
+   \[
+   A_o = A_p [u\ v\ Lw]
+   \]
+
+   represents `L` layers of the surface.
+4. The in-plane basis is reduced or canonicalized without changing the underlying in-plane lattice.
+5. The resulting cell preserves the decorated atomic motif under periodic repetition.
+
+The phrase **motif-compatible** is critical. A purely geometric surface lattice can be too small when atomic decorations break the smaller translation symmetry. CALM therefore distinguishes the primitive surface lattice from the smallest decorated surface motif cell.
+
+## Conventional-to-primitive Miller transformation
+
+The conventional and primitive bases are related by a rational matrix `P` satisfying
+
+\[
+A_c = A_p P.
+\]
+
+For direct basis transformation `A_c = A_p P`, reciprocal covectors transform contragrediently. A conventional Miller vector `h_c` induces a primitive Miller covector proportional to
+
+\[
+h_p = P^{-T} h_c.
+\]
+
+Because `P` is rational for crystallographic cells, CALM rationalizes the transform and rescales `h_p` to a primitive integer vector
+
+\[
+m = \operatorname{primitive}\left(P^{-T}h_c\right) \in \mathbb{Z}^3,
+\qquad \gcd(|m_1|,|m_2|,|m_3|)=1.
+\]
+
+The implementation verifies that the rationalized transform reproduces the conventional basis within tolerance and that `P^T m` is parallel to `h_c`. This guards against using an inconsistent conventional/primitive basis pair.
+
+## Primitive in-plane kernel and stacking vector
+
+For the primitive Miller vector
+
+\[
+m = (m_1,m_2,m_3)^T,
+\]
+
+the in-plane primitive lattice is the integer kernel
+
+\[
+\ker_{\mathbb{Z}}(m^T) = \{x\in\mathbb{Z}^3 : m^T x = 0\}.
+\]
+
+CALM constructs integer vectors `u` and `v` such that
+
+\[
+m^T u = 0,
+\qquad
+m^T v = 0,
+\qquad
+u \times v = \pm m.
+\]
+
+The cross-product certificate is stronger than merely requiring both vectors to lie in the plane. For primitive `m`, it certifies that `u` and `v` generate the saturated integer kernel rather than a proper sublattice of it. Equivalently, the parallelogram generated by `A_p u` and `A_p v` is primitive for the bulk-induced surface lattice.
+
+CALM also constructs a Bezout stacking vector `w` satisfying
+
+\[
+m^T w = 1.
+\]
+
+The oriented integer transform
+
+\[
+T_L = [u\ v\ Lw]
+\]
+
+then satisfies
+
+\[
+T_L^T m = (0,0,L)^T,
+\]
+
+up to the sign convention of the selected in-plane orientation. Thus the first two oriented coordinates are in-plane coordinates, while the third coordinate indexes layers normal to the surface.
+
+## Shear minimization of the stacking coset
+
+The stacking vector is not unique. If `w` satisfies `m^T w = 1`, then every vector
+
+\[
+w' = w + p u + q v,
+\qquad p,q\in\mathbb{Z},
+\]
+
+satisfies the same Bezout condition. These vectors represent the same normal step with different in-plane shear.
+
+CALM chooses a metric-aware representative by minimizing
+
+\[
+\left\|A_p(w+p u+q v)\right\|_2
+\]
+
+over a small integer search around the least-squares minimizer for `(p,q)`. This is a nearest-plane reduction of the stacking-vector coset in the lattice metric. The algorithm verifies that the triple-product invariant is preserved before accepting the minimized representative.
+
+## In-plane basis reduction
+
+The primitive kernel basis is not unique. Any unimodular matrix
+
+\[
+Q\in GL(2,\mathbb{Z}),\qquad |\det Q|=1,
+\]
+
+maps
+
+\[
+[u\ v] \mapsto [u\ v]Q
+\]
+
+without changing the generated in-plane lattice. CALM applies a Gauss-style two-dimensional reduction using Cartesian lengths and dot products in the primitive metric. The reduced basis is accepted only when the exact primitive certificate
+
+\[
+([u'\times v'] = \pm m)
+\]
+
+is preserved. Otherwise, the algorithm falls back to the exact Bezout-derived basis.
+
+This makes reduction a representation morphism: it changes the basis gauge but not the surface lattice.
+
+## Motif compatibility
+
+A lattice-primitive surface cell is not necessarily motif-compatible. Let a decorated slab contain atomic species labels `Z_i` and fractional coordinates `f_i` in a candidate in-plane cell. A candidate in-plane cell is motif-compatible when folding atoms into that cell yields a decorated motif whose periodic repetition reconstructs the original slab cell.
+
+In the backend surface-reduction formulation, CALM expresses the slab in-plane cell
+
+\[
+S = [a_S\ b_S]\in\mathbb{R}^{3\times 2}
+\]
+
+in the primitive bulk basis:
+
+\[
+\widetilde C = A_p^{-1}S,
+\qquad
+C = \operatorname{round}(\widetilde C)\in\mathbb{Z}^{3\times 2}.
+\]
+
+The columns of `C` generate a rank-two sublattice of `Z^3`. CALM saturates this lattice, using Smith-normal-form machinery in the backend, to obtain bulk-induced primitive surface generators `K`. The geometric candidate basis is
+
+\[
+P_{\parallel} = A_p K.
+\]
+
+If the slab supercell is related to the candidate primitive cell by
+
+\[
+S = P_{\parallel} H,
+\qquad H\in\mathbb{Z}^{2\times 2},
+\]
+
+then the multiplicity is
+
+\[
+\mu = |\det H|.
+\]
+
+A decorated motif check folds atoms into the candidate cell and compares discretized keys of the form
+
+\[
+\left(Z_i,\operatorname{round}(f_{ix}/\delta_{xy}),\operatorname{round}(f_{iy}/\delta_{xy}),\operatorname{round}(f_{iz}/\delta_z)\right).
+\]
+
+The expected condition is that each unique motif key occurs exactly `mu` times and the reduced motif contains `N/mu` atoms. If the primitive lattice candidate fails this decorated-motif criterion, CALM searches motif-compatible superlattices of the geometric primitive cell, ordered by increasing area, until a compatible cell is found or the configured failure policy applies.
+
+## Implemented algorithm
+
+### Inputs
+
+- Conventional Miller index `(h,k,l)`.
+- Conventional direct basis `A_conv`.
+- Primitive direct basis `A_prim`.
+- Primitive bulk atoms.
+- Number of layers `L`.
+- Rationalization and numerical tolerances.
+
+### Outputs
+
+- Oriented slab `Atoms` object.
+- Surface primitive basis data or provenance transforms, depending on the entrypoint.
+- Rotation matrix aligning the surface normal with the slab `z` axis.
+- Optional validation diagnostics.
+
+### Workflow
+
+1. Validate that the Miller vector is nonzero and that `A_prim` and `A_conv` are commensurate.
+2. Compute the primitive Miller vector `m = primitive(P^{-T} h_c)` using rationalized exact arithmetic where possible.
+3. Construct an exact primitive integer triplet `(u,v,w)` satisfying:
+   - `m·u = 0`,
+   - `m·v = 0`,
+   - `u×v = ±m`,
+   - `m·w = 1`.
+4. Apply Gauss-style in-plane reduction and accept it only if the primitive certificate is preserved.
+5. Minimize the stacking-vector shear over the coset `w + span_Z{u,v}`.
+6. Build the integer supercell transform `T = [u v Lw]`.
+7. Construct the oriented slab by applying `T` to the primitive atoms.
+8. Rotate the Cartesian frame so the reciprocal normal is aligned with `+z`.
+9. Optionally validate the oriented Miller invariant, normal parallelism, and surface-basis certificates.
+10. For slab-supercell reduction, perform the motif compatibility test and, when needed, promote the geometric primitive cell to a minimal motif-compatible superlattice.
+
+## Implementation notes (migrated from legacy surface preprocessing guide)
+
+### Conventional-to-primitive practical notes
+
+CALM treats conventional Miller indices as the user-facing input. A robust implementation should:
+
+- standardize to a conventional cell before transforming to primitive coordinates (spglib or equivalent);
+- compute the primitive transform `P` so that `A_conv = A_prim @ P` and rationalize `P` with bounded denominators before integerization;
+- verify that the rationalized transform reconstructs the conventional basis within a scale-aware tolerance before trusting integer certificates.
+
+These are implementation-level precautions; the mathematical spec remains the primitive-side construction in this document.
+
+### Primitive-kernel and certificate notes
+
+The in-plane kernel is constructed from the primitive Miller covector `m`. Practical guidance:
+
+- build exact integer kernel generators `u, v` so that `m·u = 0`, `m·v = 0`, and certify saturation by `u × v = ±m` (cross-product certificate);
+- compute a Bezout stacking vector `w` with `m·w = 1` and minimize shear over the coset `w + p u + q v` by a small integer search around the metric least-squares minimizer;
+- perform any Gauss/Niggli-style in-plane reduction only when the primitive certificate is preserved; if not preserved, fall back to the exact Bezout-derived basis.
+
+These checks should fail loudly if certificates cannot be preserved under the chosen tolerances.
+
+### Motif-compatible promotion notes
+
+Motif-compatibility is stronger than geometric primitivity. Implementation guidance:
+
+- fold atomic positions into the candidate in-plane cell and discretize motif keys (species + quantized fractional coords) using a stable discretization tolerance and denominator limit;
+- compute per-key multiplicity and verify that the folded motif repeats the expected multiplicity `mu = |det H|`; accept the candidate only when multiplicities match expected counts;
+- when the geometric primitive fails motif compatibility, search small motif-compatible superlattices ordered by increasing area (LCM/denominator guided) until a compatible cell is found or the configured policy triggers failure;
+- cache repeated small-integer lattice computations and motif-key fingerprints to reduce overhead.
+
+### 2D reduction and fallback notes
+
+Reduction of the in-plane basis is a representation-gauge choice. Practical constraints:
+
+- prefer a Gauss-style / 2D Niggli reduction on the embedded Cartesian in-plane metric to present short vectors and canonical ordering;
+- ensure reduced basis preserves the integer primitive certificate (`u×v=±m`) before accepting it as canonical; otherwise reject the reduction and keep the exact integer basis;
+- use deterministic tie-breaking (lexicographic) and consistent tolerances (`tol` and `symprec`) for reproducibility across platforms;
+- when near-degenerate inputs are encountered, use exact-integer arithmetic where possible for kernel-related steps and only apply floating-point reduction for gauge choices.
+
+### Appendix: Short worked example (FCC Al(111))
+
+Inputs (compact): conventional cubic Al, `a ≈ 4.05 Å`, Miller `(1,1,1)`.
+
+- Primitive transform yields `A_prim` (rhombohedral primitive for FCC).
+- Kernel integer generators: `u = [-1,1,0]`, `v = [-1,0,1]` satisfy `m·u = m·v = 0` and `u×v = ±m`.
+- After rotation into slab frame and 2D reduction, a compact reduced in-plane basis is produced (e.g., `[[2.863, 1.432],[0.0, 2.479]]`), suitable for enumeration and motif checks.
+
+These concise notes are intended as practical checks and smoke-tests for implementers; full code lives in the CALM backend modules referenced in the Implementation mapping.
+
+## Complexity
+
+The exact integer triplet construction is constant time for a fixed three-dimensional Miller vector. The Gauss reduction and shear minimization are also constant time with respect to atom count.
+
+The dominant costs are:
+
+- applying the integer supercell transform, which scales with the number of atoms in the generated slab;
+- motif-compatibility folding and keying, which is linear in the number of slab atoms for a fixed candidate cell;
+- optional HNF/SNF-based superlattice search, whose practical cost is controlled by the multiplicity `mu` and by caching of repeated small integer-lattice calculations.
+
+For CALM's intended use, the algorithm is dominated by downstream interface enumeration rather than by primitive surface-cell construction.
+
+## Correctness properties
+
+CALM relies on the following properties.
+
+| Property | Mathematical statement | Implementation check |
+| --- | --- | --- |
+| Nonzero orientation | `h_c != 0` and `m != 0` | Miller input validation |
+| Primitive Miller vector | `gcd(m)=1` | gcd reduction and validation |
+| In-plane kernel | `m·u=m·v=0` | exact integer construction |
+| Saturated primitive kernel | `u×v=±m` | exact cross-product certificate |
+| Valid stacking step | `m·w=1` | Bezout certificate |
+| Layer orientation | `T_L^T m=(0,0,L)^T` | optional oriented Miller invariant |
+| Basis-gauge preservation | accepted reductions preserve `u×v=±m` | reduction certificate |
+| Shear-coset preservation | `w -> w+pu+qv` keeps `m·w=1` | post-minimization check |
+| Motif compatibility | folded decorated motif repeats with multiplicity `mu` | motif-key multiplicity check |
+
+These checks are designed to fail loudly when the mathematical certificates are violated rather than silently producing a plausible but nonconforming slab.
+
+## Numerical considerations
+
+The core lattice certificates are integer-valued, but CALM must bridge floating-point crystallographic data to exact integer arithmetic. The main numerical considerations are:
+
+- rationalizing conventional-to-primitive transforms with bounded denominators;
+- verifying that the rationalized transform reconstructs `A_conv` from `A_prim` within scale-aware tolerance;
+- rounding nearly integer lattice coefficients only after tolerance checks;
+- preserving exact integer certificates after floating-point basis reduction decisions;
+- avoiding aggressive zeroing of meaningful Cartesian shear components;
+- discretizing motif keys with tolerances that separate true motif translations from floating-point noise.
+
+The algorithm prefers exact integer certificate checks whenever possible. Floating-point steps are used to choose gauges, rotations, and reductions, not to define the underlying lattice identities.
+
+## Design decisions and limitations
+
+- Conventional Miller indices are treated as user-facing inputs, so CALM explicitly transforms them to primitive coordinates before integer-kernel construction.
+- The primitive in-plane basis is certified by `u×v=±m`; this avoids accepting non-saturated kernel bases.
+- Shear minimization is a gauge choice for the stacking vector and is not allowed to change the surface lattice or layer invariant.
+- Motif compatibility is stronger than lattice compatibility and depends on numerical keying tolerances.
+- Degenerate or poorly conditioned input cells can fail rationalization or tolerance checks. Such failures indicate that CALM cannot certify the transformation under the requested tolerances.
+- The current motif-key approach is deterministic but tolerance-based; future formal verification should specify admissible tolerance regimes for noisy relaxed structures separately from exact crystallographic structures.
+
+## Implementation mapping
+
+Primary implementation locations:
+
+- `calm.slab.ops.primitive_surface_algorithm.primitive_miller_from_conventional`
+- `calm.slab.ops.primitive_surface_algorithm.compute_primitive_surface_basis`
+- `calm.slab.ops.primitive_surface_algorithm.build_oriented_primitive_slab`
+- `calm.slab.ops.primitive_surface_algorithm.apply_2d_niggli_reduction`
+- `calm.slab.surface_primitive.oriented_slab_surface_primitive`
+- `calm.slab.surface_primitive.surface_primitive_from_slabs`
+- `calm.symmetry.surface_primitive` for the slab-supercell motif-compatible reduction backend
+- `calm.symmetry.reduction` for two-dimensional lattice reduction helpers
+
+Related documentation:
+
+- `docs/reference/surface_primitive_cell_generation.md`
+- `docs/primitive_surface_cells.md`
+
+## Verification mapping
+
+Existing and recommended verification should cover:
+
+- primitive Miller-vector rationalization and parallelism checks;
+- exact triplet certificates for representative Miller vectors, including axial and mixed-index cases;
+- invariance of `u×v=±m` under accepted in-plane reductions;
+- preservation of `m·w=1` after shear minimization;
+- oriented Miller invariant `T^T m=(0,0,L)^T`;
+- motif-key multiplicity checks for centered and multi-site motifs;
+- deterministic behavior under equivalent basis gauges;
+- skip-gated optional-backend tests for ASE/spglib-dependent construction paths.
+
+Future formal verification should separate exact integer-lattice correctness from floating-point/tolerance admissibility. The integer certificates are suitable for property-based tests over primitive Miller vectors; motif compatibility requires representative decorated-cell fixtures.
+
+## References
+
+The mathematical foundations rely on standard crystallographic lattice theory, integer-lattice kernel construction, Smith and Hermite normal forms, Gauss/Niggli reduction of low-dimensional lattices, and reciprocal-lattice Miller-index transformations. See the project bibliography for the maintained reference list.

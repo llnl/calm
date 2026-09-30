@@ -1,0 +1,66 @@
+\chapter{M004 --- Surface Termination Selection}
+
+\section{Stage 1 --- Mathematical Specification}
+
+\subsection{Scientific Purpose}
+
+Select a single surface termination from an admissible Termination Set.
+
+\subsection{Transformation}
+
+\[
+\Phi_{\mathrm{select}}:
+\mathcal{P}(\mathcal{T})
+\rightarrow
+\mathcal{T}
+\]
+
+\subsection{Mathematical Inputs}
+
+\begin{itemize}
+\item Termination Set
+\item Selection criterion
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+A single Surface Termination.
+
+\subsection{Domain}
+
+Finite sets of admissible surface terminations.
+
+\subsection{Codomain}
+
+Surface-termination space.
+
+\subsection{Preconditions}
+
+\begin{itemize}
+\item Non-empty Termination Set.
+\item Well-defined selection criterion.
+\end{itemize}
+
+\subsection{Postconditions}
+
+A selected termination together with its provenance.
+
+\subsection{Invariants}
+
+\begin{itemize}
+\item Primitive surface identity.
+\item Crystallographic orientation.
+\item Termination provenance.
+\end{itemize}
+
+\subsection{Gauge Freedoms}
+
+None in the selection itself. Gauge freedoms have already been quotiented
+out during termination enumeration.
+
+\subsection{Selection Criteria}
+
+Selection may be driven by reproducibility, user choice, symmetry,
+stoichiometry, polarity, or other explicitly specified admissibility
+criteria. Such criteria form part of the mathematical contract of this
+transformation.

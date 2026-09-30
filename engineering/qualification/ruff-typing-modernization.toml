@@ -1,0 +1,10 @@
+# Focused static policy replacing source-spelling pytest tests.
+target-version = "py310"
+
+[lint]
+select = ["F401", "UP006", "UP007", "UP045"]
+
+[lint.per-file-ignores]
+# Retained import documents the delegated helper ownership used by an
+# architecture contract; the implementation itself lives in _surface_symmetry.
+"calm/interface/matching/search.py" = ["F401"]

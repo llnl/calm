@@ -1,0 +1,304 @@
+# LLNL LC GitLab CI configuration for CALM
+# Uses Jacamar runners on CZ clusters (dane)
+
+stages:
+  - preflight
+  - test
+  - coverage
+  - docs
+  - build
+  - deploy
+
+variables:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PIP_NO_CACHE_DIR: "1"
+  CALM_CI_RUNTIME_BASE: "/var/tmp"
+  PYTHONNOUSERSITE: "1"
+  MPLBACKEND: "Agg"
+  CALM_REPO_URL: "$CI_PROJECT_URL"
+  CALM_REPO_NAME: "$CI_PROJECT_PATH"
+  CALM_EDIT_URI: "-/edit/$CI_DEFAULT_BRANCH/docs/"
+
+# -----------------
+# Interpreter and package-index preflight
+# -----------------
+
+ci:py311-preflight:
+  stage: preflight
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-preflight-py311.txt
+    - '$CALM_CI_PYTHON -c "import platform, ssl, sys; print(\"preflight_python=\" + repr(sys.version)); print(\"preflight_platform=\" + repr(platform.platform())); print(\"preflight_openssl=\" + repr(ssl.OPENSSL_VERSION))"'
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - build/ci/
+    expire_in: 1 week
+
+# -----------------
+# Unit / smoke tests
+# Linux jobs provide secondary portability evidence; macOS arm64 is the
+# primary local release-qualification platform.
+# -----------------
+
+ruff:typing-modernization:
+  stage: test
+  tags:
+    - dane
+    - shell
+  timeout: 5m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-ruff.txt
+    - $CALM_CI_PYTHON engineering/qualification/check_typing_modernization_contract.py
+    - $CALM_CI_PYTHON -m ruff check --config engineering/qualification/ruff-typing-modernization.toml @engineering/qualification/typing-modernization-files.txt
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - build/ci/
+    expire_in: 1 week
+
+pytest:py311:
+  stage: test
+  parallel: 3
+  tags:
+    - dane
+    - shell
+  timeout: 20m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  variables:
+    COVERAGE_FILE: ".coverage.${CI_NODE_INDEX}"
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-test-py311.txt
+    - >-
+      $CALM_CI_PYTHON engineering/ci/run_pytest_shard.py
+      --index "$CI_NODE_INDEX"
+      --count "$CI_NODE_TOTAL"
+      --manifest "build/ci/pytest-shard-${CI_NODE_INDEX}.json"
+      --
+      -q
+      --timeout=300
+      -m "not real_backend"
+      --durations=30
+      --junitxml="junit-${CI_NODE_INDEX}.xml"
+      --cov=calm
+      --cov-report=
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    reports:
+      junit: junit-*.xml
+    paths:
+      - junit-*.xml
+      - .coverage.*
+      - build/ci/
+    expire_in: 1 week
+
+coverage:py311:
+  stage: coverage
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  needs:
+    - job: pytest:py311
+      artifacts: true
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-coverage-py311.txt
+    - ls -la .coverage.*
+    - $CALM_CI_PYTHON -m coverage combine
+    - $CALM_CI_PYTHON -m coverage report
+    - $CALM_CI_PYTHON -m coverage xml -o coverage.xml
+    - $CALM_CI_PYTHON -m coverage html -d htmlcov
+  after_script:
+    - engineering/ci/capture_environment.sh
+  coverage: '/TOTAL.*\s+(\d+)%/'
+  artifacts:
+    when: always
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - coverage.xml
+      - htmlcov/
+      - build/ci/
+    expire_in: 1 week
+
+qualification:linux-py311-contract:
+  stage: test
+  tags:
+    - dane
+    - shell
+  timeout: 20m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-test-py311.txt
+    - >-
+      $CALM_CI_PYTHON engineering/qualification/qualify.py
+      --cell linux-x86_64-py311-core
+      --profile contracts
+      --profile persistence
+      --output build/qualification/linux-py311-contract.json
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - build/qualification/
+      - build/ci/
+    expire_in: 4 weeks
+
+# -----------------
+# Docs build
+# -----------------
+
+docs:mkdocs:
+  stage: docs
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-docs-py311.txt
+    - $CALM_CI_PYTHON -m mkdocs build --strict
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - site/
+      - build/ci/
+    expire_in: 1 week
+
+# -----------------
+# Package build
+# -----------------
+
+build:dist:
+  stage: build
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - $CALM_CI_PYTHON engineering/qualification/check_packaging_contract.py
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-build-py311.txt
+    - rm -rf build dist calm.egg-info
+    - $CALM_CI_PYTHON -m build
+    - $CALM_CI_PYTHON engineering/qualification/check_python_distribution_artifacts.py --dist-dir dist
+    - $CALM_CI_PYTHON -m twine check dist/*
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - dist/
+      - build/ci/
+    expire_in: 1 week
+
+# -----------------
+# GitLab Pages
+# -----------------
+
+pages:
+  stage: deploy
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-docs-py311.txt
+    - test -n "${CI_PAGES_URL:-}"
+    - CALM_SITE_URL="${CI_PAGES_URL%/}/" $CALM_CI_PYTHON -m mkdocs build --strict --site-dir public
+  after_script:
+    - engineering/ci/capture_environment.sh
+  pages: true
+  artifacts:
+    when: always
+    paths:
+      - public
+      - build/ci/
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      when: on_success
+
+# -----------------
+# Release builds
+# -----------------
+
+dist:release:
+  stage: build
+  tags:
+    - dane
+    - shell
+  timeout: 10m
+  id_tokens:
+    SITE_ID_TOKEN:
+      aud: https://lc.llnl.gov/gitlab
+  before_script:
+    - source engineering/ci/bootstrap_python.sh
+  script:
+    - $CALM_CI_PYTHON engineering/qualification/check_packaging_contract.py
+    - engineering/ci/install_requirements.sh engineering/ci/requirements-build-py311.txt
+    - rm -rf build dist calm.egg-info
+    - $CALM_CI_PYTHON -m build
+    - $CALM_CI_PYTHON engineering/qualification/check_python_distribution_artifacts.py --dist-dir dist
+    - $CALM_CI_PYTHON -m twine check dist/*
+  after_script:
+    - engineering/ci/capture_environment.sh
+  artifacts:
+    when: always
+    paths:
+      - dist/
+      - build/ci/
+    expire_in: 4 weeks
+  rules:
+    - if: $CI_COMMIT_TAG

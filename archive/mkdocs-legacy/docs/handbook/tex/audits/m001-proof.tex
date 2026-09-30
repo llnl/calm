@@ -1,0 +1,112 @@
+
+\section{Mathematical Analysis}
+
+\subsection{Theorem M001.1}
+
+Let
+\[
+\mathbf h=(h,k,l)\in\mathbb Z^3
+\]
+be a primitive Miller index satisfying
+\[
+\gcd(h,k,l)=1.
+\]
+
+Then there exists an orientation-preserving unimodular matrix
+\[
+S\in SL(3,\mathbb Z)
+\]
+such that
+\[
+\mathbf hS=(0,0,1).
+\]
+
+\subsection{Proof Strategy}
+
+The proof is constructive and follows the same mathematical decomposition
+used by the implementation, but is independent of any programming
+language.
+
+\subsubsection*{Step 1: Primitive Reduction}
+
+If $\gcd(h,k,l)=g>1$, then every integer linear combination of
+$h,k,l$ is divisible by $g$. Consequently the Diophantine equation
+\[
+hx+ky+lz=1
+\]
+has no integer solution.
+
+Therefore primitive reduction is a necessary precondition.
+
+\subsubsection*{Step 2: Bézout Witness}
+
+Since $\gcd(h,k,l)=1$, Bézout's identity guarantees integers
+$x,y,z$ satisfying
+\[
+hx+ky+lz=1.
+\]
+
+Thus there exists an integer vector
+\[
+\mathbf w=(x,y,z)^T
+\]
+with
+\[
+\mathbf h\mathbf w=1.
+\]
+
+\subsubsection*{Step 3: Integer Kernel}
+
+The homomorphism
+\[
+\phi:\mathbb Z^3\rightarrow\mathbb Z,
+\qquad
+\phi(\mathbf v)=\mathbf h\mathbf v
+\]
+has image $\mathbb Z$ because $\mathbf h$ is primitive.
+
+Hence
+\[
+\ker(\phi)
+\]
+is a free abelian group of rank two.
+
+Choose a primitive basis
+$\{\mathbf u_1,\mathbf u_2\}$ for this kernel.
+
+\subsubsection*{Step 4: Assemble the Basis}
+
+Define
+\[
+S=
+\begin{bmatrix}
+\mathbf u_1 &
+\mathbf u_2 &
+\mathbf w
+\end{bmatrix}.
+\]
+
+By construction,
+\[
+\mathbf hS=(0,0,1).
+\]
+
+If $\det(S)=-1$, negate one kernel basis vector. This preserves the
+generated kernel lattice while producing an orientation-preserving basis.
+
+\subsection{Consequences}
+
+The theorem establishes only existence. It does not imply uniqueness.
+Different primitive kernel bases correspond to gauge-equivalent
+representatives of the same surface lattice.
+
+\subsection{Questions for the Implementation Audit}
+
+The implementation review must determine:
+
+\begin{enumerate}
+\item Does the algorithm construct a primitive kernel basis?
+\item Does the implementation always produce a unimodular matrix?
+\item Is the orientation repair mathematically equivalent to the proof?
+\item Are all proof assumptions enforced by the implementation?
+\end{enumerate}

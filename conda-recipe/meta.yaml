@@ -1,0 +1,50 @@
+{% set name = "calm" %}
+{% set version = "1.0.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  number: 0
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python >=3.10,<3.13
+    - pip
+    - setuptools >=77
+    - wheel
+  run:
+    - python >=3.10,<3.13
+    - numpy >=1.26,<3
+    - sqlalchemy >=2.0,<3
+
+test:
+  imports:
+    - calm
+
+about:
+  home: https://czgitlab.llnl.gov/weitzner/calm
+  license: MIT
+  license_family: MIT
+  license_file:
+    - LICENSE
+    - NOTICE
+  summary: Canonicalized Affine-invariant Lattice Matching for Interface Models
+  description: |
+    CALM is a stable Python library for deterministic interface enumeration,
+    systematic prototype search, and follow-up analysis for crystalline
+    solid-solid interfaces. The conda package mirrors the import-light base
+    Python distribution; atomistic and crystallographic workflows require
+    the separately managed science dependencies.
+  doc_url: https://czgitlab.llnl.gov/weitzner/calm/-/tree/main/docs
+  dev_url: https://czgitlab.llnl.gov/weitzner/calm
+
+extra:
+  recipe-maintainers:
+    - sweitzner

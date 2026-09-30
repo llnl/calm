@@ -1,0 +1,69 @@
+{
+  "case": "equal_square",
+  "class_count": 2,
+  "first_discovery_indices": [
+    1,
+    5
+  ],
+  "implementation": "primitive_coupled_pair_v2",
+  "index5_pair_oracle": {
+    "candidates_admitted": 32,
+    "correspondence_domains": 12,
+    "member_pairs_expanded": 12,
+    "orbit_pairs_considered": 9,
+    "orbit_prefilter_admitted": 3,
+    "orbit_prefilter_inconclusive": 0,
+    "orbit_prefilter_rejected": 6,
+    "primitive_classes_created": 1,
+    "sources_aggregated_by_pair_key": 31,
+    "strain_admissible_correspondences": 32
+  },
+  "index5_surface_oracle": {
+    "admitted_members": 6,
+    "comparison_orbits": 3,
+    "comparison_symmetry_reduction": 3,
+    "condition_rejected": 0,
+    "hnf_generated": 6,
+    "k": 5,
+    "reduction_failed": 0
+  },
+  "k_max": 5,
+  "oracle_status": "pass",
+  "pair_identity_policy": {
+    "correspondence_orientation": "proper",
+    "key_version": 1,
+    "material_exchange_identified": false,
+    "pair_symmetry_policy": "full"
+  },
+  "pair_identity_sha256": "9a62f2c77ce6de406b09fb62067b07b15863dfe2074aa27d01ae3bdbee7683bd",
+  "pair_key_sha256": "0738e5451deb04dc792dc75a2f842ed3678ed238e7e61cca5fee863bf2c68a59",
+  "primitive_pair_keys": [
+    [
+      -1,
+      0,
+      0,
+      -1,
+      1,
+      0,
+      0,
+      1
+    ],
+    [
+      -4,
+      -3,
+      -3,
+      -1,
+      5,
+      3,
+      0,
+      1
+    ]
+  ],
+  "schema": "calm.coupled_match_qualification/v2",
+  "surface_operation_counts": {
+    "A": 8,
+    "B": 8
+  },
+  "surface_symmetry_mode": "explicit_fixture",
+  "symmetry_source": "full_square_d4"
+}

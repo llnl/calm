@@ -1,0 +1,3 @@
+# Small package-index probe used before the full CI fan-out.
+setuptools>=77,<83
+wheel>=0.45,<1

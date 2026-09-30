@@ -1,0 +1,50 @@
+\chapter{M006 --- Periodic Slab Realization}
+
+\section{Stage 3 --- Implementation Review}
+
+\subsection{Purpose}
+
+Identify how the implementation realizes a \emph{Slab Specification} as a
+\emph{Periodic Slab}. This stage documents the implementation only. It does
+not assess correctness or architectural quality.
+
+\subsection{Implementation Responsibilities}
+
+\begin{enumerate}
+\item Validate the slab specification.
+\item Construct a periodic slab satisfying the specification.
+\item Realize the requested boundary conditions and vacuum region.
+\item Preserve the crystallographic and specification invariants.
+\item Record implementation provenance as needed.
+\end{enumerate}
+
+\subsection{Scientific Input}
+
+Slab Specification.
+
+\subsection{Scientific Output}
+
+Periodic Slab.
+
+\subsection{Implementation Decomposition}
+
+The implementation may employ intermediate geometric representations during
+construction. These are implementation mechanisms used to realize the final
+Periodic Slab and are \emph{not} treated as independent scientific objects.
+
+\subsection{Transformation Classification}
+
+\begin{itemize}
+\item Scientific transformation: Slab Specification $\rightarrow$ Periodic Slab.
+\item Representation transformations: internal coordinate, indexing, and
+metadata manipulations.
+\item Gauge operations: choices such as origin placement or equivalent
+representatives that do not change the scientific object.
+\item Implementation utilities: geometric helper routines used during
+construction.
+\end{itemize}
+
+\subsection{Stage Status}
+
+This stage is descriptive only. Comparison against the mathematical
+specification and correctness assessment are deferred to Stages~4--6.

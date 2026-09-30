@@ -1,0 +1,52 @@
+\chapter{M005 --- Slab Specification}
+
+\section{Stage 1 --- Revised Mathematical Specification}
+
+\subsection{Reason for Revision}
+
+Inspection of the implementation indicates that slab construction is more
+naturally decomposed into specification, geometric realization, and
+final slab representation.
+
+\subsection{Scientific Purpose}
+
+Construct a Slab Specification from a selected Surface Termination.
+
+\subsection{Transformation}
+
+\[
+\Phi_{\mathrm{spec}}:
+\mathcal{T}_{\mathrm{surface}}
+\rightarrow
+\mathcal{S}_{\mathrm{spec}}
+\]
+
+\subsection{Inputs}
+
+\begin{itemize}
+\item Surface Termination
+\item Thickness parameters
+\item Boundary-condition parameters
+\end{itemize}
+
+\subsection{Output}
+
+A Slab Specification.
+
+\subsection{Scientific Content}
+
+A Slab Specification records the scientific parameters required to
+realize a slab without yet constructing its finite geometry.
+
+\subsection{Invariants}
+
+\begin{itemize}
+\item Selected surface termination
+\item Crystallographic orientation
+\item In-plane lattice
+\end{itemize}
+
+\subsection{Deferred Transformations}
+
+Finite geometric realization and canonical slab construction are treated
+as subsequent transformations pending implementation review.

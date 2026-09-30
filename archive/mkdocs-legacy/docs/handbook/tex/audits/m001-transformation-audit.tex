@@ -1,0 +1,85 @@
+
+\chapter{Transformation Audit M001}
+\label{chap:audit-m001}
+
+\section{Mathematical Specification}
+
+\subsection*{Scientific Purpose}
+Construct an orientation-preserving integer basis adapted to a primitive
+Miller plane.
+
+\subsection*{Domain}
+Primitive Miller indices $\mathbf h\in\mathbb Z^3$ with
+$\gcd(h,k,l)=1$.
+
+\subsection*{Codomain}
+Matrices $S\in SL(3,\mathbb Z)$ satisfying
+\[
+\mathbf hS=(0,0,1).
+\]
+
+\subsection*{Scientific Invariants}
+\begin{itemize}
+\item Integer lattice preserved.
+\item Orientation preserved.
+\item Surface normal preserved.
+\item Kernel basis remains primitive.
+\end{itemize}
+
+\subsection*{Gauge Freedom}
+Changing the sign of an in-plane basis vector does not alter the surface
+lattice and is treated as gauge fixing.
+
+\section{Algorithm}
+
+\begin{enumerate}
+\item Reduce the Miller index to primitive form.
+\item Construct Bézout coefficients.
+\item Build a unimodular reduction.
+\item Permute the basis to align the surface normal.
+\item Repair orientation if necessary.
+\item Verify all defining invariants.
+\end{enumerate}
+
+\section{Implementation Mapping}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Algorithm step & CALM procedure & Notes\\
+\hline
+Primitive reduction & \texttt{\_reduce\_hkl()} & Exact integer arithmetic\\
+Bézout coefficients & \texttt{\_extended\_gcd()} & Extended Euclidean algorithm\\
+Unimodular reduction & \texttt{\_right\_reduce\_row\_to\_hnf()} & Successive Bézout elimination\\
+Assembly & \texttt{surface\_basis\_S\_from\_hkl()} & Composite transformation\\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Verification Matrix}
+
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Obligation & Evidence & Status\\
+\hline
+Primitive Miller index & Implementation & Review complete\\
+$\mathbf hS=(0,0,1)$ & Assertions/tests & Verified\\
+$\det(S)=1$ & Implementation & Verified\\
+Primitive kernel basis & Requires dedicated audit & Pending\\
+$S^{-1}\in SL(3,\mathbb Z)$ & Not yet identified & Pending\\
+\hline
+\end{tabular}
+\end{center}
+
+\section{Audit Findings}
+
+\begin{enumerate}
+\item The implementation decomposes naturally into four mathematical
+sub-transformations rather than a single operation.
+\item Orientation repair is a gauge-fixing operation, not a scientific
+morphism.
+\item The routine \texttt{\_right\_reduce\_row\_to\_hnf()} is best
+understood as a constructive unimodular reduction based on successive
+Bézout eliminations.
+\end{enumerate}

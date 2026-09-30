@@ -1,0 +1,41 @@
+\chapter{M005 --- Ontology Refinement}
+
+\section{Findings}
+
+Inspection of the slab implementation indicates that slab construction is
+not a single monolithic transformation.
+
+\subsection{Evidence}
+
+Dedicated implementation modules include:
+
+\begin{itemize}
+\item thickness control,
+\item slab geometry,
+\item tilt metadata,
+\item primitive surface algorithm,
+\item termination enumeration.
+\end{itemize}
+
+\subsection{Proposed Scientific Decomposition}
+
+\[
+\text{Surface Termination}
+\rightarrow
+\text{Slab Specification}
+\rightarrow
+\text{Finite Slab Geometry}
+\rightarrow
+\text{Slab}
+\]
+
+\subsection{Rationale}
+
+Thickness control introduces an independent mathematical object
+(parameterized slab specification) that should be audited separately
+before geometric realization.
+
+\subsection{Recommendation}
+
+Suspend the current M005 audit and restart with the refined ontology if
+subsequent implementation review confirms this decomposition.

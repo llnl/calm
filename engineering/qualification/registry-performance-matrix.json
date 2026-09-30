@@ -1,0 +1,92 @@
+{
+  "schema": "calm.registry_performance_matrix/v2",
+  "roadmap_series": "0337",
+  "update": "0337e",
+  "default_repeats": 5,
+  "default_memory_repeats": 1,
+  "correctness_fields": [
+    "proposal_count",
+    "trajectory_sha256",
+    "score_trace_sha256",
+    "best_translation_hex",
+    "best_score_quantized",
+    "n_steps",
+    "n_accepted",
+    "objective_evaluations",
+    "atom_count"
+  ],
+  "workloads": [
+    {
+      "id": "registry_small_64_atoms_80_steps",
+      "atoms_per_slab": 32,
+      "n_steps": 80,
+      "step_scale": 0.08,
+      "seed": 123,
+      "profile": false,
+      "purpose": "Short orchestration sentinel guarding prepared-evaluator overhead.",
+      "expected": {
+        "trajectory_sha256": "8db10d0fdc651e60122e9c6f772702cd59d1f89396dcf3b1b6a4873bc367096d",
+        "score_trace_sha256": "2b823de9fac0c6f2ca058cb97901c91f6214025bca9ab3a1d6e87b9aa8340037",
+        "best_translation_hex": [
+          "0x1.6eb0faf55ed2fp-2",
+          "0x1.3a7d93cd3d5f4p-1"
+        ],
+        "best_score_quantized": "1.1596532899e-03",
+        "n_steps": 80,
+        "n_accepted": 11,
+        "objective_evaluations": 81,
+        "atom_count": 64,
+        "proposal_count": 80
+      }
+    },
+    {
+      "id": "registry_medium_600_atoms_400_steps",
+      "atoms_per_slab": 300,
+      "n_steps": 400,
+      "step_scale": 0.08,
+      "seed": 123,
+      "profile": true,
+      "purpose": "Primary cheap-calculator workload exposing repeated fixed-geometry reconstruction.",
+      "expected": {
+        "trajectory_sha256": "04dffcadc4d50c9a80753fed3d3892887f86a028efe89c94e386e12651eb7c7e",
+        "score_trace_sha256": "7485929b0c670f12fb9552ffd1db1f232ab0d65722270c0e70847aead94978fa",
+        "best_translation_hex": [
+          "0x1.7b608b9550c73p-2",
+          "0x1.3947cf7613ffep-1"
+        ],
+        "best_score_quantized": "1.0037550459e-03",
+        "n_steps": 400,
+        "n_accepted": 13,
+        "objective_evaluations": 401,
+        "atom_count": 600,
+        "proposal_count": 400
+      }
+    },
+    {
+      "id": "registry_large_2400_atoms_200_steps",
+      "atoms_per_slab": 1200,
+      "n_steps": 200,
+      "step_scale": 0.08,
+      "seed": 321,
+      "profile": true,
+      "purpose": "Large atom-count workload qualifying memory and copy scaling.",
+      "expected": {
+        "trajectory_sha256": "21f510d11556eadc6dbd1e75added7ce3f5331baccbcc6077838bc5e0ac1ef72",
+        "score_trace_sha256": "536fa0d2fbcb5ef5ab13b96f66496628dd132d9336d6e07e8da0026bf64421a9",
+        "best_translation_hex": [
+          "0x1.79084c0c360e8p-2",
+          "0x1.3c54bfbc5fbb6p-1"
+        ],
+        "best_score_quantized": "1.0646283119e-03",
+        "n_steps": 200,
+        "n_accepted": 9,
+        "objective_evaluations": 201,
+        "atom_count": 2400,
+        "proposal_count": 200
+      }
+    }
+  ],
+  "diagnostic_fields": [
+    "observed_proposal_trace_sha256"
+  ]
+}

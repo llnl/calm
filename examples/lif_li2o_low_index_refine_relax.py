@@ -1,0 +1,1521 @@
+#!/usr/bin/env python3
+"""Refine and relax the selected LiF/Li2O low-index interface candidates.
+
+Run ``lif_li2o_low_index_pareto.py`` first. This standalone follow-on program
+opens that persistent project, selects a configured Pareto and/or controlled
+high-strain candidate cohort, and then performs the following calculator-backed
+workflow for each selected candidate:
+
+1. build the coherent interface at an initial strain partition and registry;
+2. scan the strain-partition parameter ``alpha``;
+3. run a translation-only Monte Carlo registry search;
+4. recover the unrelaxed total energy from the selected registry objective;
+5. relax atomic positions at fixed cell; and
+6. calculate ``(E_relaxed - E_unrelaxed) / N``.
+
+The script checkpoints aggregate CSV outputs and the three relaxation-summary
+figures after every completed candidate, then writes five final
+publication-oriented figures:
+
+* strain-partition energy versus ``alpha``;
+* Monte Carlo registry energy traces;
+* relaxation energy per atom versus total logarithmic strain norm;
+* relaxation energy per atom versus isotropic logarithmic strain norm; and
+* relaxation energy per atom versus deviatoric logarithmic strain norm.
+
+``CANDIDATE_SCOPE`` can use the global or pair-local Pareto populations, a
+controlled high-strain extension drawn from dominated admitted candidates, or
+the union of the pair-local front and that extension. The high-strain sampler
+is deterministic and balances surface pairs and isotropic/deviatoric strain
+character while retaining an explicit atom-count guard.
+
+CALM's current public ``Project.build_interfaces`` method reselects candidates
+from the Pareto front and therefore cannot construct this filtered dominated
+cohort. To keep this exploratory workflow out of CALM's public API, the script
+isolates construction in ``build_selected_interfaces`` using the existing
+Project-owned private build and persistence services. That compatibility shim
+is deliberately guarded and is the only private-API use in this script.
+
+The default calculator is GRACE-1L-OMAT on CPU. Confirm model suitability and
+convergence independently before interpreting the calculated energies.
+"""
+
+from __future__ import annotations
+
+import csv
+from collections import defaultdict
+from itertools import product
+from math import ceil, isfinite
+from pathlib import Path
+from typing import Any, Iterable, Mapping, Sequence
+
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.ticker import MaxNLocator, PercentFormatter
+
+from calm import (
+    BuildSettings,
+    Potential,
+    RegistrySettings,
+    RelaxSettings,
+    StrainPartitionSettings,
+    open_project,
+)
+
+
+# -----------------------------------------------------------------------------
+# Shared project and candidate identity
+# -----------------------------------------------------------------------------
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+WORK_DIR = SCRIPT_DIR / "work" / "lif-li2o-low-index-pareto"
+PROJECT_DIR = WORK_DIR / "lif-li2o-low-index-grace.calm"
+OUTPUT_DIR = WORK_DIR / "outputs-grace" / "refine-relax"
+CHECKPOINT_DIR = OUTPUT_DIR / "checkpoints"
+
+MILLERS = (
+    (1, 0, 0),
+    (1, 1, 0),
+    (1, 1, 1),
+)
+SEARCH_PREFIX = "lif-li2o-low-index-v1"
+
+# Increment this prefix when changing scientific controls in a way that should
+# create a distinguishable follow-up lineage.
+WORKFLOW_PREFIX = "lif-li2o-refine-relax-v1"
+
+# Supported values: "global_pareto", "pair_pareto", "high_strain", and
+# "pair_pareto_plus_high_strain". The combined scope preserves the original
+# pair-Pareto ordering so compatible completed work retains its registry seed.
+CANDIDATE_SCOPE = "high_strain"
+
+# The high-strain extension samples admitted candidates that are not on their
+# pair-local Pareto front. Strain norms are dimensionless (0.03 means 3%).
+# Each isotropic-fraction target selects one candidate per surface pair. The
+# fraction is ||E_iso||_F^2 / ||E||_F^2, consistent with the orthogonal strain
+# decomposition. Start with a conservative atom ceiling for faster turnaround;
+# increase it later to admit additional surface pairs and strain characters.
+HIGH_STRAIN_MIN_NORM = 0.03
+HIGH_STRAIN_MAX_NORM: float | None = None
+HIGH_STRAIN_MAX_ATOMS: int | None = 1000
+HIGH_STRAIN_ISOTROPIC_FRACTION_TARGETS = (0.0, 1.0)
+
+# Optional safety limit applied after deterministic cohort ordering.
+# ``None`` processes every candidate in the selected supported scope.
+MAX_SELECTED_CANDIDATES: int | None = None
+
+# Set True to write ``selection-plan.csv`` and stop before building or running
+# calculators. This is useful because the high-strain extension can contain
+# substantially larger and more expensive interfaces.
+SELECTION_ONLY = False
+
+# Refresh partial aggregate outputs after this many attempted candidates.
+# Set to ``None`` to disable checkpointing. Summary figures are inexpensive and
+# are regenerated by default; the potentially large detail grids are optional.
+CHECKPOINT_EVERY_N_CANDIDATES: int | None = 1
+CHECKPOINT_INCLUDE_DETAIL_FIGURES = False
+
+
+# -----------------------------------------------------------------------------
+# Calculator and workflow controls
+# -----------------------------------------------------------------------------
+
+POTENTIAL_MODEL = "GRACE-1L-OMAT"
+POTENTIAL_DEVICE = "cpu"
+POTENTIAL_QUIET = True
+
+BUILD_SETTINGS = BuildSettings(
+    strain_partition="both",
+    alpha=0.5,
+    gap=1.5,
+    vacuum=15.0,
+    translation=(0.0, 0.0),
+)
+
+STRAIN_PARTITION_SETTINGS = StrainPartitionSettings(
+    target_metric="potential_energy_density_eV_per_A2",
+    alphas=tuple(index / 20.0 for index in range(21)),
+)
+
+REGISTRY_STEPS = 50
+REGISTRY_TRANSLATION_STEP = 0.08
+REGISTRY_BASE_SEED = 20260901
+
+RELAX_SETTINGS = RelaxSettings(
+    fmax=0.03,
+    steps=500,
+    relax_cell=False,
+)
+
+# Refinement failures stop the workflow because later structures would be
+# undefined. Relaxation failures are persisted and reported while allowing
+# other candidates to continue.
+CALCULATION_BACKEND = "real"
+CALCULATION_ON_ERROR = "record"
+
+REGISTRY_ENERGY_OBJECTIVE = "unrelaxed_total_energy_density_eV_per_A2"
+REGISTRY_ENERGY_UNITS = "eV_per_A2"
+
+
+# -----------------------------------------------------------------------------
+# Figure configuration
+# -----------------------------------------------------------------------------
+
+# Set True for self-contained figures. Set False when a shared legend will be
+# added during multipanel assembly.
+SHOW_LEGEND = False
+
+FIGURE_WIDTH_IN = 5.6
+AXES_WIDTH_TO_HEIGHT = 1.25
+LEFT_MARGIN_IN = 0.86
+RIGHT_MARGIN_IN = 0.14
+BOTTOM_MARGIN_IN = 0.70
+TOP_MARGIN_IN = 0.10
+LEGEND_BAND_HEIGHT_IN = 0.42
+
+DETAIL_FIGURE_WIDTH_IN = 7.2
+DETAIL_NCOLS = 2
+DETAIL_PANEL_HEIGHT_IN = 2.45
+
+LEGEND_FONT_SIZE = 9.0
+AXIS_LABEL_FONT_SIZE = 12.0
+TICK_LABEL_FONT_SIZE = 10.0
+DETAIL_TITLE_FONT_SIZE = 9.0
+
+CANDIDATE_ALPHA = 1.0
+CANDIDATE_SIZE = 46
+CANDIDATE_EDGE_WIDTH = 0.7
+
+# Color encodes the LiF orientation; marker shape encodes the Li2O
+# orientation, matching the companion geometric-search figures.
+LIF_COLORS = {
+    (1, 0, 0): "#0072B2",
+    (1, 1, 0): "#D55E00",
+    (1, 1, 1): "#009E73",
+}
+LI2O_MARKERS = {
+    (1, 0, 0): "o",
+    (1, 1, 0): "s",
+    (1, 1, 1): "^",
+}
+
+
+def compact_hkl(miller: tuple[int, int, int]) -> str:
+    """Return a compact Miller label such as ``100`` or ``111``."""
+
+    return "".join(str(value) for value in miller)
+
+
+def search_name(
+    miller_a: tuple[int, int, int],
+    miller_b: tuple[int, int, int],
+) -> str:
+    """Return the stable search name used by the enumeration script."""
+
+    return (
+        f"{SEARCH_PREFIX}-lif-{compact_hkl(miller_a)}"
+        f"-li2o-{compact_hkl(miller_b)}"
+    )
+
+
+SEARCH_ORIENTATIONS = {
+    search_name(miller_a, miller_b): (miller_a, miller_b)
+    for miller_a, miller_b in product(MILLERS, repeat=2)
+}
+
+
+def candidate_uid(row: Mapping[str, Any]) -> str:
+    """Return the full authoritative identity used to join workflow stages."""
+
+    value = (
+        row.get("candidate_uid")
+        or row.get("project_prototype_uid")
+        or row.get("prototype_uid")
+    )
+    if not value:
+        label = row.get("candidate_id") or "<unknown>"
+        raise RuntimeError(
+            f"Candidate {label!r} lacks an authoritative full identity."
+        )
+    return str(value)
+
+
+def candidate_key(row: Mapping[str, Any]) -> str:
+    """Return a readable key that is unique across the nine searches."""
+
+    name = str(row["search_name"])
+    miller_a, miller_b = SEARCH_ORIENTATIONS[name]
+    display_id = str(row.get("candidate_id") or candidate_uid(row)[-8:])
+    return (
+        f"lif{compact_hkl(miller_a)}-li2o{compact_hkl(miller_b)}-"
+        f"{display_id}"
+    )
+
+
+def candidate_sort_key(row: Mapping[str, Any]) -> tuple[Any, ...]:
+    """Sort candidates deterministically by size, strain, and identity."""
+
+    return (
+        int(row["n_atoms_estimate"]),
+        float(row["strain_norm"]),
+        str(row.get("search_name") or ""),
+        candidate_uid(row),
+    )
+
+
+def candidate_metadata(row: Mapping[str, Any]) -> dict[str, Any]:
+    """Return plotting and provenance metadata for one selected candidate."""
+
+    name = str(row["search_name"])
+    miller_a, miller_b = SEARCH_ORIENTATIONS[name]
+    return {
+        "candidate_key": candidate_key(row),
+        "candidate_id": str(row.get("candidate_id") or ""),
+        "candidate_uid": candidate_uid(row),
+        "project_prototype_id": row.get("project_prototype_id"),
+        "search_name": name,
+        "lif_surface": f"({compact_hkl(miller_a)})",
+        "li2o_surface": f"({compact_hkl(miller_b)})",
+        "lif_miller": compact_hkl(miller_a),
+        "li2o_miller": compact_hkl(miller_b),
+        "analysis_cohort": row.get("analysis_cohort"),
+        "n_atoms_estimate": int(row["n_atoms_estimate"]),
+        "strain_norm": float(row["strain_norm"]),
+        "isotropic_strain_norm": float(row["isotropic_strain_norm"]),
+        "deviatoric_strain_norm": float(row["deviatoric_strain_norm"]),
+    }
+
+
+def add_metadata(
+    rows: Iterable[Mapping[str, Any]],
+    metadata: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Attach candidate metadata to detached public result rows."""
+
+    return [{**dict(metadata), **dict(row)} for row in rows]
+
+
+def write_csv(
+    path: Path,
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    preferred: Sequence[str] = (),
+) -> None:
+    """Write heterogeneous public rows with deterministic column ordering."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not rows:
+        path.write_text("", encoding="utf-8")
+        return
+
+    keys = {str(key) for row in rows for key in row}
+    fieldnames = [name for name in preferred if name in keys]
+    fieldnames.extend(sorted(keys.difference(fieldnames)))
+    with path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=fieldnames,
+            extrasaction="raise",
+        )
+        writer.writeheader()
+        writer.writerows(dict(row) for row in rows)
+
+
+def pair_pareto_rows(project: Any) -> list[dict[str, Any]]:
+    """Return the deterministically ordered union of pair-local fronts."""
+
+    rows: list[dict[str, Any]] = []
+    for name in SEARCH_ORIENTATIONS:
+        rows.extend(
+            dict(row)
+            for row in project.search(name)
+            .candidates()
+            .pareto(scope="authoritative")
+            .to_rows(view="all")
+        )
+    rows.sort(key=candidate_sort_key)
+    return rows
+
+
+def isotropic_strain_fraction(row: Mapping[str, Any]) -> float:
+    """Return the squared isotropic contribution to the total strain norm."""
+
+    total = float(row["strain_norm"])
+    isotropic = float(row["isotropic_strain_norm"])
+    if total <= 0.0:
+        return 0.0
+    fraction = (isotropic / total) ** 2
+    return min(1.0, max(0.0, fraction))
+
+
+def high_strain_rows(
+    project: Any,
+    *,
+    excluded_uids: set[str],
+) -> list[dict[str, Any]]:
+    """Select a deterministic, strain-character-balanced extension cohort."""
+
+    if HIGH_STRAIN_MIN_NORM < 0.0:
+        raise ValueError("HIGH_STRAIN_MIN_NORM must be non-negative.")
+    if (
+        HIGH_STRAIN_MAX_NORM is not None
+        and HIGH_STRAIN_MAX_NORM < HIGH_STRAIN_MIN_NORM
+    ):
+        raise ValueError(
+            "HIGH_STRAIN_MAX_NORM must be at least HIGH_STRAIN_MIN_NORM."
+        )
+    if HIGH_STRAIN_MAX_ATOMS is not None and HIGH_STRAIN_MAX_ATOMS <= 0:
+        raise ValueError("HIGH_STRAIN_MAX_ATOMS must be positive or None.")
+    targets = tuple(float(value) for value in HIGH_STRAIN_ISOTROPIC_FRACTION_TARGETS)
+    if not targets or any(value < 0.0 or value > 1.0 for value in targets):
+        raise ValueError(
+            "HIGH_STRAIN_ISOTROPIC_FRACTION_TARGETS must contain values in [0, 1]."
+        )
+
+    selected: list[dict[str, Any]] = []
+    for name in SEARCH_ORIENTATIONS:
+        admitted = [
+            dict(row)
+            for row in project.search(name).candidates().to_rows(view="all")
+        ]
+        eligible = []
+        for row in admitted:
+            uid = candidate_uid(row)
+            strain = float(row["strain_norm"])
+            n_atoms = int(row["n_atoms_estimate"])
+            if uid in excluded_uids or strain < HIGH_STRAIN_MIN_NORM:
+                continue
+            if HIGH_STRAIN_MAX_NORM is not None and strain > HIGH_STRAIN_MAX_NORM:
+                continue
+            if HIGH_STRAIN_MAX_ATOMS is not None and n_atoms > HIGH_STRAIN_MAX_ATOMS:
+                continue
+            eligible.append(row)
+
+        chosen_uids: set[str] = set()
+        for target in targets:
+            available = [
+                row for row in eligible if candidate_uid(row) not in chosen_uids
+            ]
+            if not available:
+                break
+            chosen = min(
+                available,
+                key=lambda row: (
+                    abs(isotropic_strain_fraction(row) - target),
+                    -float(row["strain_norm"]),
+                    int(row["n_atoms_estimate"]),
+                    candidate_uid(row),
+                ),
+            )
+            chosen = {**chosen, "analysis_cohort": "high_strain_extension"}
+            selected.append(chosen)
+            chosen_uids.add(candidate_uid(chosen))
+
+        print(
+            f"High-strain extension for {name}: selected "
+            f"{len(chosen_uids)} of {len(eligible)} eligible candidates."
+        )
+
+    selected.sort(key=candidate_sort_key)
+    return selected
+
+
+def select_candidate_rows(project: Any) -> list[dict[str, Any]]:
+    """Select the configured Pareto and/or high-strain analysis population."""
+
+    names = list(SEARCH_ORIENTATIONS)
+    pair_rows: list[dict[str, Any]] | None = None
+    if CANDIDATE_SCOPE == "global_pareto":
+        collection = project.candidates().where(search_name=names)
+        rows = [
+            {
+                **dict(row),
+                "analysis_cohort": "global_pareto",
+            }
+            for row in collection.pareto(scope="computed").to_rows(view="all")
+        ]
+        rows.sort(key=candidate_sort_key)
+    elif CANDIDATE_SCOPE == "pair_pareto":
+        rows = [
+            {**row, "analysis_cohort": "pair_pareto"}
+            for row in pair_pareto_rows(project)
+        ]
+    elif CANDIDATE_SCOPE in {
+        "high_strain",
+        "pair_pareto_plus_high_strain",
+    }:
+        pair_rows = pair_pareto_rows(project)
+        excluded = {candidate_uid(row) for row in pair_rows}
+        extension = high_strain_rows(project, excluded_uids=excluded)
+        if CANDIDATE_SCOPE == "high_strain":
+            rows = extension
+        else:
+            baseline = [
+                {**row, "analysis_cohort": "pair_pareto"}
+                for row in pair_rows
+            ]
+            # Keep the baseline first so its historical index-based registry
+            # seeds remain unchanged when the extension is enabled.
+            rows = baseline + extension
+    else:
+        raise ValueError(
+            "CANDIDATE_SCOPE must be 'global_pareto', 'pair_pareto', "
+            "'high_strain', or 'pair_pareto_plus_high_strain'."
+        )
+
+    if not rows:
+        raise RuntimeError(
+            f"No candidates were found for CANDIDATE_SCOPE={CANDIDATE_SCOPE!r}."
+        )
+
+    required = (
+        "search_name",
+        "n_atoms_estimate",
+        "strain_norm",
+        "isotropic_strain_norm",
+        "deviatoric_strain_norm",
+    )
+    incomplete = [
+        row.get("candidate_id") or candidate_uid(row)
+        for row in rows
+        if any(row.get(field) is None for field in required)
+    ]
+    if incomplete:
+        raise RuntimeError(
+            "Selected candidates lack required public metrics: "
+            + ", ".join(map(str, incomplete[:8]))
+        )
+
+    if MAX_SELECTED_CANDIDATES is not None:
+        if MAX_SELECTED_CANDIDATES <= 0:
+            raise ValueError("MAX_SELECTED_CANDIDATES must be positive or None.")
+        rows = rows[:MAX_SELECTED_CANDIDATES]
+    return rows
+
+
+def build_selected_interfaces(
+    project: Any,
+    selected_rows: Sequence[Mapping[str, Any]],
+) -> dict[str, str]:
+    """Build exactly the script-selected candidates and return persistent UIDs.
+
+    CALM's current public builder always performs its own Pareto selection. This
+    standalone analysis needs admitted dominated candidates, so construction is
+    delegated directly to the Project-owned build and persistence services. Keep
+    this compatibility shim local to the exploratory script; it intentionally
+    does not alter or extend CALM's supported public API.
+    """
+
+    build_service = getattr(project, "_interface_builds", None)
+    build_one = getattr(build_service, "_build_interface_model", None)
+    saver = getattr(project, "_saver", None)
+    persist_one = getattr(saver, "record_interface_model", None)
+    if not callable(build_one) or not callable(persist_one):
+        raise RuntimeError(
+            "This script requires the CALM Project-owned interface build and "
+            "persistence services used by the reviewed repository snapshot. "
+            "The installed CALM version is incompatible with this standalone "
+            "analysis shim."
+        )
+
+    by_search: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in selected_rows:
+        by_search[str(row["search_name"])].append(row)
+
+    built_by_candidate: dict[str, str] = {}
+    for name in SEARCH_ORIENTATIONS:
+        targets = by_search.get(name, [])
+        if not targets:
+            continue
+
+        search = project.search(name)
+        target_uids = {candidate_uid(row) for row in targets}
+        selected = search.candidates().where(candidate_uid=target_uids)
+        if len(selected) != len(target_uids):
+            raise RuntimeError(
+                f"Search {name!r} resolved {len(selected)} of "
+                f"{len(target_uids)} explicitly selected candidates."
+            )
+
+        report = selected.validate_buildable()
+        if not report.ok:
+            raise RuntimeError(
+                f"Buildability validation failed for selected candidates in "
+                f"{name!r}:\n{report.summary()}"
+            )
+
+        print(f"\nBuilding {len(selected)} script-selected candidates for {name}")
+
+        for row in targets:
+            uid = candidate_uid(row)
+            if not (
+                row.get("project_prototype_uid")
+                or row.get("project_prototype_id")
+            ):
+                raise RuntimeError(
+                    f"Candidate {candidate_key(row)!r} lacks an authoritative "
+                    "persistent prototype identity."
+                )
+
+            model = build_one(dict(row), settings=BUILD_SETTINGS)
+            if getattr(model, "candidate", None) is None:
+                model.candidate = dict(row)
+            persisted = persist_one(
+                model,
+                name=f"{WORKFLOW_PREFIX}-{candidate_key(row)}-built",
+            )
+            interface_uid = (
+                persisted.get("uid_full")
+                if isinstance(persisted, Mapping)
+                else getattr(persisted, "uid_full", None)
+            ) or (
+                persisted.get("id_short")
+                if isinstance(persisted, Mapping)
+                else getattr(persisted, "id_short", None)
+            )
+            if not interface_uid:
+                raise RuntimeError(
+                    "Persisted interface for candidate "
+                    f"{candidate_key(row)!r} lacks persistent identity."
+                )
+            built_by_candidate[candidate_key(row)] = str(interface_uid)
+
+    if len(built_by_candidate) != len(selected_rows):
+        raise RuntimeError(
+            "Not every selected candidate was mapped to a built interface."
+        )
+    return built_by_candidate
+
+
+def successful_relaxation_row(
+    rows: Sequence[Mapping[str, Any]],
+) -> dict[str, Any] | None:
+    """Return the single converged relaxation row, if present."""
+
+    successful = [
+        dict(row)
+        for row in rows
+        if row.get("final_energy_eV") is not None
+        and row.get("converged") is True
+        and row.get("failure") in (None, {})
+    ]
+    if len(successful) > 1:
+        raise RuntimeError("Expected one relaxation result per candidate.")
+    return successful[0] if successful else None
+
+
+def run_candidate_followups(
+    project: Any,
+    selected_rows: Sequence[Mapping[str, Any]],
+    built_by_candidate: Mapping[str, str],
+) -> dict[str, list[dict[str, Any]]]:
+    """Run refinement and relaxation for every selected candidate."""
+
+    selected_output = [
+        {**dict(candidate), **candidate_metadata(candidate)}
+        for candidate in selected_rows
+    ]
+    strain_points: list[dict[str, Any]] = []
+    registry_results: list[dict[str, Any]] = []
+    registry_trace: list[dict[str, Any]] = []
+    unrelaxed_results: list[dict[str, Any]] = []
+    relaxation_results: list[dict[str, Any]] = []
+    summary_rows: list[dict[str, Any]] = []
+    failure_rows: list[dict[str, Any]] = []
+
+    def snapshot() -> dict[str, list[dict[str, Any]]]:
+        """Return the accumulated rows without querying mutable project state."""
+
+        return {
+            "selected_candidates": selected_output,
+            "strain_points": strain_points,
+            "registry_results": registry_results,
+            "registry_trace": registry_trace,
+            "unrelaxed_results": unrelaxed_results,
+            "relaxation_results": relaxation_results,
+            "summary": summary_rows,
+            "failures": failure_rows,
+        }
+
+    checkpoint_results(
+        snapshot(),
+        completed=0,
+        total=len(selected_rows),
+        state="starting",
+        force=True,
+    )
+
+    for index, candidate in enumerate(selected_rows):
+        metadata = candidate_metadata(candidate)
+        key = str(metadata["candidate_key"])
+        candidate_dir = OUTPUT_DIR / "candidates" / key
+        candidate_dir.mkdir(parents=True, exist_ok=True)
+
+        print(
+            f"\n[{index + 1}/{len(selected_rows)}] Refining and relaxing {key}"
+        )
+        registry_settings = RegistrySettings(
+            steps=REGISTRY_STEPS,
+            translation_step=REGISTRY_TRANSLATION_STEP,
+            seed=REGISTRY_BASE_SEED + index,
+        )
+        refinement = project.refine_interfaces(
+            str(candidate["search_name"]),
+            interfaces=built_by_candidate[key],
+            strain_settings=STRAIN_PARTITION_SETTINGS,
+            registry_settings=registry_settings,
+            label_prefix=f"{WORKFLOW_PREFIX}-{key}",
+            on_error="raise",
+        )
+        if not refinement.ok:
+            raise RuntimeError(refinement.summary())
+        refinement.write_outputs(
+            candidate_dir,
+            filename_prefix="",
+            plots=(),
+        )
+
+        if refinement.strain_scan is None or refinement.registry_run is None:
+            raise RuntimeError(
+                f"Refinement for {key!r} did not return both result stages."
+            )
+        strain_rows = refinement.strain_scan.to_rows(view="all")
+        registry_rows = refinement.registry_run.to_rows(view="all")
+        trace_rows = refinement.registry_run.trace_rows()
+        strain_points.extend(add_metadata(strain_rows, metadata))
+        registry_results.extend(add_metadata(registry_rows, metadata))
+        registry_trace.extend(add_metadata(trace_rows, metadata))
+
+        registry_interfaces = refinement.interfaces(stage="registry_refined")
+        if len(registry_interfaces) != 1:
+            raise RuntimeError(
+                f"Expected one registry-refined interface for {key!r}; "
+                f"found {len(registry_interfaces)}."
+            )
+        registry_all = registry_interfaces.to_rows(view="all")[0]
+        registry_construction = registry_interfaces.to_rows(
+            view="construction"
+        )[0]
+        n_atoms = registry_construction.get("n_atoms")
+        if n_atoms is None or int(n_atoms) <= 0:
+            raise RuntimeError(f"Registry-refined interface {key!r} lacks atoms.")
+        n_atoms = int(n_atoms)
+
+        if len(registry_rows) != 1:
+            raise RuntimeError(
+                f"Expected one registry result for {key!r}; "
+                f"found {len(registry_rows)}."
+            )
+        registry_row = registry_rows[0]
+        objective = registry_row.get("objective")
+        objective_units = registry_row.get("objective_units")
+        if objective != REGISTRY_ENERGY_OBJECTIVE:
+            raise RuntimeError(
+                f"Registry result for {key!r} uses unsupported objective "
+                f"{objective!r}."
+            )
+        if objective_units != REGISTRY_ENERGY_UNITS:
+            raise RuntimeError(
+                f"Registry result for {key!r} uses unsupported units "
+                f"{objective_units!r}."
+            )
+
+        area_A2 = registry_construction.get("area_A2")
+        score_eV_per_A2 = registry_row.get("score")
+        if area_A2 is None or score_eV_per_A2 is None:
+            raise RuntimeError(
+                f"Registry result for {key!r} lacks energy density or area."
+            )
+        area_A2 = float(area_A2)
+        score_eV_per_A2 = float(score_eV_per_A2)
+        unrelaxed_energy = score_eV_per_A2 * area_A2
+        if (
+            not isfinite(area_A2)
+            or area_A2 <= 0.0
+            or not isfinite(score_eV_per_A2)
+            or not isfinite(unrelaxed_energy)
+        ):
+            raise RuntimeError(
+                f"Registry result for {key!r} has invalid energy or area."
+            )
+        unrelaxed_row = {
+            **metadata,
+            "registry_followup_id": registry_row.get("followup_id"),
+            "registry_interface_uid": registry_all.get("uid_full"),
+            "objective": objective,
+            "objective_units": objective_units,
+            "unrelaxed_energy_density_eV_per_A2": score_eV_per_A2,
+            "area_A2": area_A2,
+            "energy_eV": unrelaxed_energy,
+            "energy_source": "registry_selected_objective_times_area",
+        }
+        unrelaxed_results.append(unrelaxed_row)
+
+        relaxation = project.relax_interfaces(
+            registry_interfaces,
+            settings=RELAX_SETTINGS,
+            backend=CALCULATION_BACKEND,
+            resume=True,
+            partial_resume=True,
+            on_error=CALCULATION_ON_ERROR,
+        )
+        raw_relaxation_rows = relaxation.to_rows(view="all")
+        relaxation_results.extend(
+            add_metadata(raw_relaxation_rows, metadata)
+        )
+
+        relaxed_row = successful_relaxation_row(raw_relaxation_rows)
+        if relaxed_row is None:
+            failure_rows.append(
+                {
+                    **metadata,
+                    "unrelaxed_energy_ok": True,
+                    "relaxation_converged": relaxed_row is not None,
+                    "registry_interface_uid": registry_all.get("uid_full"),
+                }
+            )
+            print(
+                f"WARNING: {key} lacks a converged relaxation result; "
+                "it will be omitted from relaxation-energy plots."
+            )
+            checkpoint_results(
+                snapshot(),
+                completed=index + 1,
+                total=len(selected_rows),
+                state="running",
+            )
+            continue
+
+        relaxed_energy = float(relaxed_row["final_energy_eV"])
+        delta_energy = relaxed_energy - unrelaxed_energy
+        if not all(
+            isfinite(value)
+            for value in (unrelaxed_energy, relaxed_energy, delta_energy)
+        ):
+            raise RuntimeError(f"Non-finite relaxation energy for {key!r}.")
+
+        selected_strain_rows = [
+            row for row in strain_rows if row.get("is_selected") is True
+        ]
+        selected_alpha = (
+            float(selected_strain_rows[0]["alpha"])
+            if len(selected_strain_rows) == 1
+            else None
+        )
+        registry_shift = (
+            registry_rows[0].get("registry_shift_frac_a")
+            if len(registry_rows) == 1
+            else None
+        )
+        summary_rows.append(
+            {
+                **metadata,
+                "n_atoms": n_atoms,
+                "selected_alpha": selected_alpha,
+                "registry_shift_frac_a": registry_shift,
+                "registry_seed": REGISTRY_BASE_SEED + index,
+                "registry_interface_uid": registry_all.get("uid_full"),
+                "unrelaxed_energy_source": unrelaxed_row["energy_source"],
+                "unrelaxed_energy_density_eV_per_A2": score_eV_per_A2,
+                "interface_area_A2": area_A2,
+                "relaxation_result_uid": relaxed_row.get("uid_full"),
+                "unrelaxed_energy_eV": unrelaxed_energy,
+                "relaxed_energy_eV": relaxed_energy,
+                "relaxation_energy_eV": delta_energy,
+                "relaxation_energy_eV_per_atom": delta_energy / n_atoms,
+                "relaxation_converged": True,
+                "relaxation_steps": relaxed_row.get("n_steps"),
+                "max_force_eV_per_A": relaxed_row.get("max_force_eV_per_A"),
+            }
+        )
+
+        checkpoint_results(
+            snapshot(),
+            completed=index + 1,
+            total=len(selected_rows),
+            state="running",
+        )
+
+    return snapshot()
+
+
+def figure_size(*, show_legend: bool = SHOW_LEGEND) -> tuple[float, float]:
+    """Return a canvas size that preserves the requested axes geometry."""
+
+    axes_width = FIGURE_WIDTH_IN - LEFT_MARGIN_IN - RIGHT_MARGIN_IN
+    if axes_width <= 0.0 or AXES_WIDTH_TO_HEIGHT <= 0.0:
+        raise ValueError("Invalid figure width, margins, or axes aspect ratio.")
+    axes_height = axes_width / AXES_WIDTH_TO_HEIGHT
+    legend_height = LEGEND_BAND_HEIGHT_IN if show_legend else 0.0
+    return (
+        FIGURE_WIDTH_IN,
+        BOTTOM_MARGIN_IN + axes_height + legend_height + TOP_MARGIN_IN,
+    )
+
+
+def configure_panel_layout(fig: Any, ax: Any) -> None:
+    """Apply inch-based margins without changing the axes-box aspect ratio."""
+
+    figure_width, figure_height = fig.get_size_inches()
+    axes_width = figure_width - LEFT_MARGIN_IN - RIGHT_MARGIN_IN
+    axes_height = axes_width / AXES_WIDTH_TO_HEIGHT
+    fig.subplots_adjust(
+        left=LEFT_MARGIN_IN / figure_width,
+        right=1.0 - RIGHT_MARGIN_IN / figure_width,
+        bottom=BOTTOM_MARGIN_IN / figure_height,
+        top=(BOTTOM_MARGIN_IN + axes_height) / figure_height,
+    )
+    ax.set_box_aspect(1.0 / AXES_WIDTH_TO_HEIGHT)
+
+
+def style_axes(ax: Any, *, grid_axis: str = "both") -> None:
+    """Apply the shared restrained publication style."""
+
+    ax.set_axisbelow(True)
+    ax.grid(axis=grid_axis, color="0.90", linewidth=0.6)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_linewidth(0.8)
+    ax.spines["bottom"].set_linewidth(0.8)
+    ax.tick_params(
+        direction="out",
+        width=0.8,
+        labelsize=TICK_LABEL_FONT_SIZE,
+    )
+
+
+def orientation_legend_handles() -> list[Line2D]:
+    """Return the factorized color and marker legend used across figures."""
+
+    lif_handles = [
+        Line2D(
+            [],
+            [],
+            color=LIF_COLORS[miller],
+            linewidth=4.0,
+            solid_capstyle="butt",
+            label=(
+                rf"LiF: $({compact_hkl(miller)})$"
+                if index == 0
+                else rf"$({compact_hkl(miller)})$"
+            ),
+        )
+        for index, miller in enumerate(MILLERS)
+    ]
+    li2o_handles = [
+        Line2D(
+            [],
+            [],
+            linestyle="none",
+            marker=LI2O_MARKERS[miller],
+            markersize=5.5,
+            markerfacecolor="0.35",
+            markeredgecolor="none",
+            label=(
+                rf"Li$_2$O: $({compact_hkl(miller)})$"
+                if index == 0
+                else rf"$({compact_hkl(miller)})$"
+            ),
+        )
+        for index, miller in enumerate(MILLERS)
+    ]
+    return lif_handles + li2o_handles
+
+
+def add_orientation_legend(fig: Any) -> None:
+    """Add the shared legend without changing the plotting-box dimensions."""
+
+    if not SHOW_LEGEND:
+        return
+    figure_height = fig.get_figheight()
+    fig.legend(
+        handles=orientation_legend_handles(),
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.0 - TOP_MARGIN_IN / figure_height),
+        ncol=6,
+        frameon=False,
+        fontsize=LEGEND_FONT_SIZE,
+        borderaxespad=0.0,
+        handlelength=1.1,
+        handletextpad=0.35,
+        columnspacing=0.8,
+        markerfirst=False,
+    )
+
+
+def save_figure(
+    fig: Any,
+    stem: str,
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Save matched vector and high-resolution raster figure artifacts."""
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_dir / f"{stem}.pdf")
+    fig.savefig(output_dir / f"{stem}.png", dpi=300)
+    plt.close(fig)
+
+
+def panel_label(index: int) -> str:
+    """Return spreadsheet-style panel labels: a, ..., z, aa, ab, ...."""
+
+    if index < 0:
+        raise ValueError("Panel index must be non-negative.")
+    label = ""
+    value = index + 1
+    while value:
+        value, remainder = divmod(value - 1, 26)
+        label = chr(97 + remainder) + label
+    return label
+
+
+def detail_title(metadata: Mapping[str, Any], index: int) -> str:
+    """Return a compact small-multiple title."""
+
+    return (
+        f"{panel_label(index)}) {metadata['candidate_id']}  "
+        f"LiF{metadata['lif_surface']}/Li$_2$O{metadata['li2o_surface']}  "
+        f"$N={metadata['n_atoms_estimate']}$"
+    )
+
+
+def detail_figure(
+    n_panels: int,
+    *,
+    legend_height: float = 0.0,
+) -> tuple[Any, list[Any]]:
+    """Create a two-column small-multiple figure with 5:4 axes boxes."""
+
+    ncols = min(DETAIL_NCOLS, max(1, n_panels))
+    nrows = ceil(n_panels / ncols)
+    height = 0.85 + nrows * DETAIL_PANEL_HEIGHT_IN + legend_height
+    fig, axes_array = plt.subplots(
+        nrows,
+        ncols,
+        figsize=(DETAIL_FIGURE_WIDTH_IN, height),
+        squeeze=False,
+    )
+    axes = list(axes_array.flat)
+    top = 1.0 - (0.20 + legend_height) / height
+    fig.subplots_adjust(
+        left=0.105,
+        right=0.985,
+        bottom=0.075,
+        top=top,
+        wspace=0.30,
+        hspace=0.48,
+    )
+    for ax in axes:
+        ax.set_box_aspect(0.80)
+    return fig, axes
+
+
+def plot_strain_partition_grid(
+    rows: Sequence[Mapping[str, Any]],
+    metadata_by_key: Mapping[str, Mapping[str, Any]],
+    order: Sequence[str],
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Plot strain-partition energy above each candidate-specific minimum."""
+
+    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[str(row["candidate_key"])].append(row)
+    keys = [key for key in order if grouped.get(key)]
+    if not keys:
+        return
+
+    fig, axes = detail_figure(len(keys))
+    for index, key in enumerate(keys):
+        ax = axes[index]
+        metadata = metadata_by_key[key]
+        miller_a, miller_b = SEARCH_ORIENTATIONS[str(metadata["search_name"])]
+        points = sorted(grouped[key], key=lambda row: float(row["alpha"]))
+        energies = [
+            float(row["potential_energy_density_eV_per_A2"])
+            for row in points
+        ]
+        reference = min(energies)
+        relative = [1000.0 * (value - reference) for value in energies]
+        alphas = [float(row["alpha"]) for row in points]
+        ax.plot(
+            alphas,
+            relative,
+            color=LIF_COLORS[miller_a],
+            linewidth=1.3,
+            marker=LI2O_MARKERS[miller_b],
+            markersize=3.8,
+            markeredgewidth=0.0,
+        )
+        selected = [
+            position
+            for position, row in enumerate(points)
+            if row.get("is_selected") is True
+        ]
+        for position in selected:
+            ax.scatter(
+                [alphas[position]],
+                [relative[position]],
+                s=48,
+                marker=LI2O_MARKERS[miller_b],
+                facecolor=LIF_COLORS[miller_a],
+                edgecolor="black",
+                linewidth=CANDIDATE_EDGE_WIDTH,
+                zorder=5,
+            )
+        ax.set_title(
+            detail_title(metadata, index),
+            fontsize=DETAIL_TITLE_FONT_SIZE,
+            loc="left",
+        )
+        ax.set_xlim(-0.02, 1.02)
+        ax.xaxis.set_major_locator(MaxNLocator(nbins=5))
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=5))
+        style_axes(ax)
+
+    for ax in axes[len(keys) :]:
+        ax.set_visible(False)
+    fig.supxlabel(
+        r"Strain-partition parameter, $\alpha$",
+        fontsize=AXIS_LABEL_FONT_SIZE,
+        y=0.015,
+    )
+    fig.supylabel(
+        r"Energy above minimum (meV $\mathrm{\AA}^{-2}$)",
+        fontsize=AXIS_LABEL_FONT_SIZE,
+        x=0.018,
+    )
+    save_figure(
+        fig,
+        "strain-partition-energy-vs-alpha",
+        output_dir=output_dir,
+    )
+
+
+def plot_registry_trace_grid(
+    rows: Sequence[Mapping[str, Any]],
+    metadata_by_key: Mapping[str, Mapping[str, Any]],
+    order: Sequence[str],
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Plot current and best-so-far Monte Carlo registry energy traces."""
+
+    grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        grouped[str(row["candidate_key"])].append(row)
+    keys = [key for key in order if grouped.get(key)]
+    if not keys:
+        return
+
+    legend_height = 0.35 if SHOW_LEGEND else 0.0
+    fig, axes = detail_figure(len(keys), legend_height=legend_height)
+    for index, key in enumerate(keys):
+        ax = axes[index]
+        metadata = metadata_by_key[key]
+        miller_a, _ = SEARCH_ORIENTATIONS[str(metadata["search_name"])]
+        trace = sorted(grouped[key], key=lambda row: int(row["step"]))
+        reference = min(float(row["best_score"]) for row in trace)
+        steps = [int(row["step"]) for row in trace]
+        current = [
+            1000.0 * (float(row["current_score"]) - reference)
+            for row in trace
+        ]
+        best = [
+            1000.0 * (float(row["best_score"]) - reference)
+            for row in trace
+        ]
+        ax.plot(
+            steps,
+            current,
+            color="0.65",
+            linewidth=0.8,
+            alpha=0.75,
+        )
+        ax.plot(
+            steps,
+            best,
+            color=LIF_COLORS[miller_a],
+            linewidth=1.5,
+        )
+        ax.set_title(
+            detail_title(metadata, index),
+            fontsize=DETAIL_TITLE_FONT_SIZE,
+            loc="left",
+        )
+        ax.set_xlim(min(steps), max(steps))
+        ax.xaxis.set_major_locator(MaxNLocator(nbins=5, integer=True))
+        ax.yaxis.set_major_locator(MaxNLocator(nbins=5))
+        style_axes(ax)
+
+    for ax in axes[len(keys) :]:
+        ax.set_visible(False)
+    fig.supxlabel(
+        "Monte Carlo step",
+        fontsize=AXIS_LABEL_FONT_SIZE,
+        y=0.015,
+    )
+    fig.supylabel(
+        r"Energy above best (meV $\mathrm{\AA}^{-2}$)",
+        fontsize=AXIS_LABEL_FONT_SIZE,
+        x=0.018,
+    )
+    if SHOW_LEGEND:
+        fig.legend(
+            handles=[
+                Line2D([], [], color="0.65", linewidth=1.0, label="Current"),
+                Line2D(
+                    [],
+                    [],
+                    color="black",
+                    linewidth=1.5,
+                    label="Best so far",
+                ),
+            ],
+            loc="upper center",
+            ncol=2,
+            frameon=False,
+            fontsize=LEGEND_FONT_SIZE,
+        )
+    save_figure(
+        fig,
+        "registry-monte-carlo-energy-trace",
+        output_dir=output_dir,
+    )
+
+
+def y_limits_with_zero(values: Sequence[float]) -> tuple[float, float]:
+    """Return padded limits that retain the physically meaningful zero line."""
+
+    lower = min(values)
+    upper = max(max(values), 0.0)
+    span = upper - lower
+    if span <= 0.0:
+        span = max(abs(lower), 0.01)
+    padding = 0.08 * span
+    return lower - padding, upper + padding
+
+
+def plot_relaxation_summary(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    x_key: str,
+    x_label: str,
+    stem: str,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Plot relaxation energy per atom against one candidate strain metric."""
+
+    if not rows:
+        return
+    fig, ax = plt.subplots(figsize=figure_size())
+    for row in rows:
+        name = str(row["search_name"])
+        miller_a, miller_b = SEARCH_ORIENTATIONS[name]
+        ax.scatter(
+            [float(row[x_key])],
+            [float(row["relaxation_energy_eV_per_atom"])],
+            s=CANDIDATE_SIZE,
+            marker=LI2O_MARKERS[miller_b],
+            facecolor=LIF_COLORS[miller_a],
+            edgecolor="black",
+            linewidth=CANDIDATE_EDGE_WIDTH,
+            alpha=CANDIDATE_ALPHA,
+            zorder=4,
+        )
+
+    x_values = [float(row[x_key]) for row in rows]
+    y_values = [float(row["relaxation_energy_eV_per_atom"]) for row in rows]
+    x_upper = max(x_values)
+    if x_upper <= 0.0:
+        x_upper = 0.01
+    ax.set_xlim(-0.025 * x_upper, 1.06 * x_upper)
+    ax.set_ylim(*y_limits_with_zero(y_values))
+    ax.axhline(0.0, color="0.35", linewidth=0.8, zorder=1)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(
+        r"Relaxation energy per atom, $\Delta E_\mathrm{relax}/N$ "
+        r"(eV atom$^{-1}$)"
+    )
+    ax.xaxis.set_major_locator(MaxNLocator(nbins=5))
+    ax.xaxis.set_major_formatter(PercentFormatter(xmax=1.0, decimals=1))
+    ax.yaxis.set_major_locator(MaxNLocator(nbins=5))
+    ax.xaxis.label.set_size(AXIS_LABEL_FONT_SIZE)
+    ax.yaxis.label.set_size(AXIS_LABEL_FONT_SIZE)
+    style_axes(ax)
+    configure_panel_layout(fig, ax)
+    add_orientation_legend(fig)
+    save_figure(fig, stem, output_dir=output_dir)
+
+
+def write_aggregate_outputs(
+    results: Mapping[str, list[dict[str, Any]]],
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Write the combined tabular evidence used by every figure."""
+
+    preferred_identity = (
+        "candidate_key",
+        "candidate_id",
+        "candidate_uid",
+        "project_prototype_id",
+        "search_name",
+        "lif_surface",
+        "li2o_surface",
+        "analysis_cohort",
+        "n_atoms_estimate",
+    )
+    write_csv(
+        output_dir / "selected-candidates.csv",
+        results["selected_candidates"],
+        preferred=preferred_identity,
+    )
+    write_csv(
+        output_dir / "strain-partition-points.csv",
+        results["strain_points"],
+        preferred=(*preferred_identity, "alpha", "is_selected"),
+    )
+    write_csv(
+        output_dir / "registry-search-results.csv",
+        results["registry_results"],
+        preferred=preferred_identity,
+    )
+    write_csv(
+        output_dir / "registry-search-trace.csv",
+        results["registry_trace"],
+        preferred=(*preferred_identity, "step"),
+    )
+    write_csv(
+        output_dir / "unrelaxed-energy-results.csv",
+        results["unrelaxed_results"],
+        preferred=(
+            *preferred_identity,
+            "registry_interface_uid",
+            "unrelaxed_energy_density_eV_per_A2",
+            "area_A2",
+            "energy_eV",
+            "energy_source",
+        ),
+    )
+    write_csv(
+        output_dir / "relaxation-results.csv",
+        results["relaxation_results"],
+        preferred=preferred_identity,
+    )
+    write_csv(
+        output_dir / "relaxation-energy-summary.csv",
+        results["summary"],
+        preferred=(
+            *preferred_identity,
+            "n_atoms",
+            "strain_norm",
+            "isotropic_strain_norm",
+            "deviatoric_strain_norm",
+            "unrelaxed_energy_source",
+            "unrelaxed_energy_density_eV_per_A2",
+            "interface_area_A2",
+            "unrelaxed_energy_eV",
+            "relaxed_energy_eV",
+            "relaxation_energy_eV",
+            "relaxation_energy_eV_per_atom",
+        ),
+    )
+    write_csv(
+        output_dir / "incomplete-candidates.csv",
+        results["failures"],
+        preferred=preferred_identity,
+    )
+
+
+def make_summary_figures(
+    results: Mapping[str, list[dict[str, Any]]],
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Create the three relaxation-versus-strain summary figures."""
+
+    summary = results["summary"]
+    plot_relaxation_summary(
+        summary,
+        x_key="strain_norm",
+        x_label=r"Logarithmic strain norm, $\|\mathbf{E}\|_\mathrm{F}$ (%)",
+        stem="relaxation-energy-vs-log-strain",
+        output_dir=output_dir,
+    )
+    plot_relaxation_summary(
+        summary,
+        x_key="isotropic_strain_norm",
+        x_label=(
+            r"Isotropic logarithmic strain norm, "
+            r"$\|\mathbf{E}_\mathrm{iso}\|_\mathrm{F}$ (%)"
+        ),
+        stem="relaxation-energy-vs-isotropic-log-strain",
+        output_dir=output_dir,
+    )
+    plot_relaxation_summary(
+        summary,
+        x_key="deviatoric_strain_norm",
+        x_label=(
+            r"Deviatoric logarithmic strain norm, "
+            r"$\|\mathbf{E}_\mathrm{dev}\|_\mathrm{F}$ (%)"
+        ),
+        stem="relaxation-energy-vs-deviatoric-log-strain",
+        output_dir=output_dir,
+    )
+
+
+def make_figures(
+    results: Mapping[str, list[dict[str, Any]]],
+    *,
+    output_dir: Path = OUTPUT_DIR,
+) -> None:
+    """Create the five requested publication-oriented figures."""
+
+    metadata_rows = [
+        candidate_metadata(row) for row in results["selected_candidates"]
+    ]
+    metadata_by_key = {
+        str(row["candidate_key"]): row for row in metadata_rows
+    }
+    order = [str(row["candidate_key"]) for row in metadata_rows]
+
+    plot_strain_partition_grid(
+        results["strain_points"],
+        metadata_by_key,
+        order,
+        output_dir=output_dir,
+    )
+    plot_registry_trace_grid(
+        results["registry_trace"],
+        metadata_by_key,
+        order,
+        output_dir=output_dir,
+    )
+    make_summary_figures(results, output_dir=output_dir)
+
+
+def checkpoint_results(
+    results: Mapping[str, list[dict[str, Any]]],
+    *,
+    completed: int,
+    total: int,
+    state: str,
+    force: bool = False,
+) -> None:
+    """Refresh partial tables and plots after a configurable work interval."""
+
+    interval = CHECKPOINT_EVERY_N_CANDIDATES
+    if interval is None:
+        return
+    if interval <= 0:
+        raise ValueError("CHECKPOINT_EVERY_N_CANDIDATES must be positive or None.")
+    if not force and completed < total and completed % interval != 0:
+        return
+
+    write_aggregate_outputs(results, output_dir=CHECKPOINT_DIR)
+    write_csv(
+        CHECKPOINT_DIR / "checkpoint-status.csv",
+        [
+            {
+                "state": state,
+                "completed_candidates": completed,
+                "total_candidates": total,
+                "successful_relaxations": len(results["summary"]),
+                "incomplete_candidates": len(results["failures"]),
+            }
+        ],
+        preferred=(
+            "state",
+            "completed_candidates",
+            "total_candidates",
+            "successful_relaxations",
+            "incomplete_candidates",
+        ),
+    )
+    if CHECKPOINT_INCLUDE_DETAIL_FIGURES:
+        make_figures(results, output_dir=CHECKPOINT_DIR)
+    else:
+        make_summary_figures(results, output_dir=CHECKPOINT_DIR)
+    print(
+        "[checkpoint] "
+        f"{completed}/{total} attempted; "
+        f"{len(results['summary'])} relaxation pairs -> {CHECKPOINT_DIR}"
+    )
+
+
+def main() -> None:
+    if not PROJECT_DIR.exists():
+        raise FileNotFoundError(
+            f"CALM project not found at {PROJECT_DIR}. Run "
+            "lif_li2o_low_index_pareto.py first."
+        )
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    project = open_project(PROJECT_DIR, summarize=True)
+    potential = Potential.grace(
+        POTENTIAL_MODEL,
+        device=POTENTIAL_DEVICE,
+        quiet=POTENTIAL_QUIET,
+    )
+    potential.validate()
+    project.configure(mlip="grace", calculator=potential.to_spec())
+
+    selected_rows = select_candidate_rows(project)
+    print(
+        f"\nSelected {len(selected_rows)} candidates from "
+        f"{CANDIDATE_SCOPE!r}."
+    )
+    selection_plan = [
+        {**dict(row), **candidate_metadata(row)} for row in selected_rows
+    ]
+    write_csv(
+        OUTPUT_DIR / "selection-plan.csv",
+        selection_plan,
+        preferred=(
+            "analysis_cohort",
+            "candidate_key",
+            "candidate_id",
+            "candidate_uid",
+            "search_name",
+            "lif_surface",
+            "li2o_surface",
+            "n_atoms_estimate",
+            "strain_norm",
+            "isotropic_strain_norm",
+            "deviatoric_strain_norm",
+        ),
+    )
+    print(f"Selection plan: {OUTPUT_DIR / 'selection-plan.csv'}")
+    if SELECTION_ONLY:
+        print("SELECTION_ONLY=True; no interfaces or calculations were run.")
+        return
+
+    built_by_candidate = build_selected_interfaces(project, selected_rows)
+    results = run_candidate_followups(
+        project,
+        selected_rows,
+        built_by_candidate,
+    )
+    write_aggregate_outputs(results)
+    make_figures(results)
+    checkpoint_results(
+        results,
+        completed=len(selected_rows),
+        total=len(selected_rows),
+        state="complete",
+        force=True,
+    )
+
+    print("\nCompleted LiF/Li2O refinement and relaxation workflow.")
+    print(f"Selected candidates: {len(selected_rows)}")
+    print(f"Complete relaxation-energy pairs: {len(results['summary'])}")
+    print(f"Incomplete candidates: {len(results['failures'])}")
+    print(f"Project: {PROJECT_DIR}")
+    print(f"Outputs: {OUTPUT_DIR}")
+
+
+if __name__ == "__main__":
+    main()

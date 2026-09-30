@@ -1,0 +1,54 @@
+
+\chapter{M003 --- Surface Termination}
+
+\section{Stage 3 --- Implementation Review}
+
+\subsection{Purpose}
+
+This stage identifies how the implementation constructs surface
+terminations. It is descriptive only and does not evaluate correctness.
+
+\subsection{Implementation Responsibilities}
+
+The implementation is responsible for:
+
+\begin{enumerate}
+\item Enumerating admissible terminations.
+\item Constructing candidate surface truncations.
+\item Preserving crystallographic orientation.
+\item Carrying sufficient provenance to distinguish physically distinct
+terminations.
+\end{enumerate}
+
+\subsection{Mathematical Input}
+
+\begin{itemize}
+\item Primitive Surface
+\item Bulk crystal description
+\end{itemize}
+
+\subsection{Mathematical Output}
+
+\begin{itemize}
+\item Surface Termination
+\end{itemize}
+
+\subsection{Implementation Classification}
+
+\begin{center}
+\begin{tabular}{|p{0.45\linewidth}|p{0.28\linewidth}|}
+\hline
+Implementation role & Classification\\
+\hline
+Termination enumeration & Scientific transformation\\
+Termination selection & Scientific transformation\\
+Termination metadata/provenance & Representation support\\
+Equivalent-origin handling & Gauge operation\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Stage 3 Status}
+
+No comparison against the mathematical specification has yet been
+performed. Correctness assessment is deferred to Stage 4.

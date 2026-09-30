@@ -1,0 +1,82 @@
+site_name: CALM
+site_description: Coherent solid-solid interface construction and reproducible scientific workflows
+site_url: !ENV CALM_SITE_URL
+repo_url: !ENV CALM_REPO_URL
+repo_name: !ENV CALM_REPO_NAME
+edit_uri: !ENV CALM_EDIT_URI
+
+docs_dir: docs
+
+extra_css:
+  - stylesheets/extra.css
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.path
+    - toc.follow
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Learn:
+      - Build your first interface: learn/first-interface.md
+      - Compare candidates: learn/compare-candidates.md
+      - Refine, relax, and evaluate: learn/refine-relax-evaluate.md
+  - Use CALM:
+      - Projects: use/projects.md
+      - Materials: use/materials.md
+      - Surfaces and terminations: use/surfaces.md
+      - Searches and candidates: use/searches.md
+      - Build and refine interfaces: use/build-refine.md
+      - Relax and evaluate: use/relax-evaluate.md
+      - Datasets and campaigns: use/datasets-campaigns.md
+  - Understand:
+      - Surface models: understand/surface-models.md
+      - Surface cells and supercells: understand/surface-supercells.md
+      - Coherent matching, strain, and Pareto selection: understand/coherent-matching.md
+      - Strain partitioning and registry: understand/strain-registry.md
+      - Relaxation, energy, and reference conventions: understand/energetics.md
+  - Reference:
+      - Public API: reference/public-api.md
+      - Project operations: reference/api/project.md
+      - Inputs and settings: reference/api/inputs-settings.md
+      - Returned objects and tables: reference/api/returned-objects.md
+      - Exceptions and utilities: reference/api/exceptions-utilities.md
+      - Units and conventions: reference/units-conventions.md
+      - Terminology: reference/terminology.md
+      - Supported scope: reference/supported-scope.md
+      - Calculator support: reference/calculator-support.md
+      - Geometry and project troubleshooting: reference/troubleshooting-geometry.md
+      - Calculation and data troubleshooting: reference/troubleshooting-calculations.md
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - engineering/documentation/generate_api_reference.py
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.snippets:
+      base_path:
+        - .
+      check_paths: true
+      dedent_subsections: true
+      restrict_base_path: true
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

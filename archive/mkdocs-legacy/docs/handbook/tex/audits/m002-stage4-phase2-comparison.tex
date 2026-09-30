@@ -1,0 +1,52 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 4 --- Comparison (Phase 2)}
+
+\subsection{Mathematical Proposition}
+
+Transforming a Miller covector from the conventional reciprocal basis to
+the primitive reciprocal basis preserves the represented crystallographic
+plane.
+
+\subsection{Implementation}
+
+The implementation applies the verified basis transformation to obtain a
+primitive Miller covector before any integer-lattice construction.
+
+\subsection{Comparison}
+
+\begin{center}
+\begin{tabular}{|p{0.42\linewidth}|p{0.36\linewidth}|}
+\hline
+Mathematical requirement & Implementation status\\
+\hline
+Plane preserved & Implemented\\
+Orientation preserved & Implemented\\
+Coordinate representation changes & Yes\\
+Scientific surface unchanged & Yes\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence}
+
+Current evidence:
+
+\begin{itemize}
+\item Mathematical specification (Stage 1).
+\item Mathematical analysis (Stage 2).
+\item Implementation decomposition (Stage 3).
+\item Module algorithm description.
+\end{itemize}
+
+\subsection{Audit Result}
+
+The implementation is consistent with the mathematical interpretation of
+this phase as a representation transformation between reciprocal-space
+coordinate systems. No discrepancy has been identified at this stage.
+
+\subsection{Outstanding Questions}
+
+The detailed reciprocal-space mapping and sign conventions will be
+verified during the evidence review (Stage 5).

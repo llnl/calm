@@ -1,0 +1,57 @@
+{
+  "cell": [
+    [
+      3.61,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      3.61,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      3.61
+    ]
+  ],
+  "info": {
+    "calm_tutorial_name": "cu",
+    "calm_tutorial_role": "ase-emt",
+    "calm_tutorial_system": "Cu/Ni"
+  },
+  "numbers": [
+    29,
+    29,
+    29,
+    29
+  ],
+  "pbc": [
+    true,
+    true,
+    true
+  ],
+  "scaled_positions": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      0.0,
+      0.5
+    ],
+    [
+      0.5,
+      0.5,
+      0.0
+    ]
+  ]
+}

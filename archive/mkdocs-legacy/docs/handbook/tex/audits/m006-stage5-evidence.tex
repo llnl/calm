@@ -1,0 +1,51 @@
+\chapter{M006 --- Evidence}
+
+\section{Stage 5 --- Evidence}
+
+This stage records the evidence supporting the conclusion that the
+implementation realizes the mathematical transformation documented in
+Stages~1--2. It does not introduce architectural recommendations.
+
+\section{Traceability Matrix}
+
+\begin{tabular}{p{0.24\textwidth}p{0.22\textwidth}p{0.20\textwidth}p{0.24\textwidth}}
+\textbf{Mathematical Proposition} &
+\textbf{Implementation Evidence} &
+\textbf{Verification Evidence} &
+\textbf{Assessment}\\
+\hline
+Specification defines slab realization &
+Construction routines &
+Unit/integration tests &
+Evidence to be confirmed.\\
+Periodic slab produced &
+Periodic cell generation &
+Structure validation &
+Evidence to be confirmed.\\
+Termination preserved &
+Surface realization routines &
+Regression tests &
+Evidence to be confirmed.\\
+Requested thickness realized &
+Thickness construction logic &
+Geometry checks &
+Evidence to be confirmed.\\
+Requested vacuum realized &
+Vacuum construction logic &
+Geometry checks &
+Evidence to be confirmed.\\
+Gauge choices preserve object &
+Coordinate normalization &
+Invariant checks &
+Evidence to be confirmed.\\
+\end{tabular}
+
+\section{Evidence Gaps}
+
+Any proposition lacking implementation or verification evidence should be
+recorded here for resolution before architectural conclusions are drawn.
+
+\section{Stage Summary}
+
+The objective of this stage is complete mathematical traceability. All
+architectural recommendations remain deferred until Stage~6.

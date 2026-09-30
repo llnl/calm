@@ -1,0 +1,1002 @@
+{
+  "schema_version": "calm.package_ownership.v2",
+  "package_root_files": [
+    "__init__.py",
+    "_version.py",
+    "api.py",
+    "exceptions.py"
+  ],
+  "top_level_packages": {
+    "analysis": {
+      "role": "Scientific ranking and Pareto-analysis kernels.",
+      "allowed_calm_import_roots": []
+    },
+    "bulk": {
+      "role": "Bulk crystal models, provenance, and submitted-representation identity.",
+      "allowed_calm_import_roots": [
+        "structure",
+        "symmetry"
+      ]
+    },
+    "calculators": {
+      "role": "Optional calculator specifications, providers, identity, and execution boundaries.",
+      "allowed_calm_import_roots": [
+        "exceptions",
+        "keys"
+      ]
+    },
+    "interface": {
+      "role": "Interface matching, construction, energy, refinement, and shared interface models.",
+      "allowed_calm_import_roots": [
+        "analysis",
+        "calculators",
+        "exceptions",
+        "keys",
+        "math2d",
+        "serialization",
+        "slab",
+        "structure",
+        "symmetry",
+        "viz"
+      ]
+    },
+    "keys": {
+      "role": "Canonical scientific identity and integer normal-form keys.",
+      "allowed_calm_import_roots": [
+        "math2d",
+        "slab",
+        "structure",
+        "symmetry"
+      ]
+    },
+    "math2d": {
+      "role": "Dependency-light two-dimensional lattice and matrix kernels.",
+      "allowed_calm_import_roots": []
+    },
+    "project": {
+      "role": "Durable application, domain, persistence, runtime composition, and project presentation.",
+      "allowed_calm_import_roots": [
+        "_version",
+        "analysis",
+        "bulk",
+        "calculators",
+        "exceptions",
+        "interface",
+        "keys",
+        "math2d",
+        "serialization",
+        "slab",
+        "structure",
+        "symmetry"
+      ]
+    },
+    "public": {
+      "role": "Implementation of the single Project-centered public facade and returned read models.",
+      "allowed_calm_import_roots": [
+        "_version",
+        "analysis",
+        "bulk",
+        "calculators",
+        "exceptions",
+        "interface",
+        "project",
+        "serialization",
+        "slab",
+        "structure",
+        "symmetry",
+        "viz"
+      ]
+    },
+    "serialization": {
+      "role": "Strict current JSON projection and isolated historical regression serialization.",
+      "allowed_calm_import_roots": []
+    },
+    "slab": {
+      "role": "Slab models and the single oriented-slab implementation package.",
+      "allowed_calm_import_roots": [
+        "bulk",
+        "exceptions",
+        "keys",
+        "serialization",
+        "structure",
+        "symmetry"
+      ]
+    },
+    "structure": {
+      "role": "Exact structure payloads, ASE adapters, I/O, validation, standardization, and characterization.",
+      "allowed_calm_import_roots": [
+        "exceptions",
+        "serialization"
+      ]
+    },
+    "symmetry": {
+      "role": "Bulk and surface symmetry reduction, groups, and resolvers.",
+      "allowed_calm_import_roots": [
+        "exceptions",
+        "structure"
+      ]
+    },
+    "viz": {
+      "role": "Optional scientific visualization helpers.",
+      "allowed_calm_import_roots": [
+        "analysis"
+      ]
+    }
+  },
+  "project_layers": {
+    "domain": [],
+    "ports": [
+      "domain"
+    ],
+    "application": [
+      "domain",
+      "ports"
+    ],
+    "infrastructure": [
+      "domain",
+      "ports"
+    ],
+    "runtime": [
+      "application",
+      "domain",
+      "presentation"
+    ],
+    "presentation": [
+      "domain",
+      "ports"
+    ]
+  },
+  "public_layers": {
+    "inputs": [
+      "errors",
+      "records"
+    ],
+    "records": [
+      "collections",
+      "errors",
+      "inputs",
+      "presentation",
+      "projections"
+    ],
+    "collections": [
+      "errors",
+      "inputs",
+      "presentation",
+      "projections",
+      "records"
+    ],
+    "projections": [],
+    "workflows": [
+      "collections",
+      "errors",
+      "inputs",
+      "persistence",
+      "presentation",
+      "projections",
+      "records"
+    ],
+    "queries": [
+      "collections",
+      "records"
+    ],
+    "persistence": [
+      "errors",
+      "projections"
+    ],
+    "presentation": [
+      "projections"
+    ]
+  },
+  "retirement": {
+    "retired_modules": [
+      "calm._bulk_standardization_contract",
+      "calm._campaign_contract",
+      "calm._conditioning_contract",
+      "calm._dataset_contract",
+      "calm._derived_interface_contract",
+      "calm._energy_contract",
+      "calm._energy_result_contract",
+      "calm._json_contract",
+      "calm._refinement_contract",
+      "calm._refinement_result_contract",
+      "calm._relaxation_contract",
+      "calm._relaxed_reference_contract",
+      "calm._slab_record_contract",
+      "calm._strain_state_contract",
+      "calm._surface_symmetry_group",
+      "calm._surface_symmetry_resolver",
+      "calm._zur_mcgill_contract",
+      "calm.ase_adapter",
+      "calm.calculators.attach",
+      "calm.calculators.availability",
+      "calm.calculators.factory",
+      "calm.extras",
+      "calm.graph",
+      "calm.interface._matching_dedupe",
+      "calm.interface._matching_enumeration",
+      "calm.interface._matching_orchestrator",
+      "calm.interface._matching_scoring",
+      "calm.interface.builder",
+      "calm.interface.ops.registry_search_runner",
+      "calm.interface.pruning",
+      "calm.interface.refinement.registry_compat",
+      "calm.interface.refinement.registry_geometry",
+      "calm.interface.refinement.registry_runner",
+      "calm.interface.refs",
+      "calm.interface.workflows",
+      "calm.io",
+      "calm.kernels",
+      "calm.math2d.integer2x2",
+      "calm.math2d.norms2x2",
+      "calm.math2d.robust",
+      "calm.project.infrastructure.logging",
+      "calm.project.infrastructure.unit_of_work",
+      "calm.project.legacy",
+      "calm.project.optimize_interface",
+      "calm.project.project",
+      "calm.project.relax",
+      "calm.project.runtime.workspace_persistence",
+      "calm.project.strain_partition_scan",
+      "calm.project.ux",
+      "calm.project.ux.facades",
+      "calm.project.ux.facades.mutations",
+      "calm.project.ux.facades.query",
+      "calm.project.ux.notebook",
+      "calm.project.ux.workspace",
+      "calm.public._authoritative_build",
+      "calm.public._export",
+      "calm.public._row_energy",
+      "calm.public.filters",
+      "calm.public.match_search_result",
+      "calm.public.matches",
+      "calm.public.normalizers",
+      "calm.public.project_candidates",
+      "calm.public.project_interface_workflows",
+      "calm.public.project_lookup",
+      "calm.public.project_search",
+      "calm.public.recipes",
+      "calm.public.selection",
+      "calm.public.sidecar",
+      "calm.public.sidecar_store",
+      "calm.report",
+      "calm.reporting",
+      "calm.slab.legacy",
+      "calm.slab.ops._numeric",
+      "calm.slab.ops.primitive_surface_algorithm",
+      "calm.slab.ops.validate_surface_basis",
+      "calm.slab.surface_primitive",
+      "calm.slab.surface_primitive_cell",
+      "calm.structure_characterization",
+      "calm.symmetry.orientations",
+      "calm.symmetry.primitive_slab",
+      "calm.symmetry.surface_primitive",
+      "calm.util",
+      "calm.util.ase_atoms",
+      "calm.util.atoms_validation",
+      "calm.util.bulk_fingerprinting",
+      "calm.util.signature",
+      "calm.util.warnings",
+      "calm.viz.enumeration",
+      "calm.workflow"
+    ],
+    "additional_prohibited_import_prefixes": [
+      "calm.interface._build_geometry",
+      "calm.interface._build_kernel",
+      "calm.interface._coupled_matching_orchestrator",
+      "calm.interface._energy_kernel",
+      "calm.interface._matching_pair_identity",
+      "calm.interface._matching_types",
+      "calm.interface.audit",
+      "calm.interface.conditioning",
+      "calm.interface.energy_contract",
+      "calm.interface.interface_energy",
+      "calm.interface.kernels",
+      "calm.interface.ops",
+      "calm.interface.registry_search",
+      "calm.interface.strain_partition",
+      "calm.interface.zur_mcgill",
+      "calm.public.candidate_collections",
+      "calm.public.generated_surface",
+      "calm.public.interface_collections",
+      "calm.public.persisted_search",
+      "calm.public.persistent_records",
+      "calm.public.structure_collections",
+      "calm.slab._json",
+      "calm.slab.ops",
+      "calm.slab.oriented_slab",
+      "calm.slab.oriented_slab_transforms"
+    ],
+    "retired_files": [
+      "calm/_bulk_standardization_contract.py",
+      "calm/_campaign_contract.py",
+      "calm/_conditioning_contract.py",
+      "calm/_dataset_contract.py",
+      "calm/_derived_interface_contract.py",
+      "calm/_energy_contract.py",
+      "calm/_energy_result_contract.py",
+      "calm/_json_contract.py",
+      "calm/_refinement_contract.py",
+      "calm/_refinement_result_contract.py",
+      "calm/_relaxation_contract.py",
+      "calm/_relaxed_reference_contract.py",
+      "calm/_slab_record_contract.py",
+      "calm/_strain_state_contract.py",
+      "calm/_surface_symmetry_group.py",
+      "calm/_surface_symmetry_resolver.py",
+      "calm/_zur_mcgill_contract.py",
+      "calm/ase_adapter.py",
+      "calm/calculators/attach.py",
+      "calm/calculators/availability.py",
+      "calm/calculators/factory.py",
+      "calm/graph.py",
+      "calm/interface/_matching_dedupe.py",
+      "calm/interface/_matching_enumeration.py",
+      "calm/interface/_matching_orchestrator.py",
+      "calm/interface/_matching_scoring.py",
+      "calm/interface/builder.py",
+      "calm/interface/ops/__init__.py",
+      "calm/interface/ops/registry_search_runner.py",
+      "calm/interface/pruning.py",
+      "calm/interface/refs.py",
+      "calm/interface/registry_search_compat.py",
+      "calm/interface/registry_search_geometry.py",
+      "calm/interface/registry_search_runner.py",
+      "calm/interface/workflows.py",
+      "calm/io.py",
+      "calm/kernels/__init__.py",
+      "calm/math2d/integer2x2.py",
+      "calm/math2d/norms2x2.py",
+      "calm/math2d/robust.py",
+      "calm/project/infrastructure/unit_of_work.py",
+      "calm/project/optimize_interface.py",
+      "calm/project/project.py",
+      "calm/project/relax.py",
+      "calm/project/strain_partition_scan.py",
+      "calm/project/ux/workspace_persistence.py",
+      "calm/public/_authoritative_build.py",
+      "calm/public/_export.py",
+      "calm/public/_row_energy.py",
+      "calm/public/filters.py",
+      "calm/public/match_search_result.py",
+      "calm/public/matches.py",
+      "calm/public/normalizers.py",
+      "calm/public/project_candidates.py",
+      "calm/public/project_interface_workflows.py",
+      "calm/public/project_lookup.py",
+      "calm/public/project_search.py",
+      "calm/public/recipes.py",
+      "calm/public/records.py",
+      "calm/public/selection.py",
+      "calm/public/sidecar.py",
+      "calm/public/sidecar_store.py",
+      "calm/report.py",
+      "calm/reporting.py",
+      "calm/slab/legacy.py",
+      "calm/slab/ops/_numeric.py",
+      "calm/slab/ops/primitive_surface_algorithm.py",
+      "calm/slab/ops/validate_surface_basis.py",
+      "calm/slab/surface_primitive.py",
+      "calm/slab/surface_primitive_cell.py",
+      "calm/structure_characterization.py",
+      "calm/symmetry/orientations.py",
+      "calm/symmetry/primitive_slab.py",
+      "calm/symmetry/surface_primitive.py",
+      "calm/util/__init__.py",
+      "calm/util/ase_atoms.py",
+      "calm/util/atoms_validation.py",
+      "calm/util/bulk_fingerprinting.py",
+      "calm/util/signature.py",
+      "calm/util/warnings.py",
+      "calm/viz/enumeration.py",
+      "calm/workflow.py"
+    ],
+    "retired_source_trees": [
+      "calm/extras",
+      "calm/interface/kernels",
+      "calm/interface/ops",
+      "calm/project/infrastructure/logging",
+      "calm/project/legacy",
+      "calm/project/ux",
+      "calm/slab/ops",
+      "calm/util"
+    ],
+    "retired_source_symbols": {
+      "calm/analysis/pareto.py": [
+        "assume_finite: bool",
+        "atom_counts: tuple[int, ...]",
+        "d_cell_decimals: int",
+        "return_sorted: bool"
+      ],
+      "calm/bulk/bulk.py": [
+        "ase_atoms: ase_atoms_type | None",
+        "def bind_calculator(",
+        "def calculator(",
+        "def calculator_spec(",
+        "def calculator_uid(",
+        "def clear_calculator("
+      ],
+      "calm/bulk/fingerprinting.py": [
+        "def compute_bulk_uid_full("
+      ],
+      "calm/bulk/provenance.py": [
+        "S_input_to_conventional_col",
+        "S_input_to_primitive_col",
+        "def from_json(",
+        "det_input_to_conventional",
+        "integer_tol",
+        "is_integer_input_to_conventional",
+        "max_abs_err_input_to_conventional"
+      ],
+      "calm/calculators/__init__.py": [
+        "FMFactory",
+        "register_provider"
+      ],
+      "calm/calculators/api.py": [
+        "class ProviderInfo",
+        "def _coerce_models(",
+        "def get_default_calculator_spec(",
+        "def register_provider(",
+        "def set_default_calculator_spec("
+      ],
+      "calm/calculators/registry.py": [
+        "def providers("
+      ],
+      "calm/calculators/spec.py": [
+        "def schema_version("
+      ],
+      "calm/interface/energy/reference.py": [
+        "def compute_strained_bulk_interface_excess_energy(",
+        "def print_eigs_sym("
+      ],
+      "calm/interface/matching/_orchestrator.py": [
+        "def _orbit_pair_may_match("
+      ],
+      "calm/interface/matching/grouping.py": [
+        "def numerical_grouping_key_status("
+      ],
+      "calm/interface/pipeline.py": [
+        "def _prototype_ranking_key("
+      ],
+      "calm/interface/refinement/analysis.py": [
+        "def format_crystallographic_direction(",
+        "def min_principal_strain(",
+        "def principal_directions_to_conventional_cell(",
+        "def principal_directions_to_crystallographic("
+      ],
+      "calm/interface/results.py": [
+        "def pareto_points("
+      ],
+      "calm/interface/types.py": [
+        "class Primitive:",
+        "def diagnostic_only(",
+        "def diagnostic_policy(",
+        "def diagnostic_policy_version(",
+        "def max_principal("
+      ],
+      "calm/keys/_canonical_v2.py": [
+        "def canonical_identity_boundary_contract_v2(",
+        "def canonical_identity_serialization_contract_v2("
+      ],
+      "calm/keys/hnf.py": [
+        "def canonical_hnf_key_under_pg(",
+        "def hnf_orbit_under_pg(",
+        "def normalize_pg_ops(",
+        "def orbit_snf_signature_under_pg("
+      ],
+      "calm/keys/uid.py": [
+        "def interface_relax_uid(",
+        "def prototype_uid(",
+        "def sha256_hex(",
+        "def supercell_uid("
+      ],
+      "calm/math2d/_core.py": [
+        "def solve2("
+      ],
+      "calm/math2d/normal_forms.py": [
+        "def egcd(",
+        "def gcd_many(",
+        "def snf_mat_2x2_full_rank("
+      ],
+      "calm/math2d/spd2x2.py": [
+        "def is_spd_2x2(",
+        "def riemannian_distance_spd("
+      ],
+      "calm/project/application/buildability.py": [
+        "ensure_prototype_id",
+        "ensure_slab_id",
+        "hasattr(uow.ids",
+        "uow.ids.resolve(prototype"
+      ],
+      "calm/project/application/followups/calculator_resolution.py": [
+        "def resolve_calculator_from_interface("
+      ],
+      "calm/project/application/followups/energy.py": [
+        "params: Mapping[str, Any] | None = None"
+      ],
+      "calm/project/application/followups/interface_energy.py": [
+        "def compute_strain_scan_energy("
+      ],
+      "calm/project/application/followups/orch_helpers.py": [
+        "Best-effort: swallow exceptions and return empty mapping on failure.",
+        "best-effort: try per-item insert",
+        "def is_partial_resume(",
+        "def normalize_unresolved_results(",
+        "str(run_uid).replace"
+      ],
+      "calm/project/application/followups/reference_energy.py": [
+        "def _first_present("
+      ],
+      "calm/project/application/followups/registry_search.py": [
+        "def _create_edges(",
+        "def _run_stage_impl(",
+        "def start_search(",
+        "def start_search_run(",
+        "derive_interfaces: bool = False",
+        "params: Mapping[str, Any] | None = None"
+      ],
+      "calm/project/application/followups/relaxation.py": [
+        "def _run_stage_impl(",
+        "def start_relaxation_run(",
+        "params: Mapping[str, Any] | None = None"
+      ],
+      "calm/project/application/followups/strain_scan.py": [
+        "StrainPartitionScanOrchestrator._validate_and_normalize_inputs",
+        "def start_scan(",
+        "params: Mapping[str, Any] | None = None"
+      ],
+      "calm/project/infrastructure/db/id_resolver.py": [
+        "engine.connect()",
+        "repositories sometimes outlive"
+      ],
+      "calm/project/infrastructure/db/payload_helpers.py": [
+        "atoms.get(\"calm:tilt\")",
+        "except Exception",
+        "payload.get(\"calm:tilt\")"
+      ],
+      "calm/project/infrastructure/db/repos/__init__.py": [
+        "class SqlAlchemyIdResolver",
+        "def _safe_execute(",
+        "def update_parent_links(",
+        "repositories may outlive"
+      ],
+      "calm/project/infrastructure/db/uow.py": [
+        "class _ConnProxy",
+        "raw SQL strings",
+        "sa_text"
+      ],
+      "calm/project/ports/ids.py": [
+        "class UowIdResolver",
+        "def ensure_campaign_id(",
+        "def ensure_campaign_run_id(",
+        "def ensure_job_id(",
+        "def resolve_artifact(",
+        "def resolve_bulk(",
+        "def resolve_job("
+      ],
+      "calm/project/ports/repos.py": [
+        "def update_parent_links("
+      ],
+      "calm/project/runtime/helpers.py": [
+        "def attach_bulk_id_short_to_slab(",
+        "def energy_stage_results_to_dicts(",
+        "def registry_stage_results_to_dicts(",
+        "def relaxation_stage_results_to_dicts("
+      ],
+      "calm/project/runtime/workspace.py": [
+        "def _existing_uow_factory",
+        "def persist_dataset(",
+        "def start_registry_search_from_strain_partition_scan(",
+        "fallback to a factory that",
+        "return self._followups.start_registry_search(\n                prototypes=prototypes,\n                n_steps=n_steps,\n                params=merged",
+        "return self._followups.start_strain_partition_scan(\n                prototypes=prototypes,\n                alphas=alphas,\n                params=merged"
+      ],
+      "calm/public/__init__.py": [
+        "__all__ = [",
+        "def _lazy(",
+        "def resolve_attr("
+      ],
+      "calm/public/collections/base.py": [
+        "columns: Sequence[str] | None",
+        "def _passes_strain_filter("
+      ],
+      "calm/public/collections/candidates.py": [
+        "def build_dataset(",
+        "def materials_regex("
+      ],
+      "calm/public/collections/interfaces.py": [
+        "def compute_interfacial_energies("
+      ],
+      "calm/public/collections/structures.py": [
+        "def filter(",
+        "def import_material("
+      ],
+      "calm/public/inputs/materials.py": [
+        "def lattice_parameters(",
+        "def surface(",
+        "def surfaces("
+      ],
+      "calm/public/inputs/project_config.py": [
+        "def apply_configuration_to_workspace(",
+        "def apply_public_configuration(",
+        "project._public_records[\"configuration\"]"
+      ],
+      "calm/public/persistence/adapter.py": [
+        "\"add_derived_interface\"",
+        "\"create_campaign_run\"",
+        "\"persist_campaign\"",
+        "\"persist_campaign_run\"",
+        "\"persist_interface\"",
+        "\"save_campaign\"",
+        "\"save_derived_interface\"",
+        "\"save_interface\"",
+        "def _call_with_supported_kwargs(",
+        "def persist_dataset(",
+        "def update_prototype(",
+        "signature(fn)"
+      ],
+      "calm/public/persistence/repository.py": [
+        "def save_bulk(",
+        "def save_dataset(",
+        "def update_prototype(",
+        "table(\"campaign_runs\")",
+        "table(\"campaigns\")",
+        "table(\"slabs\")"
+      ],
+      "calm/public/presentation/plotting.py": [
+        "\"front_line\",",
+        "\"group_front_color\",",
+        "def compute_pareto_mask("
+      ],
+      "calm/public/presentation/reporting.py": [
+        "class CaptureReporter:",
+        "class ConsoleProgress:",
+        "class NullReporter:",
+        "class ReportEvent:",
+        "def ensure_reporter(",
+        "def format_energies(",
+        "def format_prototypes(",
+        "def format_table(",
+        "def get_default_console_reporter(",
+        "def get_default_reporter(",
+        "def get_feature(",
+        "def print_energies(",
+        "def print_prototype(",
+        "def print_prototypes(",
+        "def prototype_summary_row(",
+        "def set_default_console_reporter(",
+        "def set_default_reporter(",
+        "def to_dataframe("
+      ],
+      "calm/public/project.py": [
+        "def _apply_configuration_to_workspace(",
+        "def _apply_public_configuration(",
+        "def _ensure_material_persisted(",
+        "def _load_public_records(",
+        "def _prepare_surface_payload(",
+        "def _project_open_counts_mapping(",
+        "def _project_open_info_mapping(",
+        "def _project_open_workflow_warnings(",
+        "def _resolve_to_public_material(",
+        "def candidate_classification_summary(",
+        "def classify_candidates(",
+        "def create_or_get_campaign_run(",
+        "def get_by_hash(",
+        "def import_material(",
+        "def matches(",
+        "def refresh_public_records(",
+        "def repair_interface_search(",
+        "def validate_interface_workflows("
+      ],
+      "calm/public/projections/buildability.py": [
+        "def check_candidate_buildability(",
+        "def classify_candidate_row("
+      ],
+      "calm/public/projections/stage.py": [
+        "class StageResultSchema",
+        "could_not_normalize"
+      ],
+      "calm/public/records/buildability.py": [
+        "class CandidateClassification:",
+        "def display(",
+        "def raise_if_failed(",
+        "def to_rows("
+      ],
+      "calm/public/records/datasets.py": [
+        "class InterfaceDataset:"
+      ],
+      "calm/public/records/followups.py": [
+        "def derived_interfaces(",
+        "def run(self):",
+        "list_followup_results("
+      ],
+      "calm/public/records/generated_surface.py": [
+        "def stable_uid(",
+        "def validate_exportable("
+      ],
+      "calm/public/records/interfaces.py": [
+        "def build_dataset(",
+        "def interfacial_energy(",
+        "def pareto_data(",
+        "def save(self, path) -> None:"
+      ],
+      "calm/public/records/surfaces.py": [
+        "def to_slab_spec("
+      ],
+      "calm/public/workflows/saving.py": [
+        "def record_interface_collection(",
+        "def record_interface_dataset(",
+        "hasattr(obj, \"to_ase\")",
+        "save_interface_collection"
+      ],
+      "calm/public/workflows/search.py": [
+        "def load_result(",
+        "legacy_kwargs"
+      ],
+      "calm/slab/oriented/_primitive.py": [
+        "def rationalize_vector(",
+        "def smith_normal_form_1x3("
+      ],
+      "calm/slab/oriented/builder.py": [
+        "class MotifInplaneReductionFallbackWarning",
+        "def R_ungauged_to_gauged(",
+        "def U_orthogonalize_c_lattice(",
+        "def _find_inplane_motif_reduction_hnf(",
+        "def _get_pure_translation_translations_frac(",
+        "def _reduce_inplane_by_motif_translations(",
+        "def build_oriented_slab_from_conventional(",
+        "def compute_total_rotation(",
+        "def map_deformation_gradient_conv_to_slab(",
+        "def map_deformation_gradient_slab_to_conv("
+      ],
+      "calm/slab/oriented/model.py": [
+        "def build_oriented_slab_from_conventional(",
+        "def build_oriented_slab_from_primitive(",
+        "def build_oriented_slabs_from_conventional(",
+        "def build_oriented_slabs_from_primitive(",
+        "def compute_oriented_slab_transforms(",
+        "def compute_registry_shift_cart(",
+        "def map_deformation_gradient_conv_to_slab(",
+        "def map_deformation_gradient_slab_to_conv("
+      ],
+      "calm/slab/oriented/terminations.py": [
+        "def is_polar_surface("
+      ],
+      "calm/slab/oriented/transforms.py": [
+        "def get_transforms_from_atoms_info(",
+        "def get_transforms_payload_from_atoms_info("
+      ],
+      "calm/slab/slab.py": [
+        "def copy(self) -> \"Slab\":",
+        "def get_super(",
+        "def slab_uid(",
+        "def stamped_copy(",
+        "def unstamp(",
+        "def unstamped_copy("
+      ],
+      "calm/structure/ase_adapter.py": [
+        "def atoms_cell_col(",
+        "def atoms_set_cell_col(",
+        "def cell_ase_from_col(",
+        "def cell_col_from_ase(",
+        "def make_supercell_row(",
+        "def supercell_matrix_col_from_ase(",
+        "def wrap_positions_in_cell("
+      ],
+      "calm/structure/io.py": [
+        "def load_json(",
+        "def load_structures_batch("
+      ],
+      "calm/structure/validation.py": [
+        "def check_duplicate_atoms(",
+        "def normalize_atoms(",
+        "def remove_duplicate_atoms("
+      ],
+      "calm/symmetry/__init__.py": [
+        "ase_to_spglib_cell",
+        "get_spacegroup",
+        "get_spacegroup_ops",
+        "get_standardized_cell",
+        "get_surface_pointgroup_ops",
+        "niggli_reduce_2d",
+        "spglib_cell_to_ase_atoms"
+      ],
+      "calm/symmetry/reduction.py": [
+        "CANONICAL_GAUSS_REDUCTION_VERSION",
+        "U_HANDEDNESS_REPAIR_2D"
+      ],
+      "calm/symmetry/spglib_adapter.py": [
+        "allow_z_flip",
+        "def _with_zero_translations(",
+        "def ase_to_spglib_cell(",
+        "def get_pointgroup_ops(",
+        "def get_spacegroup_ops(",
+        "def get_standardized_cell(",
+        "def get_symmetry_dataset_value(",
+        "def spglib_cell_to_ase_atoms(",
+        "include_magmoms",
+        "include_tau",
+        "magmoms_key",
+        "return_2d",
+        "set_magmoms",
+        "use_tags_as_numbers"
+      ],
+      "calm/viz/pareto.py": [
+        "def __iter__(self):",
+        "def pareto_front(",
+        "def plot_pareto_front(",
+        "group_front_color:"
+      ],
+      "engineering/documentation/api_reference_manifest.py": [
+        "calm.public.persistence.inspect_project",
+        "name in {\"open_project\", \"inspect_project\", \"Project\"}"
+      ]
+    },
+    "retired_attributes": {
+      "calm": [
+        "InterfaceBuildRun",
+        "InterfaceEnergyRun",
+        "ProjectConfig",
+        "PrototypeSearchRun",
+        "WorkspaceV2",
+        "kernels",
+        "prepare_bulk",
+        "prepare_slab",
+        "run_interface_build",
+        "run_interface_energy",
+        "run_prototype_search",
+        "run_prototype_search_from_files",
+        "run_prototype_search_from_structures"
+      ],
+      "calm.analysis": [
+        "STRAIN_SIZE_PARETO_POLICY",
+        "STRAIN_SIZE_PARETO_POPULATION_SCOPE",
+        "STRAIN_SIZE_PARETO_VERSION",
+        "pareto_front_2d_numpy",
+        "strain_size_pareto"
+      ],
+      "calm.bulk": [
+        "ase_bulk",
+        "standardize_bulk"
+      ],
+      "calm.bulk.fingerprinting": [
+        "compute_bulk_uid_full"
+      ],
+      "calm.calculators": [
+        "FMFactory",
+        "get_calculator",
+        "register_provider"
+      ],
+      "calm.exceptions": [
+        "NiggliReductionInvariantError",
+        "NiggliReductionInvariantWarning",
+        "NumericalError",
+        "NumericalWarning",
+        "PrimitiveSlabFallbackWarning"
+      ],
+      "calm.interface": [
+        "StrainedBulkReferenceResult",
+        "compute_strained_bulk_reference_energies"
+      ],
+      "calm.interface.config": [
+        "AffineInvariantStrainModel2D"
+      ],
+      "calm.interface.types": [
+        "ReducedSupercell2D"
+      ],
+      "calm.keys": [
+        "canonical_hnf_key_under_pg",
+        "hnf2_col",
+        "hnf_orbit_under_pg",
+        "normalize_pg_ops",
+        "prototype_uid",
+        "supercell_uid"
+      ],
+      "calm.keys._canonical_v2": [
+        "canonical_identity_boundary_contract_v2",
+        "canonical_identity_serialization_contract_v2"
+      ],
+      "calm.keys.hnf": [
+        "canonical_hnf_key_under_pg",
+        "hnf_orbit_under_pg",
+        "normalize_pg_ops",
+        "orbit_snf_signature_under_pg"
+      ],
+      "calm.keys.uid": [
+        "interface_relax_uid",
+        "prototype_uid",
+        "sha256_hex",
+        "supercell_uid"
+      ],
+      "calm.math2d": [
+        "adj2",
+        "check_spd2_robust",
+        "cond2",
+        "egcd",
+        "eigh2_robust",
+        "eigvals2_robust",
+        "gcd_many",
+        "inv2_robust",
+        "inv_unimodular",
+        "right_quotient_2x2",
+        "snf_mat_2x2_full_rank",
+        "solve2",
+        "solve2_robust",
+        "validate_spd_with_recovery"
+      ],
+      "calm.math2d.spd2x2": [
+        "is_spd_2x2",
+        "riemannian_distance_spd"
+      ],
+      "calm.project.application.artifacts": [
+        "ArtifactService"
+      ],
+      "calm.project.application.runs": [
+        "RunService"
+      ],
+      "calm.project.infrastructure.artifacts.fs_store": [
+        "FsArtifactStore"
+      ],
+      "calm.public.errors": [
+        "PublicProjectSidecarWarning"
+      ],
+      "calm.public.presentation.plotting": [
+        "compute_pareto_mask"
+      ],
+      "calm.public.records.datasets": [
+        "InterfaceDataset"
+      ],
+      "calm.serialization.regression": [
+        "hash_dict"
+      ],
+      "calm.slab": [
+        "OrientedSlab",
+        "build_oriented_slab_from_conventional",
+        "build_oriented_slabs_from_conventional",
+        "make_slab",
+        "surface_primitive_slab"
+      ],
+      "calm.structure.validation": [
+        "check_duplicate_atoms",
+        "normalize_atoms",
+        "remove_duplicate_atoms"
+      ],
+      "calm.symmetry": [
+        "ase_to_spglib_cell",
+        "get_spacegroup",
+        "get_spacegroup_ops",
+        "get_standardized_cell",
+        "get_surface_pointgroup_ops",
+        "spglib_cell_to_ase_atoms"
+      ],
+      "calm.symmetry.reduction": [
+        "CANONICAL_GAUSS_REDUCTION_VERSION",
+        "U_HANDEDNESS_REPAIR_2D"
+      ],
+      "calm.viz": [
+        "plot_enumeration_audit",
+        "plot_pareto_front"
+      ],
+      "calm.viz.pareto": [
+        "pareto_front",
+        "plot_pareto_front"
+      ]
+    },
+    "runtime_import_probes": [
+      "calm._energy_contract",
+      "calm.ase_adapter",
+      "calm.interface.conditioning",
+      "calm.io",
+      "calm.project.ux",
+      "calm.public.persistent_records",
+      "calm.slab.ops",
+      "calm.util"
+    ]
+  },
+  "active_import_roots": [
+    "calm",
+    "benchmarks",
+    "examples",
+    "engineering/documentation",
+    "engineering/qualification"
+  ]
+}

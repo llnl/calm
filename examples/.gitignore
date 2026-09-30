@@ -1,0 +1,35 @@
+# Test and debug scripts
+check_*.py
+debug_*.py
+test_*.py
+find_*.py
+verify_*.py
+reduce_*.py
+search_*.py
+*diagnostic*.md
+*_FIX_SUMMARY.md
+
+# Canonical tutorial work directories
+work/
+
+# Sequential workflow state
+example_project.calm/
+outputs/
+
+# Test output directories
+workspace/
+workspace_*/
+output_*/
+calm/
+out/
+# Database files
+*.sqlite
+*.db
+
+# macOS metadata
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo

@@ -1,0 +1,47 @@
+\chapter{M003 --- Termination Enumeration}
+
+\section{Stage 3 --- Implementation Review (Phase 3)}
+
+\subsection{Reviewed Transformation}
+
+Identification and removal of gauge-equivalent termination
+representatives.
+
+\subsection{Mathematical Input}
+
+A finite collection of candidate surface terminations.
+
+\subsection{Mathematical Output}
+
+A termination set containing one representative from each equivalence
+class.
+
+\subsection{Algorithmic Role}
+
+This phase quotients the candidate set by the gauge equivalence relation
+defined for lateral translations and other representation-preserving
+operations.
+
+\subsection{Classification}
+
+\begin{itemize}
+\item Gauge transformation.
+\item Canonical representative selection.
+\item No new scientific object is created.
+\end{itemize}
+
+\subsection{Preserved Invariants}
+
+\begin{itemize}
+\item Physical termination identity.
+\item Surface orientation.
+\item Crystallographic provenance.
+\end{itemize}
+
+\subsection{Open Questions for Stage 4}
+
+\begin{enumerate}
+\item Is the implemented equivalence relation mathematically complete?
+\item Are all duplicate representatives removed?
+\item Is the chosen representative deterministic?
+\end{enumerate}

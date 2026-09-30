@@ -1,0 +1,60 @@
+\chapter{M006 --- Comparison}
+
+\section{Stage 4 --- Comparison}
+
+This stage compares the mathematical specification (Stages~1--2) with the
+implementation review (Stage~3). It records agreements, discrepancies, and
+observations without proposing implementation changes.
+
+\section{Comparison Matrix}
+
+\begin{tabular}{p{0.28\textwidth}p{0.28\textwidth}p{0.12\textwidth}p{0.22\textwidth}}
+\textbf{Mathematical Requirement} &
+\textbf{Implementation Evidence} &
+\textbf{Status} &
+\textbf{Notes} \\
+\hline
+Scientific input &
+Slab Specification &
+Consistent &
+Implementation accepts a slab specification.\\
+Scientific output &
+Periodic Slab &
+Consistent &
+Output matches the accepted ontology.\\
+Specification preservation &
+Construction routines &
+Review &
+Confirm all specification fields are realized.\\
+Periodicity &
+Periodic cell construction &
+Review &
+Verify lattice periodicity is preserved.\\
+Termination preservation &
+Surface construction logic &
+Review &
+Verify exposed termination matches specification.\\
+Thickness realization &
+Slab construction parameters &
+Review &
+Compare realized thickness with requested specification.\\
+Vacuum realization &
+Vacuum construction logic &
+Review &
+Compare realized vacuum spacing with requested specification.\\
+Gauge freedoms &
+Origin and equivalent representations &
+Observation &
+Gauge choices should not alter the scientific object.\\
+Hidden assumptions &
+Implementation review &
+Observation &
+Record undocumented assumptions, if any.\\
+\end{tabular}
+
+\section{Summary}
+
+At this stage, the comparison records the degree of agreement between the
+mathematical specification and the implementation. Corrective actions, if
+necessary, are deferred to later stages after supporting evidence has been
+assembled.

@@ -1,0 +1,765 @@
+{
+  "schema_version": "calm.documentation_site_contract.v1",
+  "status": "editorial_integration_complete",
+  "objective": "A single guided scientific manual with a compact exact public API reference.",
+  "principles": [
+    "Preserve verified knowledge, not legacy pages.",
+    "Organize authored content around reader intent and scientific workflow.",
+    "Give each normal user task and concept one canonical narrative home.",
+    "Integrate focused procedures and contextual troubleshooting into workflow chapters.",
+    "Use runtime introspection for exact signatures and a user-facing manifest for explanations.",
+    "Keep implementation, persistence, qualification, and repository-maintenance detail outside MkDocs."
+  ],
+  "reader_modes": {
+    "learn": "Follow a tested progression from first interface to interpreted calculator-backed results.",
+    "use": "Complete one stage of a real CALM study and make the required scientific decisions.",
+    "understand": "Interpret the mathematics, assumptions, and limitations behind CALM inputs and outputs.",
+    "reference": "Look up exact API behavior, conventions, support boundaries, or a user-visible symptom."
+  },
+  "navigation": [
+    {
+      "label": "Home",
+      "path": "index.md",
+      "kind": "authored",
+      "purpose": "Orient prospective and current users around CALM’s coherent-interface workflow, shortest successful path, principal outputs, and scientific limits.",
+      "phase": "G8",
+      "implemented": true
+    },
+    {
+      "label": "Install",
+      "path": "install.md",
+      "kind": "authored",
+      "purpose": "Define the supported source-checkout installation paths, dependency profiles, environment validation steps, and the boundary between geometry-only and calculator-backed workflows.",
+      "phase": "G8",
+      "implemented": true
+    },
+    {
+      "label": "Learn",
+      "children": [
+        {
+          "label": "Build your first interface",
+          "path": "learn/first-interface.md",
+          "kind": "authored",
+          "purpose": "This calculator-free tutorial will take a new user from packaged tutorial structures to one saved, constructed, and unrelaxed coherent interface.",
+          "phase": "G3",
+          "implemented": true,
+          "canonical_source": "examples/tutorials/first_interface.py"
+        },
+        {
+          "label": "Compare candidates",
+          "path": "learn/compare-candidates.md",
+          "kind": "authored",
+          "purpose": "This tutorial will teach users to inspect candidate tables, interpret the strain–size tradeoff, use Pareto filtering, and choose candidates for an explicit modeling objective.",
+          "phase": "G3",
+          "implemented": true,
+          "canonical_source": "examples/tutorials/compare_candidates.py"
+        },
+        {
+          "label": "Refine, relax, and evaluate",
+          "path": "learn/refine-relax-evaluate.md",
+          "kind": "authored",
+          "purpose": "This calculator-backed tutorial will teach strain allocation, registry refinement, relaxation inspection, raw energies, and one explicit thermodynamic reference convention.",
+          "phase": "G3",
+          "implemented": true,
+          "canonical_source": "examples/tutorials/refine_relax_evaluate.py"
+        }
+      ]
+    },
+    {
+      "label": "Use CALM",
+      "children": [
+        {
+          "label": "Projects",
+          "path": "use/projects.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain how users create, reopen, inspect, trace, export, reproduce, and recover incompatible CALM studies without exposing storage schemas or persistence implementation.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Materials",
+          "path": "use/materials.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain supported structure inputs, material preparation, periodicity, calculator association, inspection, and export.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Surfaces and terminations",
+          "path": "use/surfaces.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain orientation, finite slabs, vacuum, thickness, generated alternatives, explicit termination selection, and contact-face interpretation.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Searches and candidates",
+          "path": "use/searches.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain bounded coherent matching, search limits, candidate inspection, strain and size interpretation, Pareto filtering, selection, and no-candidate recovery.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Build and refine interfaces",
+          "path": "use/build-refine.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain candidate construction, gap and vacuum choices, strain partitioning, registry refinement, multi-candidate workflows, inspection, and export.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Relax and evaluate",
+          "path": "use/relax-evaluate.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain calculator requirements, relaxation settings, convergence inspection, raw energies, reference structures, derived quantities, and scientific limitations.",
+          "phase": "G4",
+          "implemented": true
+        },
+        {
+          "label": "Datasets and campaigns",
+          "path": "use/datasets-campaigns.md",
+          "kind": "authored",
+          "purpose": "This optional advanced chapter will explain eligibility, features, targets, grouping, leakage prevention, splitting, export, campaign cases, and comparison.",
+          "phase": "G4",
+          "implemented": true
+        }
+      ]
+    },
+    {
+      "label": "Understand",
+      "children": [
+        {
+          "label": "Surface models",
+          "path": "understand/surface-models.md",
+          "kind": "authored",
+          "purpose": "This chapter will connect crystallographic orientation to periodic surface cells, finite slabs, explicit terminations, and the limitations of unreconstructed finite models.",
+          "phase": "G5",
+          "implemented": true
+        },
+        {
+          "label": "Surface cells and supercells",
+          "path": "understand/surface-supercells.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain lattice bases, equivalent representations, bounded supercells, and the growth of area and atom count without reconstructing implementation canonicalization.",
+          "phase": "G5",
+          "implemented": true
+        },
+        {
+          "label": "Coherent matching, strain, and Pareto selection",
+          "path": "understand/coherent-matching.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain common periodic cells, deformation maps, principal strain, area and shape mismatch, and the strain–size tradeoff used to interpret candidates.",
+          "phase": "G5",
+          "implemented": true
+        },
+        {
+          "label": "Strain partitioning and registry",
+          "path": "understand/strain-registry.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain how coherent mismatch is shared, how periodic in-plane translations define registry, and when refinement requires a calculator.",
+          "phase": "G5",
+          "implemented": true
+        },
+        {
+          "label": "Relaxation, energy, and reference conventions",
+          "path": "understand/energetics.md",
+          "kind": "authored",
+          "purpose": "This chapter will explain local relaxation, convergence versus stability, raw total energies, normalization, explicit reference cycles, and derived interfacial quantities.",
+          "phase": "G5",
+          "implemented": true
+        }
+      ]
+    },
+    {
+      "label": "Reference",
+      "children": [
+        {
+          "label": "Public API",
+          "path": "reference/public-api.md",
+          "kind": "authored",
+          "purpose": "This page will explain CALM’s single supported namespace and route readers to exact generated signatures for project operations, inputs, settings, returned objects, tables, exceptions, and utilities.",
+          "phase": "G6",
+          "implemented": true
+        },
+        {
+          "label": "Project operations",
+          "path": "reference/api/project.md",
+          "kind": "generated",
+          "purpose": "Exact signatures for supported Project operations, grouped by workflow role.",
+          "phase": "G6",
+          "implemented": true
+        },
+        {
+          "label": "Inputs and settings",
+          "path": "reference/api/inputs-settings.md",
+          "kind": "generated",
+          "purpose": "Exact constructors and fields for supported user-authored inputs and settings.",
+          "phase": "G6",
+          "implemented": true
+        },
+        {
+          "label": "Returned objects and tables",
+          "path": "reference/api/returned-objects.md",
+          "kind": "generated",
+          "purpose": "Curated user-relevant returned-object members and supported table views.",
+          "phase": "G6",
+          "implemented": true
+        },
+        {
+          "label": "Exceptions and utilities",
+          "path": "reference/api/exceptions-utilities.md",
+          "kind": "generated",
+          "purpose": "Exact public exceptions and file or serialization utilities.",
+          "phase": "G6",
+          "implemented": true
+        },
+        {
+          "label": "Units and conventions",
+          "path": "reference/units-conventions.md",
+          "kind": "authored",
+          "purpose": "This page will provide the canonical units, coordinate conventions, basis-vector convention, strain convention, periodic directions, and normalization rules used across CALM.",
+          "phase": "G7",
+          "implemented": true
+        },
+        {
+          "label": "Terminology",
+          "path": "reference/terminology.md",
+          "kind": "authored",
+          "purpose": "This page will define the compact user vocabulary used throughout the manual and distinguish names, identifiers, searches, candidates, interfaces, results, datasets, and campaigns.",
+          "phase": "G7",
+          "implemented": true
+        },
+        {
+          "label": "Supported scope",
+          "path": "reference/supported-scope.md",
+          "kind": "authored",
+          "purpose": "This page will state what CALM constructs or evaluates, what it does not infer, and which assumptions limit scientific interpretation.",
+          "phase": "G7",
+          "implemented": true
+        },
+        {
+          "label": "Calculator support",
+          "path": "reference/calculator-support.md",
+          "kind": "authored",
+          "purpose": "This page will distinguish registered providers, dependency availability, model compatibility, scientific suitability, and the reference data required for derived quantities.",
+          "phase": "G7",
+          "implemented": true
+        },
+        {
+          "label": "Geometry and project troubleshooting",
+          "path": "reference/troubleshooting-geometry.md",
+          "kind": "authored",
+          "purpose": "This symptom index will route users to contextual remedies for structure input, surface generation, candidate search, interface construction, project lookup, and project compatibility problems.",
+          "phase": "G7",
+          "implemented": true
+        },
+        {
+          "label": "Calculation and data troubleshooting",
+          "path": "reference/troubleshooting-calculations.md",
+          "kind": "authored",
+          "purpose": "This symptom index will route users to contextual remedies for calculator availability, relaxation, energies, references, datasets, exports, and campaigns.",
+          "phase": "G7",
+          "implemented": true
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "authored_pages": 24,
+    "generated_api_pages": 4,
+    "top_level_destinations": 6
+  },
+  "page_anatomy": {
+    "learn": [
+      "Outcome",
+      "Prerequisites",
+      "Workflow",
+      "Inspect the result",
+      "Expected output",
+      "Interpretation",
+      "Limitations",
+      "Next step"
+    ],
+    "use": [
+      "Outcome",
+      "When to use it",
+      "Prerequisites",
+      "Scientific decisions",
+      "Minimal procedure",
+      "Inspect the result",
+      "Interpretation",
+      "Common variations",
+      "Common problems",
+      "Exact API"
+    ],
+    "understand": [
+      "Scientific question",
+      "Physical interpretation",
+      "Definition",
+      "How CALM uses it",
+      "What the user controls",
+      "Assumptions and limitations",
+      "Related workflow",
+      "References"
+    ],
+    "reference": [
+      "Purpose",
+      "Canonical import or convention",
+      "Exact behavior",
+      "Related workflow"
+    ],
+    "home": [
+      "What CALM does",
+      "Workflow at a glance",
+      "Start with one interface",
+      "Choose your path",
+      "Scientific limits",
+      "Public API",
+      "Next step"
+    ],
+    "install": [
+      "Choose an environment",
+      "Install from a source checkout",
+      "Validate the environment",
+      "Run the first workflow",
+      "Add a calculator provider",
+      "Installation boundaries",
+      "Troubleshooting",
+      "Related documentation"
+    ]
+  },
+  "tutorial_product": {
+    "geometry_system": "Packaged LiF/Li2O tutorial structures for the calculator-free first and candidate-comparison tutorials.",
+    "data_delivery": {
+      "decision": "Package-owned tutorial resources exposed through one supported copy/load boundary.",
+      "implementation_phase": "G2",
+      "package_change_required": false,
+      "forbidden": [
+        "repository-relative input paths",
+        "current-working-directory assumptions",
+        "undocumented downloads"
+      ],
+      "implemented": true,
+      "public_boundary": "calm.tutorial_structure",
+      "resource_names": [
+        "lif",
+        "li2o",
+        "cu",
+        "ni"
+      ],
+      "validation": "tests/public/test_tutorial_structure.py"
+    },
+    "calculator_tutorial": {
+      "decision": "Use the registered ASE provider with EMT and an EMT-compatible Cu/Ni demonstration system.",
+      "interpretation_boundary": "The example demonstrates CALM workflow mechanics and reference bookkeeping; it is not evidence that EMT is accurate for a user’s target interface.",
+      "validation_phase": "G2",
+      "canonical_source": "examples/tutorials/refine_relax_evaluate.py",
+      "execution_gate": "CALM_RUN_CALCULATOR_TUTORIAL=1",
+      "validated_by": "tests/examples/test_greenfield_tutorials.py"
+    },
+    "notebooks": "Optional notebooks are generated from tested canonical tutorial sources; handwritten parallel notebooks are prohibited.",
+    "canonical_sources": {
+      "first-interface": "examples/tutorials/first_interface.py",
+      "compare-candidates": "examples/tutorials/compare_candidates.py",
+      "refine-relax-evaluate": "examples/tutorials/refine_relax_evaluate.py"
+    },
+    "expected_output_fixtures": "examples/tutorials/expected/*.json",
+    "learn_pages": {
+      "first-interface": "docs/learn/first-interface.md",
+      "compare-candidates": "docs/learn/compare-candidates.md",
+      "refine-relax-evaluate": "docs/learn/refine-relax-evaluate.md"
+    },
+    "work_directories": {
+      "root": "examples/work",
+      "default_pattern": "examples/work/<tutorial-name>",
+      "ignored_by_git": true,
+      "canonical_commands_must_use_examples_work": true
+    }
+  },
+  "legacy_replacement": {
+    "replaced_authored_pages": [
+      "docs/getting-started/installation.md",
+      "docs/getting-started/quickstart.md",
+      "docs/how-to/build-and-refine-interfaces.md",
+      "docs/how-to/datasets-and-campaigns.md",
+      "docs/how-to/manage-projects.md",
+      "docs/how-to/select-surface-termination.md",
+      "docs/how-to/tune-search-and-select-candidates.md",
+      "docs/index.md",
+      "docs/overview.md",
+      "docs/reference/calculator-and-reference-support.md",
+      "docs/reference/notation-and-glossary.md",
+      "docs/reference/public-api.md",
+      "docs/reference/units-and-conventions.md",
+      "docs/scientific-background/coherent-matching-strain-pareto.md",
+      "docs/scientific-background/index.md",
+      "docs/scientific-background/relaxation-and-interfacial-energetics.md",
+      "docs/scientific-background/strain-partitioning-and-registry.md",
+      "docs/scientific-background/surface-cells-and-supercells.md",
+      "docs/scientific-background/surfaces-and-terminations.md",
+      "docs/supported-scope.md",
+      "docs/troubleshooting/calculations-data.md",
+      "docs/troubleshooting/geometry-projects.md",
+      "docs/tutorials/compare-candidates.md",
+      "docs/tutorials/first-interface.md",
+      "docs/tutorials/refine-relax-evaluate.md",
+      "docs/user-guide/building-and-refining-interfaces.md",
+      "docs/user-guide/datasets-and-campaigns.md",
+      "docs/user-guide/index.md",
+      "docs/user-guide/interface-searches-and-candidates.md",
+      "docs/user-guide/materials-surfaces-and-terminations.md",
+      "docs/user-guide/projects-and-saved-workflows.md",
+      "docs/user-guide/relaxation-and-energetics.md"
+    ],
+    "removed_public_figures": [
+      "docs/assets/figures/coherent-misfit-principal-strain.svg",
+      "docs/assets/figures/interface-energy-reference-cycles.svg",
+      "docs/assets/figures/lattice/cell-map-types.svg",
+      "docs/assets/figures/lattice/coupled-common-cell.svg",
+      "docs/assets/figures/lattice/strain-partition-path.svg",
+      "docs/assets/figures/pareto-strain-size.svg",
+      "docs/assets/figures/project-lineage.svg",
+      "docs/assets/figures/registry-translation-torus.svg",
+      "docs/assets/figures/surface-construction-workflow.svg"
+    ],
+    "preserved_shared_assets": [
+      "docs/javascripts/mathjax.js",
+      "docs/stylesheets/extra.css"
+    ],
+    "redirect_policy": "No compatibility redirects are created unless a published legacy URL is later shown to require one."
+  },
+  "g1_scope": {
+    "included": [
+      "replace MkDocs navigation",
+      "delete legacy authored pages and public figures",
+      "create scope-only page stubs",
+      "record page ownership and tutorial-platform decisions",
+      "update repository links and documentation architecture contracts",
+      "keep generated API infrastructure connected to the new workflow paths"
+    ],
+    "excluded": [
+      "substantive tutorial prose",
+      "tutorial data or package API changes",
+      "workflow-manual prose",
+      "scientific derivations",
+      "new public figures",
+      "API-reference redesign beyond path ownership",
+      "publication redirects"
+    ]
+  },
+  "content_requirements": {
+    "project_compatibility": {
+      "owner": "use/projects.md",
+      "must_explain": [
+        "recognizing an older or incompatible project",
+        "preserving the original directory unchanged",
+        "creating a new project",
+        "rerunning supported workflows",
+        "not editing project files"
+      ]
+    },
+    "reference_capabilities": {
+      "owners": [
+        "reference/supported-scope.md",
+        "reference/calculator-support.md"
+      ],
+      "source": "runtime EnergyConvention.reference_capability()",
+      "must_cover": [
+        "calculated reference support",
+        "work_of_adhesion_relaxed_surfaces",
+        "independently relaxed fixed-cell surfaces",
+        "unavailable-result explanations"
+      ]
+    },
+    "calculator_registry": {
+      "owner": "reference/calculator-support.md",
+      "source": "calm.calculators.registry.default_registry()",
+      "must_track_all_registered_families": true
+    },
+    "installation": {
+      "owner": "install.md",
+      "must_distinguish": [
+        "base dependencies",
+        "science dependencies",
+        "calculator-provider environments"
+      ],
+      "must_not_publish": [
+        "conda-recipe maintainer procedure as a user installation path"
+      ]
+    },
+    "terminology_and_notation": {
+      "owners": [
+        "reference/terminology.md",
+        "reference/units-conventions.md"
+      ],
+      "must_define": [
+        "basis vectors as columns",
+        "periodic directions",
+        "strain convention",
+        "names and identifiers"
+      ]
+    }
+  },
+  "publication_gate": {
+    "skeleton_is_not_publishable": false,
+    "content_complete": true,
+    "publication_ready": false,
+    "remaining_before_publication": [
+      "execute all three tutorials in their declared environments after the final corrective patches",
+      "run python -m mkdocs build --strict",
+      "run the final documentation, link, API, package, and figure verification suite",
+      "inspect the rendered home, installation, tutorial, scientific, and API pages"
+    ]
+  },
+  "g2_scope": {
+    "included": [
+      "package LiF, Li2O, Cu, and Ni tutorial structures",
+      "add one top-level tutorial_structure data boundary",
+      "create three independent canonical tutorial programs",
+      "create expected-output fixtures and execution contracts",
+      "remove the superseded quickstart and candidate tutorial programs",
+      "qualify package-data inclusion in wheel and source distributions"
+    ],
+    "excluded": [
+      "substantive tutorial prose",
+      "tutorial figures",
+      "workflow-manual prose",
+      "notebook generation",
+      "changes to CALM scientific algorithms",
+      "calculator-provider qualification beyond the ASE EMT tutorial gate"
+    ]
+  },
+  "visual_system": {
+    "implementation_phase": "G3",
+    "public_figure_root": "docs/assets/figures/tutorials",
+    "generator": "engineering/documentation/figures/generate_tutorial_figures.py",
+    "figures": [
+      {
+        "path": "docs/assets/figures/tutorials/first-interface-workflow.svg",
+        "owner": "docs/learn/first-interface.md",
+        "purpose": "Show the calculator-free path from packaged structures to one saved built interface and exports."
+      },
+      {
+        "path": "docs/assets/figures/tutorials/candidate-selection.svg",
+        "owner": "docs/learn/compare-candidates.md",
+        "purpose": "Show Pareto filtering, strain-threshold filtering, and the remaining modeling decision."
+      },
+      {
+        "path": "docs/assets/figures/tutorials/refine-relax-evaluate.svg",
+        "owner": "docs/learn/refine-relax-evaluate.md",
+        "purpose": "Show calculator-backed refinement, relaxation, raw energy, reference energy, and derived work of adhesion as separate stages."
+      }
+    ],
+    "requirements": [
+      "one explicit page owner per public figure",
+      "accessible SVG title and description",
+      "descriptive HTML alternative text and caption",
+      "vector-only deterministic output",
+      "committed output matches the repository-owned generator"
+    ]
+  },
+  "g3_scope": {
+    "included": [
+      "write the three Learn tutorials from canonical executable sources",
+      "add snippet markers to canonical tutorial programs",
+      "document expected outputs without fixing brittle candidate counts",
+      "create three tutorial-owned accessible SVG figures",
+      "add tutorial prose and figure regression contracts"
+    ],
+    "excluded": [
+      "workflow-manual prose under Use CALM",
+      "full scientific derivations under Understand",
+      "API-reference redesign",
+      "notebook generation",
+      "changes to CALM scientific algorithms",
+      "new calculator providers or model qualification"
+    ]
+  },
+  "g4_scope": {
+    "included": [
+      "write the seven task-oriented Use CALM chapters",
+      "integrate focused procedures into their canonical workflow chapters",
+      "integrate contextual troubleshooting into each workflow chapter",
+      "define repository-owned tutorial work directories under examples/work",
+      "add focused content and work-directory regression contracts"
+    ],
+    "excluded": [
+      "full scientific derivations under Understand",
+      "new public figures",
+      "API-reference redesign",
+      "calculator registry and supported-scope reference prose",
+      "changes to CALM scientific algorithms"
+    ]
+  },
+  "understand_visual_system": {
+    "implementation_phase": "G5",
+    "public_figure_root": "docs/assets/figures/understand",
+    "generator": "engineering/documentation/figures/generate_understand_figures.py",
+    "figures": [
+      {
+        "path": "docs/assets/figures/understand/surface-construction-workflow.svg",
+        "owner": "docs/understand/surface-models.md",
+        "purpose": "Separate bulk plane geometry from finite slab and termination choices."
+      },
+      {
+        "path": "docs/assets/figures/understand/cell-map-types.svg",
+        "owner": "docs/understand/surface-supercells.md",
+        "purpose": "Distinguish basis changes and rigid rotations from physical deformation."
+      },
+      {
+        "path": "docs/assets/figures/understand/coupled-common-cell.svg",
+        "owner": "docs/understand/coherent-matching.md",
+        "purpose": "Show two surface supercells mapped into one coherent periodic cell."
+      },
+      {
+        "path": "docs/assets/figures/understand/coherent-misfit-principal-strain.svg",
+        "owner": "docs/understand/coherent-matching.md",
+        "purpose": "Connect the relative metric to principal logarithmic strain."
+      },
+      {
+        "path": "docs/assets/figures/understand/pareto-strain-size.svg",
+        "owner": "docs/understand/coherent-matching.md",
+        "purpose": "Explain nondominated size-mismatch tradeoffs and later ranking."
+      },
+      {
+        "path": "docs/assets/figures/understand/strain-partition-path.svg",
+        "owner": "docs/understand/strain-registry.md",
+        "purpose": "Show the alpha path between the two candidate metrics."
+      },
+      {
+        "path": "docs/assets/figures/understand/registry-translation-torus.svg",
+        "owner": "docs/understand/strain-registry.md",
+        "purpose": "Show periodic registry coordinates as a torus."
+      },
+      {
+        "path": "docs/assets/figures/understand/interface-energy-reference-cycles.svg",
+        "owner": "docs/understand/energetics.md",
+        "purpose": "Distinguish interface excess, separation, and adhesion reference processes."
+      }
+    ],
+    "requirements": [
+      "one explicit authored owner per public figure",
+      "accessible SVG title and description",
+      "descriptive HTML alternative text and interpretive caption",
+      "vector-only deterministic output",
+      "committed output matches the repository-owned generator"
+    ]
+  },
+  "g5_scope": {
+    "included": [
+      "write the five interpretation-oriented Understand chapters",
+      "connect equations directly to CALM settings and outputs",
+      "publish eight concept-owned accessible SVG figures",
+      "include scientific references and contextual limitations",
+      "add focused scientific-content and figure regression contracts"
+    ],
+    "excluded": [
+      "Reference section prose",
+      "Home and installation prose",
+      "API-reference redesign",
+      "notebook generation",
+      "changes to CALM scientific algorithms",
+      "new calculator providers or model qualification"
+    ]
+  },
+  "api_reference": {
+    "implemented_phase": "G6",
+    "authored_overview": "docs/reference/public-api.md",
+    "generated_pages": [
+      "reference/api/project.md",
+      "reference/api/inputs-settings.md",
+      "reference/api/returned-objects.md",
+      "reference/api/exceptions-utilities.md"
+    ],
+    "signature_source": "runtime introspection of the live public API",
+    "description_source": "engineering/documentation/api_reference_manifest.py",
+    "coverage": {
+      "top_level_exports": 34,
+      "project_operations": 68,
+      "returned_object_types": 25,
+      "table_view_owners": 25
+    },
+    "presentation_rules": [
+      "Use only canonical calm imports.",
+      "Group Project operations by scientific workflow role.",
+      "Render exact settings signatures and every public field meaning.",
+      "Document only curated user-relevant members on returned objects.",
+      "Publish stable analytical table fields while omitting implementation metadata.",
+      "Link every API family to its owning workflow or scientific chapter.",
+      "Link every public exception to recovery guidance."
+    ]
+  },
+  "g6_scope": {
+    "included": [
+      "write the authored public API overview",
+      "generate exact signatures for all supported top-level exports and Project operations",
+      "render every public settings field meaning and default",
+      "curate returned-object members and stable analytical table fields",
+      "link API families and exceptions to workflow and recovery guidance",
+      "add API-reference coverage and terminology regression contracts"
+    ],
+    "excluded": [
+      "changes to the supported public API",
+      "changes to CALM scientific algorithms",
+      "Reference prose for units, terminology, scope, calculator support, or troubleshooting",
+      "Home and installation prose",
+      "new public figures"
+    ]
+  },
+  "g7_scope": {
+    "included": [
+      "write the units and conventions reference",
+      "write the compact terminology reference",
+      "state the supported scientific scope and interpretation boundaries",
+      "track every registered calculator family and calculated-reference capability",
+      "write two symptom-oriented troubleshooting indexes that route to contextual remedies",
+      "add focused reference ownership and runtime-consistency contracts"
+    ],
+    "excluded": [
+      "Home and installation prose",
+      "new public figures",
+      "changes to registered calculator providers or models",
+      "changes to supported thermodynamic formulas",
+      "changes to CALM scientific algorithms",
+      "publication redirects"
+    ]
+  },
+  "site_visual_system": {
+    "implementation_phase": "G8",
+    "public_figure_root": "docs/assets/figures/site",
+    "generator": "engineering/documentation/figures/generate_site_figures.py",
+    "figures": [
+      {
+        "path": "docs/assets/figures/site/calm-workflow-map.svg",
+        "owner": "docs/index.md",
+        "purpose": "Show the project-centered path from materials through geometry, optional calculator-backed results, derived interpretation, and optional study-management layers."
+      }
+    ],
+    "requirements": [
+      "one explicit page owner",
+      "accessible SVG title and description",
+      "descriptive HTML alternative text and caption",
+      "vector-only deterministic output",
+      "committed output matches the repository-owned generator"
+    ]
+  },
+  "g8_scope": {
+    "included": [
+      "write the documentation home and supported installation guide",
+      "publish one project-centered workflow-map figure",
+      "normalize final cross-site navigation and reader routing",
+      "remove reconstruction and phase language from public documentation",
+      "mark all authored pages as implemented while retaining final publication gates",
+      "add focused entry-page and site-figure regression contracts"
+    ],
+    "excluded": [
+      "changes to supported installation artifacts or dependency metadata",
+      "changes to CALM scientific algorithms",
+      "changes to the supported public API",
+      "new calculator providers or model qualification",
+      "publication deployment or compatibility redirects",
+      "the final strict-build and clean-environment verification campaign"
+    ]
+  }
+}

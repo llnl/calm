@@ -1,0 +1,69 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+\label{chap:m002}
+
+\section{Stage 1 --- Mathematical Specification}
+
+\subsection{Scientific Purpose}
+
+Construct the primitive two-dimensional periodic surface associated with
+a previously constructed Surface Frame.
+
+\subsection{Transformation}
+
+\[
+\Phi_{\mathrm{surface}} :
+\mathcal{F}_{\mathrm{surface}}
+\rightarrow
+\mathcal{S}_{\mathrm{primitive}}
+\]
+
+where a Surface Frame is the adapted lattice frame produced by M001 and
+a Primitive Surface is the minimal periodic two-dimensional crystal
+embedded in that frame.
+
+\subsection{Mathematical Inputs}
+
+\begin{itemize}
+\item Surface Frame
+\item Crystal motif
+\item Oriented lattice basis
+\end{itemize}
+
+\subsection{Mathematical Outputs}
+
+\begin{itemize}
+\item Primitive surface lattice
+\item Primitive surface motif
+\item Surface orientation
+\end{itemize}
+
+\subsection{Preconditions}
+
+\begin{itemize}
+\item Valid Surface Frame.
+\item Primitive Miller orientation.
+\item Consistent crystallographic basis.
+\end{itemize}
+
+\subsection{Postconditions}
+
+\begin{itemize}
+\item Primitive periodic surface.
+\item Preserved crystallographic orientation.
+\item Preserved lattice equivalence.
+\end{itemize}
+
+\subsection{Invariants}
+
+\begin{itemize}
+\item Surface normal.
+\item Chemical identities.
+\item Two-dimensional periodicity.
+\item Crystallographic equivalence.
+\end{itemize}
+
+\subsection{Gauge Freedom}
+
+Equivalent primitive representatives, in-plane origin shifts and basis
+choices that preserve the represented primitive surface.

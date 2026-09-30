@@ -1,0 +1,39 @@
+
+\chapter{M002 --- Primitive Surface Construction}
+
+\section{Stage 4 --- Comparison (Phase 3)}
+
+\subsection{Mathematical Proposition}
+
+Given a primitive Miller covector, the construction shall produce a
+primitive integer kernel basis together with a Bézout witness that
+certifies the kernel construction.
+
+\subsection{Implementation Observation}
+
+The implementation documents this phase as constructing an exact
+primitive kernel/Bézout triplet $(u,v,w)$ and uses this certificate in
+later reduction stages.
+
+\subsection{Comparison}
+
+The implementation contract matches the mathematical specification
+developed during Stages 1 and 2.
+
+The certificate-based formulation is stronger than merely producing
+kernel vectors because it explicitly records the Bézout witness.
+
+\subsection{Evidence}
+
+\begin{itemize}
+\item Stage 2 mathematical specification.
+\item Stage 3 implementation decomposition.
+\item Module algorithm documentation.
+\end{itemize}
+
+\subsection{Audit Result}
+
+No discrepancy has been identified.
+
+The remaining work is to verify, during the evidence stage, that every
+operation preserves the primitive-kernel certificate.

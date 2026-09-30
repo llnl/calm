@@ -1,0 +1,59 @@
+\chapter{M007 --- Interface Prototype Construction}
+
+\section{Stage 1 --- Revised Mathematical Specification}
+
+\subsection{Scientific Purpose}
+
+Construct an admissible interface prototype from two realized periodic slabs by
+solving the crystallographic interface matching problem. This specification
+supersedes the earlier candidate ontology in light of subsequent repository
+analysis.
+
+\subsection{Scientific Transformation}
+
+\[
+\mathrm{PeriodicSlab}_A \times \mathrm{PeriodicSlab}_B
+\longrightarrow
+\mathrm{InterfacePrototype}
+\]
+
+This is the first binary scientific transformation in the CALM workflow.
+
+\subsection{Scientific Inputs}
+
+Two realized periodic slabs.
+
+\subsection{Scientific Output}
+
+An Interface Prototype representing a crystallographically admissible candidate
+geometry relating the two periodic slabs. The prototype is not yet a fully
+constructed interface.
+
+\subsection{Mathematical Interpretation}
+
+An Interface Prototype records an admissible correspondence between two
+periodic slabs after lattice compatibility constraints have been satisfied.
+Ranking, Pareto filtering, grouping, canonicalization, and hashing are
+subsequent operations on interface prototypes and are not part of this
+scientific transformation.
+
+\subsection{Repository Evidence}
+
+Repository inspection indicates:
+
+\begin{itemize}
+\item Tutorial 3 defines an interface prototype as a candidate geometry with
+commensurate lattices.
+\item Prototype search consists of supercell enumeration, lattice matching,
+strain analysis, and ranking.
+\item \texttt{calm/interface/prototypes.py} performs canonicalization,
+hashing, and deduplication of existing prototypes rather than constructing
+them.
+\item Prototype grouping operates on previously generated prototype results.
+\end{itemize}
+
+\subsection{Primary Audit Question}
+
+Does the implementation faithfully construct Interface Prototype objects from
+pairs of Periodic Slab objects while keeping representation and workflow
+operations separate from the scientific transformation?

@@ -1,0 +1,115 @@
+{
+  "schema": "calm.compute_performance_matrix/v1",
+  "roadmap_series": "0337",
+  "update": "0337a",
+  "default_repeats": 3,
+  "default_memory_repeats": 1,
+  "default_warmup_runs": 1,
+  "correctness_fields": [
+    "implementation",
+    "oracle_status",
+    "pair_key_version",
+    "pair_key_sha256",
+    "pair_identity_sha256",
+    "class_count",
+    "source_count_total",
+    "source_index_pair_count_total",
+    "repeat_index_count_total",
+    "surface_A_hnf_generated",
+    "surface_A_comparison_orbits",
+    "surface_B_hnf_generated",
+    "surface_B_comparison_orbits",
+    "correspondence_column_pairs_tested",
+    "unimodular_correspondences_tested",
+    "strain_admissible_correspondences",
+    "unique_source_pairs_primitiveized",
+    "primitive_classes_created",
+    "sources_aggregated_by_pair_key"
+  ],
+  "workloads": [
+    {
+      "id": "coupled_equal_square_k5",
+      "family": "coupled_matching",
+      "case": "equal_square",
+      "k_max": 5,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Small exact full-D4 workload with the frozen index-five funnel oracle."
+    },
+    {
+      "id": "coupled_equal_square_k10",
+      "family": "coupled_matching",
+      "case": "equal_square",
+      "k_max": 10,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Intermediate exact full-D4 workload used for rapid optimization comparisons."
+    },
+    {
+      "id": "coupled_equal_square_k20",
+      "family": "coupled_matching",
+      "case": "equal_square",
+      "k_max": 20,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": true,
+      "purpose": "Primary same-host optimization workload and cumulative-time profile owner."
+    },
+    {
+      "id": "coupled_equal_square_k30",
+      "family": "coupled_matching",
+      "case": "equal_square",
+      "k_max": 30,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Largest frozen full-D4 inventory and scaling qualification workload."
+    },
+    {
+      "id": "coupled_rectangular_k5",
+      "family": "coupled_matching_geometry",
+      "case": "rect_small_mismatch",
+      "k_max": 5,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Rectangular small-mismatch geometry coverage."
+    },
+    {
+      "id": "coupled_hexagonal_k5",
+      "family": "coupled_matching_geometry",
+      "case": "hex_near_degenerate",
+      "k_max": 5,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Near-degenerate hexagonal geometry coverage."
+    },
+    {
+      "id": "coupled_oblique_k5",
+      "family": "coupled_matching_geometry",
+      "case": "oblique_tradeoff",
+      "k_max": 5,
+      "modes": [
+        "cold_process",
+        "warm_process"
+      ],
+      "profile": false,
+      "purpose": "Oblique metric and strain-tradeoff geometry coverage."
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+\chapter{M006 --- Ontology Refinement Review}
+
+\section{Ontology Refinement}
+
+\subsection{Purpose}
+
+Review whether ``Finite Slab Geometry'' is the immediate scientific
+object produced by realization, or whether additional scientific objects
+should be recognized before the audit proceeds.
+
+\subsection{Evidence from the Implementation}
+
+The implementation separates:
+
+\begin{itemize}
+\item Slab specification and construction parameters.
+\item Geometry realization utilities.
+\item Slab representation.
+\end{itemize}
+
+This suggests that geometric realization and periodic slab
+representation are distinct scientific transformations.
+
+\subsection{Proposed Ontology}
+
+\[
+\text{Surface Termination}
+\rightarrow
+\text{Slab Specification}
+\rightarrow
+\text{Finite Atomic Geometry}
+\rightarrow
+\text{Periodic Slab}
+\]
+
+\subsection{Working Definitions}
+
+\paragraph{Finite Atomic Geometry}
+A finite collection of atomic coordinates realizing the slab
+specification without yet asserting periodic slab identity.
+
+\paragraph{Periodic Slab}
+A crystallographic slab object obtained by embedding the finite geometry
+into its periodic representation.
+
+\subsection{Questions}
+
+\begin{enumerate}
+\item Is geometric realization complete before periodic embedding?
+\item Which invariants belong to geometry and which belong to the slab?
+\item Should periodicity itself be considered part of the scientific
+object?
+\end{enumerate}
+
+\subsection{Recommendation}
+
+Pause the remaining M006 audit until the implementation review confirms
+whether this refinement is supported throughout the slab construction
+pipeline.

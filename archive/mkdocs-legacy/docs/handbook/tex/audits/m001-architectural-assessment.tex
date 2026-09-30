@@ -1,0 +1,55 @@
+
+\section{Architectural Assessment}
+
+\subsection{Procedure Assessment}
+
+\begin{center}
+\begin{tabular}{|p{0.34\linewidth}|p{0.2\linewidth}|p{0.26\linewidth}|}
+\hline
+Procedure & Classification & Recommendation\\
+\hline
+\texttt{\_reduce\_hkl()} & Mathematical primitive & Keep; expand mathematical precondition in docstring.\\
+\hline
+\texttt{\_extended\_gcd()} & Mathematical primitive & Keep unchanged.\\
+\hline
+\texttt{\_right\_reduce\_row\_to\_hnf()} & Composite mathematical algorithm & Clarify docstring; evaluate decomposition into Bézout elimination primitives after audit.\\
+\hline
+\texttt{surface\_basis\_S\_from\_hkl()} & Orchestrator & Keep orchestration role explicit in comments.\\
+\hline
+\texttt{verify\_surface\_kernel\_is\_primitive()} & Mathematical primitive & Keep separate; document lattice-theoretic criterion.\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Documentation Assessment}
+
+\begin{itemize}
+\item State mathematical assumptions explicitly (primitive Miller index).
+\item State mathematical guarantees separately from implementation details.
+\item Explain orientation repair as gauge fixing.
+\item Explain why each elementary transformation preserves unimodularity.
+\end{itemize}
+
+\subsection{Comments Assessment}
+
+Comments should justify mathematical intent rather than restate code.
+In particular, basis permutations and sign changes should be explained in
+terms of lattice interpretation and gauge freedom.
+
+\subsection{Refactoring Assessment}
+
+No immediate refactoring is recommended before the audit is complete.
+
+Potential future decomposition:
+
+\begin{enumerate}
+\item Primitive Miller reduction.
+\item Bézout elimination step.
+\item Unimodular completion.
+\item Surface-basis interpretation.
+\item Orientation gauge fixing.
+\end{enumerate}
+
+These recommendations are deferred until all transformation audits are
+complete to avoid changing implementation while verification is in
+progress.

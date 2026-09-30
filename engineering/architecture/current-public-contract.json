@@ -1,0 +1,1449 @@
+{
+  "schema_version": "calm.public_api_contract.v4",
+  "release_stage": "stable",
+  "scope": "One Project-centered public API with explicit material ingest, durable workflow returns, and authoritative query collections.",
+  "exports": [
+    {
+      "name": "__version__",
+      "import_path": "calm.__version__",
+      "kind": "constant",
+      "implementation": "calm._version.__version__",
+      "group": "metadata",
+      "purpose": "Installed CALM version.",
+      "members": []
+    },
+    {
+      "name": "Project",
+      "import_path": "calm.Project",
+      "kind": "class",
+      "implementation": "calm.public.project.Project",
+      "group": "project",
+      "purpose": "Persistent scientific workflow entry point and query surface.",
+      "members": []
+    },
+    {
+      "name": "open_project",
+      "import_path": "calm.open_project",
+      "kind": "function",
+      "implementation": "calm.public.project.open_project",
+      "group": "project",
+      "purpose": "Open or create a current-schema directory-backed CALM project.",
+      "members": []
+    },
+    {
+      "name": "Material",
+      "import_path": "calm.Material",
+      "kind": "class",
+      "implementation": "calm.public.inputs.materials.Material",
+      "group": "inputs",
+      "purpose": "User-authored bulk-material input and project-returned material projection.",
+      "members": [
+        "name",
+        "label",
+        "atoms",
+        "formula",
+        "state",
+        "metadata",
+        "id_short",
+        "spacegroup",
+        "uid_full",
+        "authority",
+        "from_file",
+        "from_ase",
+        "summary",
+        "to_ase",
+        "to_file",
+        "characterize"
+      ]
+    },
+    {
+      "name": "Potential",
+      "import_path": "calm.Potential",
+      "kind": "class",
+      "implementation": "calm.public.inputs.potentials.Potential",
+      "group": "inputs",
+      "purpose": "Typed calculator or machine-learned interatomic-potential input.",
+      "members": [
+        "family",
+        "model",
+        "device",
+        "options",
+        "quiet",
+        "name",
+        "grace",
+        "mace",
+        "from_ase",
+        "available",
+        "info",
+        "to_spec",
+        "calculator",
+        "check",
+        "validate",
+        "supports",
+        "unsupported_elements",
+        "fingerprint"
+      ]
+    },
+    {
+      "name": "SearchSettings",
+      "import_path": "calm.SearchSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.SearchSettings",
+      "group": "settings",
+      "purpose": "Control deterministic interface-superlattice search and admissibility.",
+      "members": [
+        "max_principal_strain",
+        "max_atoms",
+        "max_supercell_index",
+        "max_candidates",
+        "mismatch_weight",
+        "cond_max",
+        "surface_symmetry_mode",
+        "surface_symprec",
+        "surface_angle_tolerance",
+        "surface_metric_tolerance",
+        "from_dict",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "StrainPartitionSettings",
+      "import_path": "calm.StrainPartitionSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.StrainPartitionSettings",
+      "group": "settings",
+      "purpose": "Control authoritative strain-partition scanning and objective selection.",
+      "members": [
+        "target_metric",
+        "alphas",
+        "resolve_metric",
+        "resolve_alphas",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "BuildSettings",
+      "import_path": "calm.BuildSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.BuildSettings",
+      "group": "settings",
+      "purpose": "Control atomistic interface construction from a persisted candidate.",
+      "members": [
+        "strain_partition",
+        "alpha",
+        "gap",
+        "vacuum",
+        "translation",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "RegistrySettings",
+      "import_path": "calm.RegistrySettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.RegistrySettings",
+      "group": "settings",
+      "purpose": "Control deterministic in-plane registry refinement.",
+      "members": [
+        "steps",
+        "translation_step",
+        "seed",
+        "operational_translation_step",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "RelaxSettings",
+      "import_path": "calm.RelaxSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.RelaxSettings",
+      "group": "settings",
+      "purpose": "Control authoritative structural relaxation and convergence.",
+      "members": [
+        "fmax",
+        "steps",
+        "relax_cell",
+        "protocol",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "EnergySettings",
+      "import_path": "calm.EnergySettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.EnergySettings",
+      "group": "settings",
+      "purpose": "Control authoritative raw total-energy evaluation.",
+      "members": [
+        "mode",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "EnergyConvention",
+      "import_path": "calm.EnergyConvention",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.EnergyConvention",
+      "group": "settings",
+      "purpose": "Declare the formula and normalization for a derived interfacial quantity.",
+      "members": [
+        "formula",
+        "n_interfaces",
+        "area_source",
+        "quantity",
+        "reference_capability",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ReferenceEnergySettings",
+      "import_path": "calm.ReferenceEnergySettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.ReferenceEnergySettings",
+      "group": "settings",
+      "purpose": "Supply explicit thermodynamic reference energies with named units.",
+      "members": [
+        "bulk_a_eV_per_formula_unit",
+        "bulk_b_eV_per_formula_unit",
+        "n_formula_units_a",
+        "n_formula_units_b",
+        "surface_a_total_energy_eV",
+        "surface_b_total_energy_eV",
+        "metadata",
+        "validate_for",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "DatasetFeature",
+      "import_path": "calm.DatasetFeature",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.DatasetFeature",
+      "group": "settings",
+      "purpose": "Declare one named machine-learning feature from a joined dataset row.",
+      "members": [
+        "name",
+        "source",
+        "dtype",
+        "required",
+        "units",
+        "description",
+        "from_value",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "DatasetTarget",
+      "import_path": "calm.DatasetTarget",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.DatasetTarget",
+      "group": "settings",
+      "purpose": "Declare one named supervised-learning target from a joined dataset row.",
+      "members": [
+        "name",
+        "source",
+        "dtype",
+        "required",
+        "units",
+        "description",
+        "from_value",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "DatasetSplitSettings",
+      "import_path": "calm.DatasetSplitSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.DatasetSplitSettings",
+      "group": "settings",
+      "purpose": "Configure deterministic group-preserving train/validation/test assignment.",
+      "members": [
+        "train_fraction",
+        "validation_fraction",
+        "test_fraction",
+        "seed",
+        "policy_version",
+        "from_value",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "DatasetSettings",
+      "import_path": "calm.DatasetSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.settings.DatasetSettings",
+      "group": "settings",
+      "purpose": "Configure authoritative dataset schema, validation, splitting, and export behavior.",
+      "members": [
+        "schema_version",
+        "duplicate_policy",
+        "failure_policy",
+        "require_complete_provenance",
+        "features",
+        "targets",
+        "group_by",
+        "split",
+        "schema",
+        "is_learning_dataset",
+        "validate",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "CampaignCase",
+      "import_path": "calm.CampaignCase",
+      "kind": "class",
+      "implementation": "calm.public.inputs.campaigns.CampaignCase",
+      "group": "settings",
+      "purpose": "Declare one named system and workflow case in a synchronous campaign.",
+      "members": [
+        "name",
+        "search_name",
+        "surface_a",
+        "surface_b",
+        "search_settings",
+        "build_top",
+        "build_settings",
+        "strain_settings",
+        "registry_settings",
+        "relax_settings",
+        "relax_backend",
+        "energy_settings",
+        "energy_backend",
+        "energy_convention",
+        "energy_references",
+        "dataset_settings",
+        "dataset_name",
+        "dimensions",
+        "validate",
+        "resolved_settings",
+        "variant",
+        "grid",
+        "to_dict",
+        "from_dict"
+      ]
+    },
+    {
+      "name": "CampaignSettings",
+      "import_path": "calm.CampaignSettings",
+      "kind": "class",
+      "implementation": "calm.public.inputs.campaigns.CampaignSettings",
+      "group": "settings",
+      "purpose": "Configure the stages and shared controls for a synchronous campaign.",
+      "members": [
+        "stages",
+        "build_top",
+        "build_settings",
+        "strain_settings",
+        "registry_settings",
+        "relax_settings",
+        "relax_backend",
+        "energy_settings",
+        "energy_backend",
+        "energy_convention",
+        "energy_references",
+        "dataset_settings",
+        "dataset_name_template",
+        "on_error",
+        "canonical_stages",
+        "resolved_dataset_settings",
+        "validate",
+        "to_dict",
+        "from_dict"
+      ]
+    },
+    {
+      "name": "CalmPublicAPIError",
+      "import_path": "calm.CalmPublicAPIError",
+      "kind": "class",
+      "implementation": "calm.public.errors.CalmPublicAPIError",
+      "group": "errors",
+      "purpose": "Base exception for errors intentionally exposed by the CALM public API.",
+      "members": []
+    },
+    {
+      "name": "CalmDependencyError",
+      "import_path": "calm.CalmDependencyError",
+      "kind": "class",
+      "implementation": "calm.public.errors.CalmDependencyError",
+      "group": "errors",
+      "purpose": "Report a missing optional dependency required by a requested operation.",
+      "members": []
+    },
+    {
+      "name": "CalmNoCandidatesError",
+      "import_path": "calm.CalmNoCandidatesError",
+      "kind": "class",
+      "implementation": "calm.public.errors.CalmNoCandidatesError",
+      "group": "errors",
+      "purpose": "Report that a workflow requiring candidates produced none.",
+      "members": []
+    },
+    {
+      "name": "AmbiguousProjectQueryError",
+      "import_path": "calm.AmbiguousProjectQueryError",
+      "kind": "class",
+      "implementation": "calm.public.errors.AmbiguousProjectQueryError",
+      "group": "errors",
+      "purpose": "Report a project query that requires further disambiguation.",
+      "members": []
+    },
+    {
+      "name": "SearchIdentityConflictError",
+      "import_path": "calm.SearchIdentityConflictError",
+      "kind": "class",
+      "implementation": "calm.public.errors.SearchIdentityConflictError",
+      "group": "errors",
+      "purpose": "Report reuse of a search name with incompatible scientific inputs.",
+      "members": []
+    },
+    {
+      "name": "DatasetIdentityConflictError",
+      "import_path": "calm.DatasetIdentityConflictError",
+      "kind": "class",
+      "implementation": "calm.public.errors.DatasetIdentityConflictError",
+      "group": "errors",
+      "purpose": "Report reuse of a dataset name with incompatible identity-bearing inputs.",
+      "members": []
+    },
+    {
+      "name": "CampaignIdentityConflictError",
+      "import_path": "calm.CampaignIdentityConflictError",
+      "kind": "class",
+      "implementation": "calm.public.errors.CampaignIdentityConflictError",
+      "group": "errors",
+      "purpose": "Report reuse of a campaign name with incompatible identity-bearing inputs.",
+      "members": []
+    },
+    {
+      "name": "ProjectPersistenceError",
+      "import_path": "calm.ProjectPersistenceError",
+      "kind": "class",
+      "implementation": "calm.public.errors.ProjectPersistenceError",
+      "group": "errors",
+      "purpose": "Report that a directory-backed project cannot be opened or persisted safely.",
+      "members": []
+    },
+    {
+      "name": "ProjectReproducibilityError",
+      "import_path": "calm.ProjectReproducibilityError",
+      "kind": "class",
+      "implementation": "calm.public.errors.ProjectReproducibilityError",
+      "group": "errors",
+      "purpose": "Report failure to create or verify a project reproducibility manifest.",
+      "members": []
+    },
+    {
+      "name": "DatasetValidationError",
+      "import_path": "calm.DatasetValidationError",
+      "kind": "class",
+      "implementation": "calm.public.records.datasets.DatasetValidationError",
+      "group": "errors",
+      "purpose": "Report authoritative dataset validation failure.",
+      "members": []
+    },
+    {
+      "name": "UnsupportedReferenceWorkflowError",
+      "import_path": "calm.UnsupportedReferenceWorkflowError",
+      "kind": "class",
+      "implementation": "calm.public.errors.UnsupportedReferenceWorkflowError",
+      "group": "errors",
+      "purpose": "Report a thermodynamic reference workflow that CALM does not implement.",
+      "members": []
+    },
+    {
+      "name": "tutorial_structure",
+      "import_path": "calm.tutorial_structure",
+      "kind": "function",
+      "implementation": "calm.structure.tutorials.tutorial_structure",
+      "group": "utilities",
+      "purpose": "Load one package-owned structure used by the public tutorials.",
+      "members": []
+    },
+    {
+      "name": "load_structure",
+      "import_path": "calm.load_structure",
+      "kind": "function",
+      "implementation": "calm.structure.io.load_structure",
+      "group": "utilities",
+      "purpose": "Load an atomistic structure from a supported file.",
+      "members": []
+    },
+    {
+      "name": "write_structure",
+      "import_path": "calm.write_structure",
+      "kind": "function",
+      "implementation": "calm.structure.io.write_structure",
+      "group": "utilities",
+      "purpose": "Write an atomistic structure to a supported file.",
+      "members": []
+    },
+    {
+      "name": "write_json",
+      "import_path": "calm.write_json",
+      "kind": "function",
+      "implementation": "calm.structure.io.write_json",
+      "group": "utilities",
+      "purpose": "Write canonical JSON output.",
+      "members": []
+    }
+  ],
+  "project_methods": [
+    {
+      "name": "summary",
+      "group": "project",
+      "purpose": "Return a compact summary of the open project."
+    },
+    {
+      "name": "reproducibility_manifest",
+      "group": "project",
+      "purpose": "Build an in-memory reproducibility snapshot for the current project state."
+    },
+    {
+      "name": "write_reproducibility_manifest",
+      "group": "project",
+      "purpose": "Write an atomic project reproducibility manifest and return its typed snapshot."
+    },
+    {
+      "name": "verify_reproducibility_manifest",
+      "group": "project",
+      "purpose": "Compare a recorded manifest with the current project and runtime state."
+    },
+    {
+      "name": "configure",
+      "group": "project",
+      "purpose": "Persist authoritative project-wide workflow configuration."
+    },
+    {
+      "name": "artifacts",
+      "group": "queries_and_provenance",
+      "purpose": "Return the project artifact-discovery helper."
+    },
+    {
+      "name": "materials",
+      "group": "materials",
+      "purpose": "Return persisted materials, optionally filtered by identity."
+    },
+    {
+      "name": "add_material",
+      "group": "materials",
+      "purpose": "Persist one user-authored material and return its project projection."
+    },
+    {
+      "name": "surfaces",
+      "group": "surfaces",
+      "purpose": "Return persisted surfaces, optionally filtered by exact identity."
+    },
+    {
+      "name": "searches",
+      "group": "search_and_refinement",
+      "purpose": "Return persisted interface searches."
+    },
+    {
+      "name": "search",
+      "group": "search_and_refinement",
+      "purpose": "Return the durable query view for one persisted interface search."
+    },
+    {
+      "name": "build_interfaces",
+      "group": "search_and_refinement",
+      "purpose": "Build and persist top candidates from a search name or durable search view."
+    },
+    {
+      "name": "refine_interfaces",
+      "group": "search_and_refinement",
+      "purpose": "Run authoritative strain-partition and registry refinement for one persisted search."
+    },
+    {
+      "name": "refine_registry",
+      "group": "search_and_refinement",
+      "purpose": "Run authoritative registry refinement from persisted strain-partitioned interfaces."
+    },
+    {
+      "name": "candidates",
+      "group": "search_and_refinement",
+      "purpose": "Return persisted interface candidates."
+    },
+    {
+      "name": "interfaces",
+      "group": "search_and_refinement",
+      "purpose": "Return persisted interface models."
+    },
+    {
+      "name": "refined_interfaces",
+      "group": "search_and_refinement",
+      "purpose": "Return authoritative persisted strain- or registry-refined interfaces."
+    },
+    {
+      "name": "interface",
+      "group": "search_and_refinement",
+      "purpose": "Return exactly one persisted interface record."
+    },
+    {
+      "name": "interface_atoms",
+      "group": "search_and_refinement",
+      "purpose": "Return authoritative interface atoms or reconstruct a non-persisted fractional registry-shift variant."
+    },
+    {
+      "name": "relaxed_interfaces",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative structurally relaxed interfaces."
+    },
+    {
+      "name": "relax_interfaces",
+      "group": "relaxation_and_energy",
+      "purpose": "Synchronously relax authoritative refined interfaces."
+    },
+    {
+      "name": "evaluate_reference_energies",
+      "group": "relaxation_and_energy",
+      "purpose": "Calculate and persist per-interface thermodynamic references."
+    },
+    {
+      "name": "evaluate_energies",
+      "group": "relaxation_and_energy",
+      "purpose": "Evaluate raw energies and optionally derive an explicit quantity."
+    },
+    {
+      "name": "reference_energy_runs",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative reference-energy workflow runs."
+    },
+    {
+      "name": "reference_energy_results",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative per-interface reference-energy results."
+    },
+    {
+      "name": "reference_energy_result",
+      "group": "relaxation_and_energy",
+      "purpose": "Return one typed authoritative reference-energy result."
+    },
+    {
+      "name": "energy_runs",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative raw-energy workflow runs."
+    },
+    {
+      "name": "energy_results",
+      "group": "relaxation_and_energy",
+      "purpose": "Return typed authoritative raw total-energy results."
+    },
+    {
+      "name": "energy_result",
+      "group": "relaxation_and_energy",
+      "purpose": "Return one typed authoritative raw total-energy result."
+    },
+    {
+      "name": "thermodynamic_runs",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative thermodynamic-derivation runs."
+    },
+    {
+      "name": "thermodynamic_results",
+      "group": "relaxation_and_energy",
+      "purpose": "Return typed authoritative derived thermodynamic quantities."
+    },
+    {
+      "name": "thermodynamic_result",
+      "group": "relaxation_and_energy",
+      "purpose": "Return one typed authoritative thermodynamic quantity."
+    },
+    {
+      "name": "datasets",
+      "group": "datasets",
+      "purpose": "Return persisted learning datasets."
+    },
+    {
+      "name": "dataset",
+      "group": "datasets",
+      "purpose": "Return one authoritative dataset bound to this open project."
+    },
+    {
+      "name": "dataset_items",
+      "group": "datasets",
+      "purpose": "Return typed authoritative membership records for one dataset."
+    },
+    {
+      "name": "create_dataset",
+      "group": "datasets",
+      "purpose": "Create or reopen a deterministic authoritative dataset."
+    },
+    {
+      "name": "add_dataset_items",
+      "group": "datasets",
+      "purpose": "Normalize and append authoritative records under persisted policy."
+    },
+    {
+      "name": "validate_dataset",
+      "group": "datasets",
+      "purpose": "Validate authoritative membership, schema, and provenance."
+    },
+    {
+      "name": "validate_ml_dataset",
+      "group": "datasets",
+      "purpose": "Validate one joined dataset for leakage-safe ML consumption."
+    },
+    {
+      "name": "export_dataset",
+      "group": "datasets",
+      "purpose": "Atomically export a validated dataset and checksum manifest."
+    },
+    {
+      "name": "campaigns",
+      "group": "campaigns",
+      "purpose": "Return persisted campaigns."
+    },
+    {
+      "name": "runs",
+      "group": "queries_and_provenance",
+      "purpose": "Return authoritative persisted workflow runs."
+    },
+    {
+      "name": "run",
+      "group": "queries_and_provenance",
+      "purpose": "Return exactly one authoritative persisted workflow run."
+    },
+    {
+      "name": "followups",
+      "group": "queries_and_provenance",
+      "purpose": "Return authoritative persisted follow-up results."
+    },
+    {
+      "name": "registry_runs",
+      "group": "search_and_refinement",
+      "purpose": "Return authoritative registry-search workflow runs."
+    },
+    {
+      "name": "registry_results",
+      "group": "search_and_refinement",
+      "purpose": "Return authoritative persisted registry-search follow-up results."
+    },
+    {
+      "name": "relaxation_runs",
+      "group": "relaxation_and_energy",
+      "purpose": "Return authoritative structural-relaxation workflow runs."
+    },
+    {
+      "name": "relaxation_results",
+      "group": "relaxation_and_energy",
+      "purpose": "Return typed authoritative structural-relaxation results."
+    },
+    {
+      "name": "relaxation_result",
+      "group": "relaxation_and_energy",
+      "purpose": "Return one typed authoritative structural-relaxation result."
+    },
+    {
+      "name": "followup",
+      "group": "queries_and_provenance",
+      "purpose": "Return exactly one authoritative persisted follow-up result."
+    },
+    {
+      "name": "run_artifacts",
+      "group": "queries_and_provenance",
+      "purpose": "Return authoritative artifacts attached to one persisted run."
+    },
+    {
+      "name": "edges",
+      "group": "queries_and_provenance",
+      "purpose": "Return authoritative persisted provenance edges."
+    },
+    {
+      "name": "lineage",
+      "group": "queries_and_provenance",
+      "purpose": "Return the authoritative persisted provenance subgraph for *target*."
+    },
+    {
+      "name": "create_campaign",
+      "group": "campaigns",
+      "purpose": "Create or reopen a deterministic authoritative campaign."
+    },
+    {
+      "name": "run_campaign",
+      "group": "campaigns",
+      "purpose": "Run a first-class campaign synchronously in the current process."
+    },
+    {
+      "name": "search_interfaces",
+      "group": "search_and_refinement",
+      "purpose": "Run or resume one deterministic interface search and return its durable project view."
+    },
+    {
+      "name": "optimize_material",
+      "group": "materials",
+      "purpose": "Optimize and persist a project material using the requested potential and settings."
+    },
+    {
+      "name": "campaign",
+      "group": "campaigns",
+      "purpose": "Return exactly one persisted campaign."
+    },
+    {
+      "name": "campaign_run",
+      "group": "campaigns",
+      "purpose": "Return exactly one persisted campaign-run record."
+    },
+    {
+      "name": "campaign_for_dataset",
+      "group": "campaigns",
+      "purpose": "Return the campaign associated with one persisted dataset."
+    },
+    {
+      "name": "campaign_run_for_dataset",
+      "group": "campaigns",
+      "purpose": "Return the campaign run associated with one persisted dataset."
+    },
+    {
+      "name": "plot_strain_partition_scan",
+      "group": "search_and_refinement",
+      "purpose": "Render the persisted strain-partition scan for one run."
+    },
+    {
+      "name": "plot_registry_search",
+      "group": "search_and_refinement",
+      "purpose": "Render the persisted registry-search trace for one run."
+    },
+    {
+      "name": "material",
+      "group": "materials",
+      "purpose": "Return a public Material facade for a persisted material."
+    },
+    {
+      "name": "export_materials",
+      "group": "materials",
+      "purpose": "Export named persisted materials to files and return written paths."
+    },
+    {
+      "name": "generate_surfaces",
+      "group": "surfaces",
+      "purpose": "Generate and persist slabs through the canonical surface helper."
+    },
+    {
+      "name": "export_surfaces",
+      "group": "surfaces",
+      "purpose": "Export persisted slabs/surfaces to POSCAR files and return written paths."
+    },
+    {
+      "name": "surface",
+      "group": "surfaces",
+      "purpose": "Return exactly one persisted surface."
+    }
+  ],
+  "workflow_objects": [
+    {
+      "name": "GeneratedSurface",
+      "implementation": "calm.public.records.generated_surface.GeneratedSurface",
+      "role": "Surface record returned by Project surface generation and queries.",
+      "members": [
+        "id_short",
+        "label",
+        "material",
+        "miller",
+        "natoms",
+        "area",
+        "uid_full",
+        "authority",
+        "bulk_uid_full",
+        "bulk_id_short",
+        "termination",
+        "termination_top",
+        "termination_bottom",
+        "termination_shift",
+        "termination_identity",
+        "termination_identity_version",
+        "termination_top_identity",
+        "termination_bottom_identity",
+        "termination_pair_identity",
+        "termination_surface_symmetry",
+        "termination_surface_symmetry_status",
+        "formula",
+        "vacuum",
+        "thickness",
+        "layers",
+        "project_slab_uid_full",
+        "project_slab_id_short",
+        "to_dict",
+        "to_ase",
+        "characterize",
+        "summary",
+        "to_file",
+        "to_surface"
+      ]
+    },
+    {
+      "name": "SurfaceCollection",
+      "implementation": "calm.public.collections.structures.SurfaceCollection",
+      "role": "Typed collection returned by Project.surfaces().",
+      "members": [
+        "records",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "where",
+        "get",
+        "one_or_none",
+        "latest",
+        "characterizations",
+        "usable_surfaces",
+        "select",
+        "one"
+      ]
+    },
+    {
+      "name": "PersistedInterfaceSearch",
+      "implementation": "calm.public.records.search.PersistedInterfaceSearch",
+      "role": "Durable query and navigation view returned by Project.search_interfaces() and Project.search().",
+      "members": [
+        "project",
+        "name",
+        "record",
+        "uid_full",
+        "id_short",
+        "authority",
+        "run_status",
+        "failure",
+        "empty",
+        "has_enumeration_audit",
+        "enumeration_audit",
+        "candidates",
+        "validate_buildable",
+        "status",
+        "buildability_summary",
+        "summary",
+        "explain",
+        "interfaces",
+        "prototype_ids",
+        "reference_energy_runs",
+        "reference_energy_results",
+        "energy_runs",
+        "energy_results",
+        "thermodynamic_runs",
+        "thermodynamic_results"
+      ]
+    },
+    {
+      "name": "CandidateCollection",
+      "implementation": "calm.public.collections.candidates.CandidateCollection",
+      "role": "Typed candidate query and selection result.",
+      "members": [
+        "records",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "where",
+        "get",
+        "one_or_none",
+        "latest",
+        "plot_pareto",
+        "search",
+        "materials",
+        "atoms",
+        "pareto",
+        "strain",
+        "miller_pair",
+        "tags",
+        "terminations",
+        "select_top",
+        "select",
+        "validate_buildable"
+      ]
+    },
+    {
+      "name": "InterfaceCollection",
+      "implementation": "calm.public.collections.interfaces.InterfaceCollection",
+      "role": "Typed collection of constructed, refined, or relaxed interfaces.",
+      "members": [
+        "records",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "where",
+        "get",
+        "one_or_none",
+        "latest",
+        "materials",
+        "stage",
+        "refined",
+        "relaxed",
+        "candidate",
+        "search",
+        "write_structures",
+        "plot_build_summary"
+      ]
+    },
+    {
+      "name": "ProjectRun",
+      "implementation": "calm.public.records.persistence.ProjectRun",
+      "role": "Authoritative persisted workflow run record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "run_type",
+        "status",
+        "spec",
+        "progress",
+        "failure",
+        "created_at",
+        "updated_at",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectSearch",
+      "implementation": "calm.public.records.persistence.ProjectSearch",
+      "role": "Authoritative persisted search record.",
+      "members": [
+        "name",
+        "uid_full",
+        "id_short",
+        "run_uid_full",
+        "run_id_short",
+        "search_identity",
+        "status",
+        "n_candidates",
+        "settings",
+        "spec",
+        "progress",
+        "failure",
+        "metadata",
+        "created_at",
+        "updated_at",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectFollowupResult",
+      "implementation": "calm.public.records.persistence.ProjectFollowupResult",
+      "role": "Authoritative persisted refinement or follow-up result.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "kind",
+        "status",
+        "run_uid_full",
+        "run_id_short",
+        "prototype_uid_full",
+        "prototype_id_short",
+        "target_uid_full",
+        "target_id_short",
+        "target_kind",
+        "best_energy",
+        "param1",
+        "param2",
+        "n_points",
+        "payload",
+        "failure",
+        "created_at",
+        "updated_at",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectInterface",
+      "implementation": "calm.public.records.persistence.ProjectInterface",
+      "role": "Authoritative persisted interface record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "label",
+        "prototype_uid_full",
+        "stage",
+        "spec",
+        "metadata",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectEnergyResult",
+      "implementation": "calm.public.records.persistence.ProjectEnergyResult",
+      "role": "Authoritative raw energy result.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "status",
+        "run_uid_full",
+        "run_id_short",
+        "prototype_uid_full",
+        "target_uid_full",
+        "target_kind",
+        "quantity",
+        "energy_eV",
+        "energy",
+        "units",
+        "backend",
+        "backend_identity",
+        "settings",
+        "artifact_refs",
+        "failure",
+        "payload",
+        "metadata",
+        "authority",
+        "succeeded",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectThermodynamicResult",
+      "implementation": "calm.public.records.persistence.ProjectThermodynamicResult",
+      "role": "Authoritative derived thermodynamic result.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "status",
+        "run_uid_full",
+        "run_id_short",
+        "prototype_uid_full",
+        "target_uid_full",
+        "target_kind",
+        "raw_energy_followup_uid",
+        "quantity",
+        "formula_id",
+        "value_eV_per_A2",
+        "value_J_per_m2",
+        "normalization_area_A2",
+        "n_interfaces",
+        "convention",
+        "references",
+        "reference_source",
+        "components",
+        "units",
+        "normalization_area_source_status",
+        "calculator_compatibility",
+        "failure",
+        "payload",
+        "authority",
+        "succeeded",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectDataset",
+      "implementation": "calm.public.records.persistence.ProjectDataset",
+      "role": "Project-bound authoritative dataset record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "name",
+        "description",
+        "metadata",
+        "created_at",
+        "authority",
+        "schema_version",
+        "settings",
+        "feature_declarations",
+        "target_declarations",
+        "grouping_fields",
+        "split_settings",
+        "items",
+        "add",
+        "validate",
+        "validate_ml",
+        "split",
+        "groups",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "export",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectDatasetItem",
+      "implementation": "calm.public.records.persistence.ProjectDatasetItem",
+      "role": "Authoritative dataset membership record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "dataset_uid_full",
+        "index",
+        "metadata",
+        "artifact_refs",
+        "created_at",
+        "authority",
+        "features",
+        "targets",
+        "group_id",
+        "split_name",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectCampaign",
+      "implementation": "calm.public.records.persistence.ProjectCampaign",
+      "role": "Project-bound campaign record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "name",
+        "spec",
+        "metadata",
+        "created_at",
+        "authority",
+        "runs",
+        "run",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectCampaignRun",
+      "implementation": "calm.public.records.persistence.ProjectCampaignRun",
+      "role": "Authoritative campaign execution record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "campaign_uid_full",
+        "run_spec_hash",
+        "backend_id",
+        "status",
+        "started_at",
+        "finished_at",
+        "metadata",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectArtifact",
+      "implementation": "calm.public.records.persistence.ProjectArtifact",
+      "role": "Authoritative artifact record.",
+      "members": [
+        "uid_full",
+        "id_short",
+        "run_uid_full",
+        "kind",
+        "uri",
+        "metadata",
+        "created_at",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "ProjectEdge",
+      "implementation": "calm.public.records.persistence.ProjectEdge",
+      "role": "Authoritative provenance edge.",
+      "members": [
+        "uid_full",
+        "src_uid_full",
+        "dst_uid_full",
+        "kind",
+        "payload",
+        "created_at",
+        "authority",
+        "to_dict"
+      ]
+    },
+    {
+      "name": "LineageGraph",
+      "implementation": "calm.public.records.persistence.LineageGraph",
+      "role": "Typed provenance graph returned by Project.lineage().",
+      "members": [
+        "root_uid_full",
+        "nodes",
+        "edges",
+        "node",
+        "upstream",
+        "downstream",
+        "to_rows"
+      ]
+    },
+    {
+      "name": "RelaxationWorkflowResult",
+      "implementation": "calm.public.records.followups.RelaxationWorkflowResult",
+      "role": "Composite result of Project.relax_interfaces().",
+      "members": [
+        "run",
+        "results",
+        "relaxed_interfaces",
+        "ok",
+        "failures",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "summary"
+      ]
+    },
+    {
+      "name": "EnergyWorkflowResult",
+      "implementation": "calm.public.records.followups.EnergyWorkflowResult",
+      "role": "Composite result of Project.evaluate_energies().",
+      "members": [
+        "energy_run",
+        "energy_results",
+        "thermodynamic_run",
+        "thermodynamic_results",
+        "ok",
+        "failures",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "summary"
+      ]
+    },
+    {
+      "name": "CampaignWorkflowResult",
+      "implementation": "calm.public.inputs.campaigns.CampaignWorkflowResult",
+      "role": "Composite result of Project.run_campaign().",
+      "members": [
+        "campaign",
+        "run",
+        "cases",
+        "status",
+        "reused",
+        "datasets",
+        "failures",
+        "available_views",
+        "to_rows",
+        "to_table",
+        "to_dataframe",
+        "write_table",
+        "comparison",
+        "summary"
+      ]
+    },
+    {
+      "name": "DatasetValidationReport",
+      "implementation": "calm.public.records.datasets.DatasetValidationReport",
+      "role": "Structured dataset validation report.",
+      "members": [
+        "dataset_uid_full",
+        "schema_version",
+        "n_items",
+        "n_valid",
+        "issues",
+        "content_fingerprint",
+        "ok",
+        "to_dict",
+        "summary",
+        "raise_for_errors"
+      ]
+    },
+    {
+      "name": "DatasetExportResult",
+      "implementation": "calm.public.records.datasets.DatasetExportResult",
+      "role": "Structured dataset export result.",
+      "members": [
+        "dataset_uid_full",
+        "destination",
+        "manifest_path",
+        "n_items",
+        "files",
+        "checksums",
+        "content_fingerprint",
+        "to_dict",
+        "summary"
+      ]
+    },
+    {
+      "name": "ProjectReproducibilityManifest",
+      "implementation": "calm.public.records.reproducibility.ProjectReproducibilityManifest",
+      "role": "Immutable project reproducibility snapshot.",
+      "members": [
+        "payload",
+        "schema_version",
+        "snapshot_id",
+        "generated_at_utc",
+        "files",
+        "backends",
+        "seeds",
+        "to_dict",
+        "write",
+        "summary",
+        "read"
+      ]
+    },
+    {
+      "name": "ReproducibilityVerificationReport",
+      "implementation": "calm.public.records.reproducibility.ReproducibilityVerificationReport",
+      "role": "Structured manifest verification report.",
+      "members": [
+        "manifest_path",
+        "recorded_snapshot_id",
+        "current_snapshot_id",
+        "issues",
+        "ok",
+        "warnings",
+        "errors",
+        "raise_for_errors",
+        "to_dict",
+        "summary"
+      ]
+    }
+  ],
+  "retired_top_level_exports": [
+    "calm.Surface",
+    "calm.SurfacePair",
+    "calm.InterfaceRequest",
+    "calm.Selection",
+    "calm.StrainFilter",
+    "calm.search_interfaces",
+    "calm.search_interface_grid",
+    "calm.viz"
+  ],
+  "internal_namespaces": [
+    "calm.public",
+    "calm.project",
+    "calm.interface",
+    "calm.slab",
+    "calm.bulk",
+    "calm.calculators",
+    "calm.viz"
+  ],
+  "retired_duplicate_methods": [
+    "Material.optimize",
+    "InterfaceCandidate.build",
+    "InterfaceCandidate.search_registry",
+    "InterfaceSearchResult.build",
+    "InterfaceSearchResult.build_all",
+    "CandidateCollection.build_all",
+    "InterfaceModel.energy",
+    "InterfaceModel.relax",
+    "InterfaceCollection.relax",
+    "InterfaceCollection.evaluate_reference_energies",
+    "InterfaceCollection.evaluate_energies",
+    "PersistedInterfaceSearch.build_top",
+    "PersistedInterfaceSearch.refine_interfaces",
+    "PersistedInterfaceSearch.relax_interfaces",
+    "PersistedInterfaceSearch.evaluate_reference_energies",
+    "PersistedInterfaceSearch.evaluate_energies",
+    "Project.save",
+    "Project.energies",
+    "Project.strain_partition_scan_plot",
+    "Project.registry_search_plot",
+    "Project.plot_pareto",
+    "Project.structures"
+  ],
+  "persistence": {
+    "database_schema_version": "v2.0.0",
+    "compatibility_policy": "exact_current_regeneration_only",
+    "automatic_migration": false,
+    "in_place_repair": false
+  }
+}

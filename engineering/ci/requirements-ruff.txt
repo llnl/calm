@@ -1,0 +1,2 @@
+# Source-only linting. Keep this job independent of the scientific runtime.
+ruff==0.15.22

@@ -1,0 +1,154 @@
+{
+  "schema": "calm.release_qualification_test_ownership",
+  "version": 2,
+  "fixture_policy": {
+    "successful_atom_structures": "tests/current_structure_fixtures.py",
+    "successful_slab_records": "tests/slab_record_fixtures.py",
+    "successful_energy_results": "tests/energy_result_fixtures.py",
+    "malformed_state_policy": "Malformed and historical mappings remain local to explicit rejection tests."
+  },
+  "lifecycle_coverage": {
+    "create": [
+      {
+        "path": "tests/public/test_project_material_persistence_ownership.py",
+        "test": "test_project_add_material_uses_the_single_material_owner"
+      },
+      {
+        "path": "tests/public/test_project_interface_query_reporting_contract.py",
+        "test": "test_persisted_interface_is_projected_from_authoritative_records"
+      }
+    ],
+    "reopen": [
+      {
+        "path": "tests/integration/project/test_stage_reopen_resume_provenance_roundtrip.py",
+        "test": "test_stage_reopen_resume_provenance_roundtrip"
+      },
+      {
+        "path": "tests/public/test_project_interface_query_reporting_contract.py",
+        "test": "test_interface_query_ignores_retired_sidecar_file"
+      }
+    ],
+    "resume": [
+      {
+        "path": "tests/integration/project/test_stage_reopen_resume_provenance_roundtrip.py",
+        "test": "test_stage_reopen_resume_provenance_roundtrip"
+      },
+      {
+        "path": "tests/integration/project/test_energy_partial_resume.py",
+        "test": "test_partial_resume_recomputes_only_missing_energy_followup"
+      }
+    ],
+    "retry": [
+      {
+        "path": "tests/integration/project/test_energy_backend_identity_and_failure.py",
+        "test": "test_energy_run_identity_resume_reopen_and_failure_retry"
+      }
+    ],
+    "failure": [
+      {
+        "path": "tests/integration/project/test_energy_backend_identity_and_failure.py",
+        "test": "test_energy_run_identity_resume_reopen_and_failure_retry"
+      },
+      {
+        "path": "tests/unit/project/test_slab_materialization_failure_policy.py",
+        "test": "test_atomistic_construction_failure_propagates"
+      }
+    ],
+    "materialization": [
+      {
+        "path": "tests/unit/project/test_slab_materialization_failure_policy.py",
+        "test": "test_missing_parent_atoms_is_the_only_spec_only_path"
+      },
+      {
+        "path": "tests/integration/project/test_resume_provenance_roundtrip.py",
+        "test": "test_existing_interface_can_acquire_its_exact_atoms_artifact"
+      }
+    ],
+    "export": [
+      {
+        "path": "tests/public/test_project_interface_query_reporting_contract.py",
+        "test": "test_interface_collection_writes_tables_and_plots"
+      },
+      {
+        "path": "tests/architecture/test_api_export_ownership.py",
+        "test": "test_calm_api_is_the_only_positive_export_registry"
+      }
+    ],
+    "lineage": [
+      {
+        "path": "tests/integration/project/test_public_lineage_query.py",
+        "test": "test_public_lineage_roundtrips_real_sqlite_edges"
+      }
+    ],
+    "validation": [
+      {
+        "path": "tests/test_workspace_validation.py",
+        "test": "test_workspace"
+      },
+      {
+        "path": "tests/test_schema_versioning.py",
+        "test": "test_structurally_incomplete_current_database_is_rejected"
+      }
+    ],
+    "regeneration_policy": [
+      {
+        "path": "tests/test_schema_versioning.py",
+        "test": "test_noncurrent_schema_is_rejected_without_migration"
+      },
+      {
+        "path": "tests/test_schema_versioning.py",
+        "test": "test_stable_schema_and_historical_project_policy_are_exact"
+      }
+    ]
+  },
+  "release_coverage": {
+    "packaging_contract": [
+      {
+        "path": "tests/unit/engineering/test_install_artifact_qualification.py",
+        "test": "test_packaging_contract_is_exact_and_current"
+      }
+    ],
+    "artifact_identity": [
+      {
+        "path": "tests/unit/engineering/test_install_artifact_qualification.py",
+        "test": "test_artifact_requirements_select_exact_extra"
+      },
+      {
+        "path": "tests/unit/engineering/test_install_artifact_qualification.py",
+        "test": "test_installed_smoke_rejects_source_checkout_import"
+      }
+    ],
+    "source_evidence": [
+      {
+        "path": "tests/unit/engineering/test_qualification_harness.py",
+        "test": "test_v3_source_policy_detects_dirty_or_unidentified_source"
+      },
+      {
+        "path": "tests/unit/engineering/test_qualification_harness.py",
+        "test": "test_default_matrix_binds_release_evidence_to_clean_source"
+      },
+      {
+        "path": "tests/unit/engineering/test_install_artifact_qualification.py",
+        "test": "test_artifact_source_identity_fails_closed_when_status_is_unavailable"
+      },
+      {
+        "path": "tests/unit/engineering/test_qualification_harness.py",
+        "test": "test_source_policy_fails_closed_when_git_status_is_unavailable"
+      },
+      {
+        "path": "tests/unit/engineering/test_qualification_harness.py",
+        "test": "test_source_stability_detects_commit_changes"
+      }
+    ],
+    "matrix_contract": [
+      {
+        "path": "tests/repository/test_public_api_qualification_contract.py",
+        "test": "test_core_qualification_matrix_uses_consistency_not_a_freeze"
+      },
+      {
+        "path": "tests/repository/test_public_api_qualification_contract.py",
+        "test": "test_core_matrix_preserves_platform_ci_and_skip_policy"
+      }
+    ]
+  }
+}

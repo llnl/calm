@@ -1,0 +1,73 @@
+{
+  "schema_version": "calm.python_distribution.v2",
+  "license_policy": {
+    "copyright_holder": "Lawrence Livermore National Security, LLC",
+    "copyright_year": 2026,
+    "expression": "MIT",
+    "files": {
+      "LICENSE": "41e565493bf7098b65db9896b21a02a7ad55cea63e542dfc1d337c5362623e81",
+      "NOTICE": "1c03a03406e4fc284f812456ef8a4866b8d5a94f57a85a8be7295a91b75c1918"
+    },
+    "status": "approved"
+  },
+  "sdist": {
+    "egg_info_files": [
+      "PKG-INFO",
+      "SOURCES.txt",
+      "dependency_links.txt",
+      "not-zip-safe",
+      "requires.txt",
+      "top_level.txt"
+    ],
+    "generated_root_files": [
+      "PKG-INFO",
+      "setup.cfg"
+    ],
+    "manifest_directives": [
+      [
+        "include",
+        "LICENSE"
+      ],
+      [
+        "include",
+        "NOTICE"
+      ],
+      [
+        "include",
+        "README.md"
+      ],
+      [
+        "prune",
+        "tests"
+      ]
+    ],
+    "profile": "minimal_installation_source",
+    "root_directories": [
+      "calm",
+      "calm.egg-info"
+    ],
+    "source_root_files": [
+      "LICENSE",
+      "MANIFEST.in",
+      "NOTICE",
+      "README.md",
+      "pyproject.toml"
+    ]
+  },
+  "wheel": {
+    "dist_info_files": [
+      "METADATA",
+      "RECORD",
+      "WHEEL",
+      "licenses/LICENSE",
+      "licenses/NOTICE",
+      "top_level.txt"
+    ],
+    "package_file_suffixes": [
+      ".json",
+      ".py"
+    ],
+    "package_root": "calm",
+    "profile": "installable_package_only"
+  }
+}

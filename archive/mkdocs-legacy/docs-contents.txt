@@ -1,0 +1,3 @@
+This archive contains the former docs/ tree moved during the MkDocs reset.
+
+Paths moved here preserve the original structure for provenance.

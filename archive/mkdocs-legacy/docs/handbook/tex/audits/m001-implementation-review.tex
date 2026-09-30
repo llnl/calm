@@ -1,0 +1,73 @@
+
+\section{Implementation Review}
+
+\subsection{Audit Objective}
+
+This review compares the implementation against Theorem~M001.1.
+The implementation is evaluated against the proof obligations rather than
+used to derive the mathematics.
+
+\subsection{Proof Obligation Traceability}
+
+\begin{center}
+\begin{tabular}{|p{0.28\linewidth}|p{0.26\linewidth}|p{0.24\linewidth}|}
+\hline
+Proof obligation & Expected implementation & Audit status\\
+\hline
+Primitive Miller reduction &
+\texttt{\_reduce\_hkl()} &
+Identified\\
+\hline
+Construct Bézout witness &
+\texttt{\_extended\_gcd()} &
+Identified\\
+\hline
+Construct unimodular basis &
+\texttt{\_right\_reduce\_row\_to\_hnf()} &
+Pending detailed review\\
+\hline
+Assemble adapted basis &
+\texttt{surface\_basis\_S\_from\_hkl()} &
+Pending detailed review\\
+\hline
+Orientation repair &
+Sign correction in
+\texttt{surface\_basis\_S\_from\_hkl()} &
+Identified\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Evidence Collected}
+
+The implementation contains explicit evidence supporting the following
+claims.
+
+\begin{enumerate}
+\item Primitive reduction is performed before the Bézout construction.
+\item Orientation repair is implemented independently of basis
+construction, consistent with its interpretation as gauge fixing.
+\item The implementation verifies the transformed Miller index after the
+basis is assembled.
+\end{enumerate}
+
+\subsection{Outstanding Mathematical Questions}
+
+The following questions remain open and will drive the next audit.
+
+\begin{enumerate}
+\item Does the constructed basis generate the full integer kernel rather
+than a proper sublattice?
+\item Is the unimodularity of the constructed matrix guaranteed by the
+algorithm or only checked afterwards?
+\item Does the implementation exactly follow the constructive proof or an
+equivalent formulation?
+\end{enumerate}
+
+\subsection{Audit Conclusion}
+
+No discrepancy has yet been identified between the mathematical
+specification and the implementation. However, the central lattice
+theoretic obligation---construction of a primitive kernel basis---has not
+yet been established from the implementation and therefore remains the
+highest-priority item for the next audit iteration.

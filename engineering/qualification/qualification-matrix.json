@@ -1,0 +1,544 @@
+{
+  "schema_version": "calm.qualification_matrix.v3",
+  "report_schema_version": "calm.qualification_report.v3",
+  "profiles": {
+    "contracts": {
+      "description": "Static, API, repository, and dependency-light contract checks.",
+      "checks": [
+        {
+          "id": "git-diff-check",
+          "command": [
+            "git",
+            "diff",
+            "--check"
+          ],
+          "requires_commands": [
+            "git"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "repository-root-consistency",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_repository_root.py"
+          ],
+          "requires_commands": [
+            "git"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "source-environment-consistency",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_source_environments.py"
+          ],
+          "requires_commands": [
+            "git"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "compile-source-tests-examples",
+          "command": [
+            "{python}",
+            "-m",
+            "compileall",
+            "-q",
+            "calm",
+            "benchmarks",
+            "conda-recipe",
+            "environments",
+            "examples",
+            "tests",
+            "engineering/documentation",
+            "engineering/qualification"
+          ],
+          "timeout_seconds": 180
+        },
+        {
+          "id": "packaging-contract",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_packaging_contract.py"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "typing-modernization-input-contract",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_typing_modernization_contract.py"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "ruff-typing-modernization",
+          "command": [
+            "{python}",
+            "-m",
+            "ruff",
+            "check",
+            "--config",
+            "engineering/qualification/ruff-typing-modernization.toml",
+            "@engineering/qualification/typing-modernization-files.txt"
+          ],
+          "requires_modules": [
+            "ruff"
+          ],
+          "timeout_seconds": 300
+        },
+        {
+          "id": "ruff-complete-tree",
+          "command": [
+            "{python}",
+            "-m",
+            "ruff",
+            "check",
+            "."
+          ],
+          "requires_modules": [
+            "ruff"
+          ],
+          "timeout_seconds": 600
+        },
+        {
+          "id": "package-organization-consistency",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_package_organization.py"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "compute-performance-contract",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_performance_contract.py"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "public-api-consistency",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_public_api_consistency.py"
+          ],
+          "requires_modules": [
+            "sqlalchemy"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "public-table-view-architecture",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_public_table_views.py"
+          ],
+          "timeout_seconds": 60
+        },
+        {
+          "id": "architecture-repository-api-contracts",
+          "command": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/architecture",
+            "tests/repository",
+            "tests/test_public_api_contract.py",
+            "tests/examples/test_public_api_workaround_contract.py",
+            "tests/unit/public/test_material_optimization_workflow_service.py",
+            "tests/architecture/test_current_slab_provenance_contract.py",
+            "tests/unit/slab/test_oriented_slab_transform_json_conformance.py",
+            "tests/unit/slab/test_oriented_slab_transforms_sidecar_contract.py",
+            "tests/unit/interface/test_principal_strain_direction_invariants.py",
+            "tests/unit/project/test_workspace_principal_direction_frames.py"
+          ],
+          "requires_modules": [
+            "pytest"
+          ],
+          "timeout_seconds": 900
+        }
+      ]
+    },
+    "persistence": {
+      "description": "Migration, reopen, resume, joined-dataset, campaign, and manifest contracts.",
+      "checks": [
+        {
+          "id": "persistence-reopen-resume-contracts",
+          "command": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "tests/test_schema_versioning.py",
+            "tests/architecture/test_reporting_sidecar_retirement.py",
+            "tests/public/test_project_reproducibility_manifest.py",
+            "tests/public/test_dataset_model_expansion.py",
+            "tests/unit/public/test_campaign_workflow_service.py",
+            "tests/integration/project/test_reference_energy_provenance_roundtrip.py",
+            "tests/architecture/test_dataset_workflow_ownership.py",
+            "tests/unit/public/test_dataset_workflow_service.py",
+            "tests/architecture/test_project_read_model_ownership.py",
+            "tests/unit/public/test_lineage_query_service.py",
+            "tests/unit/public/test_project_health_service.py",
+            "tests/unit/public/test_structure_query_service.py",
+            "tests/integration/project/test_public_lineage_query.py"
+          ],
+          "requires_modules": [
+            "pytest",
+            "sqlalchemy"
+          ],
+          "timeout_seconds": 1200
+        }
+      ]
+    },
+    "science": {
+      "description": "Complete dependency-enabled repository test suite.",
+      "checks": [
+        {
+          "id": "full-dependency-enabled-suite",
+          "command": [
+            "{python}",
+            "-m",
+            "pytest",
+            "-q",
+            "--timeout=300",
+            "-m",
+            "not real_backend",
+            "--junitxml",
+            "{report_dir}/science-junit.xml"
+          ],
+          "requires_modules": [
+            "pytest",
+            "pytest_timeout",
+            "ase",
+            "spglib",
+            "scipy",
+            "pandas",
+            "matplotlib",
+            "sqlalchemy"
+          ],
+          "timeout_seconds": 7200
+        },
+        {
+          "id": "science-skip-allowlist",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_pytest_junit.py",
+            "{report_dir}/science-junit.xml",
+            "--allow-skipped",
+            "tests/examples/test_current_examples.py::test_numbered_examples_execute_in_order"
+          ],
+          "timeout_seconds": 60
+        }
+      ]
+    },
+    "examples": {
+      "description": "Two-pass Examples 01-10 execution with process boundaries and manifest verification.",
+      "checks": [
+        {
+          "id": "numbered-examples-two-pass",
+          "command": [
+            "{python}",
+            "engineering/qualification/run_numbered_examples.py",
+            "--passes",
+            "2",
+            "--work-root",
+            "{report_dir}/numbered-examples"
+          ],
+          "requires_modules": [
+            "ase",
+            "spglib",
+            "tensorpotential"
+          ],
+          "timeout_seconds": 7200
+        }
+      ]
+    },
+    "docs": {
+      "description": "Strict documentation build.",
+      "checks": [
+        {
+          "id": "mkdocs-strict",
+          "command": [
+            "{python}",
+            "-m",
+            "mkdocs",
+            "build",
+            "--strict",
+            "--site-dir",
+            "{report_dir}/site"
+          ],
+          "requires_modules": [
+            "mkdocs"
+          ],
+          "timeout_seconds": 900
+        }
+      ]
+    },
+    "packaging": {
+      "description": "Build, exact-content validation, metadata checks, and isolated wheel/sdist installation qualification for current and minimum direct dependency tracks.",
+      "checks": [
+        {
+          "id": "wheel-sdist-current-dependencies",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_install_artifacts.py",
+            "--dependency-track",
+            "current",
+            "--work-root",
+            "{report_dir}/install-artifacts-current"
+          ],
+          "timeout_seconds": 5400,
+          "requires_distributions": [
+            "build",
+            "twine"
+          ]
+        },
+        {
+          "id": "wheel-sdist-minimum-dependencies",
+          "command": [
+            "{python}",
+            "engineering/qualification/check_install_artifacts.py",
+            "--dependency-track",
+            "minimum",
+            "--work-root",
+            "{report_dir}/install-artifacts-minimum"
+          ],
+          "timeout_seconds": 5400,
+          "requires_distributions": [
+            "build",
+            "twine"
+          ]
+        }
+      ]
+    }
+  },
+  "cells": [
+    {
+      "id": "macos-arm64-py310-core",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.10",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "macos-arm64-py311-core",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.11",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "macos-arm64-py312-core",
+      "platform": "macos",
+      "architecture": "arm64",
+      "python": "3.12",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "primary"
+    },
+    {
+      "id": "linux-x86_64-py310-core",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.10",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "secondary"
+    },
+    {
+      "id": "linux-x86_64-py311-core",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.11",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "secondary"
+    },
+    {
+      "id": "linux-x86_64-py312-core",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "python": "3.12",
+      "profiles": [
+        "contracts",
+        "persistence",
+        "science",
+        "examples",
+        "docs",
+        "packaging"
+      ],
+      "required": true,
+      "tier": "secondary"
+    }
+  ],
+  "providers": [
+    {
+      "family": "ase",
+      "required_evidence": [
+        "construction",
+        "relaxation",
+        "energy",
+        "provenance"
+      ],
+      "qualification_matrix": "engineering/qualification/provider-matrix.json",
+      "qualification_profile": "ase-emt-cpu-baseline",
+      "support_scope": "ASE EMT CPU baseline provider plumbing only",
+      "qualification_status": "qualification_required"
+    },
+    {
+      "family": "chgnet",
+      "required_evidence": [
+        "construction",
+        "relaxation",
+        "energy",
+        "model_identity",
+        "device"
+      ],
+      "qualification_status": "registered_unqualified"
+    },
+    {
+      "family": "grace",
+      "required_evidence": [
+        "construction",
+        "relaxation",
+        "energy",
+        "model_identity",
+        "device"
+      ],
+      "qualification_status": "registered_unqualified"
+    },
+    {
+      "family": "mace",
+      "required_evidence": [
+        "construction",
+        "relaxation",
+        "energy",
+        "model_identity",
+        "device"
+      ],
+      "qualification_status": "registered_unqualified"
+    },
+    {
+      "family": "lammps",
+      "required_evidence": [
+        "construction",
+        "relaxation",
+        "energy",
+        "runtime_identity",
+        "potential_identity"
+      ],
+      "qualification_status": "registered_unqualified"
+    }
+  ],
+  "qualification_contract": {
+    "python_minors": [
+      "3.10",
+      "3.11",
+      "3.12"
+    ],
+    "primary_platform": "macos-arm64",
+    "secondary_platforms": [
+      "linux-x86_64"
+    ],
+    "unqualified_platforms": [
+      "windows"
+    ],
+    "required_profiles": [
+      "contracts",
+      "persistence",
+      "science",
+      "examples",
+      "docs",
+      "packaging"
+    ],
+    "package_version": "1.0.0",
+    "requires_python": ">=3.10,<3.13",
+    "base_install": "numpy + SQLAlchemy; all 34 top-level exports, project create/reopen, and manifest verification",
+    "install_qualified_extras": [
+      "science",
+      "dataframe",
+      "plot",
+      "viz"
+    ],
+    "maintainer_extras": [
+      "dev",
+      "docs"
+    ],
+    "dependency_tracks": [
+      "current",
+      "minimum-direct"
+    ],
+    "source_policy": "exact clean Git commit",
+    "provider_extras_outside_core_artifact_smoke": [
+      "grace",
+      "mace",
+      "chgnet"
+    ]
+  },
+  "source_policy": {
+    "require_git_commit": true,
+    "require_clean_git": true
+  },
+  "evidence_distributions": [
+    "calm",
+    "numpy",
+    "sqlalchemy",
+    "scipy",
+    "ase",
+    "spglib",
+    "pandas",
+    "matplotlib",
+    "pytest",
+    "pytest-timeout",
+    "ruff",
+    "mkdocs",
+    "build",
+    "twine",
+    "tomli",
+    "tensorpotential"
+  ]
+}

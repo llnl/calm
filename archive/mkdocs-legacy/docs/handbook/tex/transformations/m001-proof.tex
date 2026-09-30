@@ -1,0 +1,43 @@
+
+\section{Mathematical Derivation}
+
+\subsection{Integer Kernel}
+
+For a primitive Miller index $\mathbf h=(h,k,l)$, define the integer kernel
+\[
+K(\mathbf h)=\{\mathbf x\in\mathbb Z^3:\mathbf h\cdot\mathbf x=0\}.
+\]
+Since $\mathbf h$ is primitive, $K(\mathbf h)$ is a rank-two sublattice of
+$\mathbb Z^3$.
+
+\subsection{Existence of a Bézout Witness}
+
+By Bézout's identity there exists $\mathbf w\in\mathbb Z^3$ satisfying
+\[
+\mathbf h\cdot\mathbf w=1.
+\]
+
+\begin{theorem}
+There exists an orientation-preserving unimodular matrix
+$S\in SL(3,\mathbb Z)$ such that
+\[
+\mathbf hS=(0,0,1).
+\]
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Choose a primitive basis of $K(\mathbf h)$ together with a Bézout witness
+$\mathbf w$. The resulting matrix is unimodular. A final permutation and,
+if necessary, sign change produce an orientation-preserving basis.
+\end{proof}
+
+\section{Algorithm}
+
+\begin{enumerate}
+\item Reduce the Miller index to primitive form.
+\item Construct Bézout coefficients.
+\item Build a unimodular basis.
+\item Permute basis vectors.
+\item Repair orientation.
+\item Verify invariants.
+\end{enumerate}

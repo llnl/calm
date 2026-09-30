@@ -1,0 +1,16 @@
+{
+  "calculator_required": false,
+  "outcome": "a Pareto-filtered LiF/Li2O candidate shortlist",
+  "required_artifacts": [
+    "candidates-all.csv",
+    "candidates-pareto.csv",
+    "candidates-shortlist.csv",
+    "run-summary.json"
+  ],
+  "schema_version": "calm.tutorial_expectation.v1",
+  "structures": [
+    "lif",
+    "li2o"
+  ],
+  "tutorial": "compare-candidates"
+}
